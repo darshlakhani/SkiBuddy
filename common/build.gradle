@@ -1,6 +1,15 @@
-apply plugin: 'java'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'joda-time:joda-time:2.9'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
 }

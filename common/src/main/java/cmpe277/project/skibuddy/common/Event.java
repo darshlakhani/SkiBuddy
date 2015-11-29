@@ -4,8 +4,10 @@ import org.joda.time.DateTime;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class Event {
+	private UUID eventID;
 	private String name;
 	private String description;
 	private DateTime start;
@@ -19,6 +21,7 @@ public class Event {
 
 		Event event = (Event) o;
 
+		if (eventID != null ? !eventID.equals(event.eventID) : event.eventID != null) return false;
 		if (name != null ? !name.equals(event.name) : event.name != null) return false;
 		if (description != null ? !description.equals(event.description) : event.description != null)
 			return false;
@@ -30,7 +33,8 @@ public class Event {
 
 	@Override
 	public int hashCode() {
-		int result = name != null ? name.hashCode() : 0;
+		int result = eventID != null ? eventID.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (start != null ? start.hashCode() : 0);
 		result = 31 * result + (end != null ? end.hashCode() : 0);
@@ -76,5 +80,13 @@ public class Event {
 
 	public void setHost(User host) {
 		this.host = host;
+	}
+
+	public UUID getEventID() {
+		return eventID;
+	}
+
+	public void setEventID(UUID eventID) {
+		this.eventID = eventID;
 	}
 }
