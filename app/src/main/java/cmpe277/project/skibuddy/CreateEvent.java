@@ -8,15 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import com.parse.Parse;
 import com.parse.ParseObject;
+=======
+import java.util.UUID;
+>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.NotAuthenticatedException;
-import cmpe277.project.skibuddy.common.Server;
-import cmpe277.project.skibuddy.server.ParseServer;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -25,6 +32,7 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+<<<<<<< HEAD
         Server s = new ParseServer(this);
 
 //<<<<<<< HEAD
@@ -41,6 +49,33 @@ public class CreateEvent extends AppCompatActivity {
             t.show();
         }
 //>>>>>>> 626ea19ae1769d73a9b3b2b961c0f7b89c7ab494
+=======
+        Button createEventButton = (Button) findViewById(R.id.createEventButton);
+        final Context self = this;
+        final Server s = new ServerSingleton().getServerInstance(self);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s.authenticateUser("abc", new ServerCallback<User>() {
+                    @Override
+                    public void handleResult(User result) {
+                        Toast t = Toast.makeText(self, String.format("got user %s", result.getName()), Toast.LENGTH_LONG);
+                        t.show();
+                    }
+                });
+            }
+        });
+
+        s.storeEvent(new Event(), new ServerCallback<UUID>() {
+            @Override
+            public void handleResult(UUID result) {
+                if(result == null){
+                    Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            }
+        });
+>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
     }
 
     @Override
