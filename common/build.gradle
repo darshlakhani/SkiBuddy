@@ -1,0 +1,6 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'joda-time:joda-time:2.9'
+}
