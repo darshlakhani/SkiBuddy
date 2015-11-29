@@ -8,12 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.NotAuthenticatedException;
-import cmpe277.project.skibuddy.common.Server;
-import cmpe277.project.skibuddy.server.ParseServer;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -22,14 +27,31 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        Server s = new ParseServer(this);
+        Button createEventButton = (Button) findViewById(R.id.createEventButton);
+        final Context self = this;
+        final Server s = new ServerSingleton().getServerInstance(self);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s.authenticateUser("abc", new ServerCallback<User>() {
+                    @Override
+                    public void handleResult(User result) {
+                        Toast t = Toast.makeText(self, String.format("got user %s", result.getName()), Toast.LENGTH_LONG);
+                        t.show();
+                    }
+                });
+            }
+        });
 
-        try {
-            s.storeEvent(new Event());
-        } catch (NotAuthenticatedException e) {
-            Toast t = Toast.makeText(this, "Couldn't save event", Toast.LENGTH_SHORT);
-            t.show();
-        }
+        s.storeEvent(new Event(), new ServerCallback<UUID>() {
+            @Override
+            public void handleResult(UUID result) {
+                if(result == null){
+                    Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            }
+        });
     }
 
     @Override
