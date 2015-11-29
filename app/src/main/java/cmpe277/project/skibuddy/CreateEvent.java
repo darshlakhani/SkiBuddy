@@ -3,14 +3,20 @@ package cmpe277.project.skibuddy;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.Server;
+import cmpe277.project.skibuddy.server.ParseServer;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -19,14 +25,22 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
+        Server s = new ParseServer(this);
 
-        Parse.initialize(this, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
+//<<<<<<< HEAD
+      /*  Parse.initialize(this, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
 
         ParseObject testObject = new ParseObject("Event");
-        testObject.put("eventNae", "ski1");
-        testObject.saveInBackground();
+        testObject.put("eventName", "ski1");
+        testObject.saveInBackground(); */
+//=======
+        try {
+            s.storeEvent(new Event());
+        } catch (NotAuthenticatedException e) {
+            Toast t = Toast.makeText(this, "Couldn't save event", Toast.LENGTH_SHORT);
+            t.show();
+        }
+//>>>>>>> 626ea19ae1769d73a9b3b2b961c0f7b89c7ab494
     }
 
     @Override
