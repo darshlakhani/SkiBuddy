@@ -36,7 +36,14 @@ public class CreateEvent extends AppCompatActivity {
                 s.authenticateUser("abc", new ServerCallback<User>() {
                     @Override
                     public void handleResult(User result) {
-                        Toast t = Toast.makeText(self, String.format("got user %s", result.getName()), Toast.LENGTH_LONG);
+                        // All callbacks may return null if the operation failed!
+                        String text;
+                        if (result == null){
+                            text = "Could not get user!";
+                        } else {
+                            text = String.format("got user %s", result.getName());
+                        }
+                        Toast t = Toast.makeText(self, text, Toast.LENGTH_LONG);
                         t.show();
                     }
                 });
