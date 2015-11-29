@@ -98,6 +98,11 @@ public class MockServer implements Server {
         returnRandomUser(callback);
     }
 
+    @Override
+    public void storeUser(User user) {
+
+    }
+
     private void returnRandomRunList(final ServerCallback<List<Run>> callback){
         doAfterRandomTimeout(new Runnable() {
             @Override
