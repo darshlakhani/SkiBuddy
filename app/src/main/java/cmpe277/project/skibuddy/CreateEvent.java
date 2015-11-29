@@ -25,7 +25,7 @@ public class CreateEvent extends AppCompatActivity {
         Parse.initialize(this, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
 
         ParseObject testObject = new ParseObject("Event");
-        testObject.put("eventName", "ski1");
+        testObject.put("eventNae", "ski1");
         testObject.saveInBackground();
     }
 
