@@ -1,14 +1,21 @@
-package cmpe277.project.skibuddy.common;
+package cmpe277.project.skibuddy.server;
 
 import java.util.List;
 import java.util.UUID;
+
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.User;
 
 public interface Server {
 
 	/**
 	 * Returns the user object of the user that is logging in (if successful). If unsuccessful returns null.
 	 */
-	User authenticateUser(String authentication_token);
+	void authenticateUser(String authentication_token, ServerCallback<User> callback);
 
 	/**
 	 * Returns the requested user

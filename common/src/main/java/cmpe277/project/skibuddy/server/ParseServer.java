@@ -1,6 +1,7 @@
 package cmpe277.project.skibuddy.server;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.parse.Parse;
@@ -14,22 +15,38 @@ import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
-import cmpe277.project.skibuddy.common.Server;
 import cmpe277.project.skibuddy.common.User;
 
 /**
  * Created by eh on 11/28/2015.
  */
 public class ParseServer implements Server {
-    public ParseServer(Context context){
-        Parse.enableLocalDatastore(context);
+    private final Context context;
 
+    public ParseServer(Context context){
+        this.context = context;
+//        Parse.enableLocalDatastore(context);
+//
         Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
     }
 
     @Override
-    public User authenticateUser(String authentication_token) {
-        return null;
+    public void authenticateUser(String authentication_token, final ServerCallback<User> callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Handler mainHandler = new Handler(context.getMainLooper());
+                User result = new User();
+                result.setName("John Doe");
+                callback.postResult(result);
+                mainHandler.post(callback);
+            }
+        }).start();
     }
 
     @Override
