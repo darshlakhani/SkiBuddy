@@ -11,7 +11,7 @@ public class ServerSingleton {
 	 */
 	public Server getServerInstance(Context context) {
 		if (server == null){
-			server = new ParseServer(context);
+			server = new MockServer(context);
 		}
 		return server;
 	}

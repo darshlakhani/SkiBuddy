@@ -12,11 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.Server;
-import cmpe277.project.skibuddy.server.ParseServer;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
@@ -43,12 +43,15 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        try {
-            s.storeEvent(new Event());
-        } catch (NotAuthenticatedException e) {
-            Toast t = Toast.makeText(this, "Couldn't save event", Toast.LENGTH_SHORT);
-            t.show();
-        }
+        s.storeEvent(new Event(), new ServerCallback<UUID>() {
+            @Override
+            public void handleResult(UUID result) {
+                if(result == null){
+                    Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            }
+        });
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.util.UUID;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
-import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
@@ -18,64 +17,69 @@ public interface Server {
 	void authenticateUser(String authentication_token, ServerCallback<User> callback);
 
 	/**
-	 * Returns the requested user
+	 * Returns the requested user. If unsuccessful returns null.
 	 */
-	User getUser(UUID userID);
+	void getUser(UUID userID, ServerCallback<User> callback);
 
 	/**
-	 * Returns all the runs associated with the event that is identified with the specified ID. Throws NotAuthenticatedException if the user cannot access that event.
+	 * Returns all the runs associated with the event that is identified with the specified ID.
+	 * Returns null if the user cannot access that event.
 	 */
-	List<Run> getRuns(UUID eventID) throws NotAuthenticatedException;
+	void getRuns(UUID eventID, ServerCallback<List<Run>> callback);
 
 	/**
-	 * Returns all the runs for the specified user
+	 * Returns all the runs for the specified user. If unsuccessful returns null.
 	 */
-	List<Run> getUserRuns(UUID userID);
+	void getUserRuns(UUID userID, ServerCallback<List<Run>> callback);
 
 	/**
-	 * Persists the run on the server. Throws NotAuthenticatedException if no user is currently logged in.
+	 * Persists the run on the server.
 	 */
-	void storeRun(Run run) throws NotAuthenticatedException;
+	void storeRun(Run run);
 
 	/**
-	 * Returns all events that the current user is involved with (either as a participant, host, or invitee). Throws NotAuthenticatedException if no user is currently logged in.
+	 * Returns all events that the current user is involved with (either as a participant, host, or invitee).
+	 * If unauthorized, or unsuccessful, returns null.
 	 */
-	List<Event> getEvents() throws NotAuthenticatedException;
+	void getEvents(ServerCallback<List<Event>> callback);
 
 	/**
-	 * Returns a list of all users that participate in the specified event. Throws NotAuthenticatedException if the user isn't involved in the specified event.
+	 * Returns a list of all users that participate in the specified event.
+	 * Returns null if the user isn't involved in the specified event.
 	 */
-	List<User> getEventParticipants(UUID eventID) throws NotAuthenticatedException;
+	void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback);
 
 	/**
-	 * Creates or updates the specified event on the server. Throws NotAuthenticatedException if the currently logged in user isn't the host of the event.
+	 * Creates or updates the specified event on the server.
+	 *
+	 * Returns null if the user can't update the specified event, UUID after successfully creating/updating the event
 	 */
-	UUID storeEvent(Event event) throws NotAuthenticatedException;
+	void storeEvent(Event event, ServerCallback<UUID> callback);
 
 	/**
-	 * Invites the specified user to the specified events. Silently ignores the call if that user is already invited or participating in the event. Throws NotAuthenticatedException if the currently logged in user isn't the host of the event.
+	 * Invites the specified user to the specified events. Silently ignores the call if that user is already invited or participating in the event.
 	 */
-	void inviteUser(User userID, Event event) throws NotAuthenticatedException;
+	void inviteUser(User userID, Event event);
 
 	/**
-	 * Accepts the invitation for the specified event. Throws NotAuthenticatedException if the currently logged in user wasn't invited for the specified event.
+	 * Accepts the invitation for the specified event.
 	 */
-	void acceptInvitation(Event event) throws NotAuthenticatedException;
+	void acceptInvitation(Event event);
 
 	/**
-	 * Rejects the invitation for the specified event. Throws NotAuthenticatedException if the currently logged in user wasn't invited for the specified event.
+	 * Rejects the invitation for the specified event.
 	 */
-	void rejectInvitation(Event event) throws NotAuthenticatedException;
+	void rejectInvitation(Event event);
 
 	/**
-	 * Sends a location update for the current user. Should be used while skiing in an event. Throws NotAuthenticatedException if no user is currently logged in.
+	 * Sends a location update for the current user. Should be used while skiing in an event.
 	 */
-	void updateLocation(Location location) throws NotAuthenticatedException;
+	void updateLocation(Location location);
 
 	/**
-	 * Registers a location listener for the specified event, the location listener will receive updates for all users in that event. Throws NotAuthenticatedException if the currently logged in user isn't part of the event.
+	 * Registers a location listener for the specified event, the location listener will receive updates for all users in that event.
 	 */
-	void registerLocationListener(LocationListener listener, UUID eventID) throws NotAuthenticatedException;
+	void registerLocationListener(LocationListener listener, UUID eventID);
 
 	/**
 	 * Unregisters the specified location listener
