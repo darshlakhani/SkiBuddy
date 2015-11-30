@@ -15,9 +15,9 @@ public class ServerSingleton {
 	 * Returns the server singleton
 	 */
 	public Server getServerInstance(Context context) {
-		if (server == null){
-			server = new MockServer(context);
-		}
+//		if (server == null){
+//			server = new MockServer(context);
+//		}
 		return server;
 	}
 

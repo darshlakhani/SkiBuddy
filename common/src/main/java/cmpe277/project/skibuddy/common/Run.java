@@ -24,17 +24,17 @@ public interface Run {
 
     void setEnd(DateTime end);
 
-    User getUser();
+    UUID getUserId();
 
-    void setUser(User user);
+    void setUserId(UUID user);
 
-    Event getEvent();
+    UUID getEventId();
 
-    void setEvent(Event event);
+    void setEventId(UUID event);
 
-    int getDistance();
+    double getDistance();
 
-    int getTopSpeed();
+    double getTopSpeed();
 
     Duration getTotalTime();
 }

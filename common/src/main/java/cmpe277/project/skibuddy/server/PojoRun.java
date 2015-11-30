@@ -17,8 +17,8 @@ class PojoRun implements Run {
 	private List<Location> track = new LinkedList<Location>();
 	private DateTime start;
 	private DateTime end;
-	private User user;
-	private Event event;
+	private UUID userId;
+	private UUID eventId;
 
 	@Override
 	public UUID getRunId() {
@@ -35,13 +35,13 @@ class PojoRun implements Run {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		PojoRun run = (PojoRun) o;
+		PojoRun pojoRun = (PojoRun) o;
 
-		if (track != null ? !track.equals(run.track) : run.track != null) return false;
-		if (start != null ? !start.equals(run.start) : run.start != null) return false;
-		if (end != null ? !end.equals(run.end) : run.end != null) return false;
-		if (user != null ? !user.equals(run.user) : run.user != null) return false;
-		return !(event != null ? !event.equals(run.event) : run.event != null);
+		if (track != null ? !track.equals(pojoRun.track) : pojoRun.track != null) return false;
+		if (start != null ? !start.equals(pojoRun.start) : pojoRun.start != null) return false;
+		if (end != null ? !end.equals(pojoRun.end) : pojoRun.end != null) return false;
+		if (userId != null ? !userId.equals(pojoRun.userId) : pojoRun.userId != null) return false;
+		return !(eventId != null ? !eventId.equals(pojoRun.eventId) : pojoRun.eventId != null);
 
 	}
 
@@ -50,8 +50,8 @@ class PojoRun implements Run {
 		int result = track != null ? track.hashCode() : 0;
 		result = 31 * result + (start != null ? start.hashCode() : 0);
 		result = 31 * result + (end != null ? end.hashCode() : 0);
-		result = 31 * result + (user != null ? user.hashCode() : 0);
-		result = 31 * result + (event != null ? event.hashCode() : 0);
+		result = 31 * result + (userId != null ? userId.hashCode() : 0);
+		result = 31 * result + (eventId != null ? eventId.hashCode() : 0);
 		return result;
 	}
 
@@ -81,37 +81,37 @@ class PojoRun implements Run {
 	}
 
 	@Override
-	public User getUser() {
-		return user;
+	public UUID getUserId() {
+		return userId;
 	}
 
 	@Override
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(UUID userId) {
+		this.userId = userId;
 	}
 
 	@Override
-	public Event getEvent() {
-		return event;
+	public UUID getEventId() {
+		return eventId;
 	}
 
 	@Override
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setEventId(UUID eventId) {
+		this.eventId = eventId;
 	}
 
 	@Override
-	public int getDistance() {
-		throw new UnsupportedOperationException();
+	public double getDistance() {
+		return 1423.14;
 	}
 
 	@Override
-	public int getTopSpeed() {
-		throw new UnsupportedOperationException();
+	public double getTopSpeed() {
+		return 52.12;
 	}
 
 	@Override
 	public Duration getTotalTime() {
-		throw new UnsupportedOperationException();
+		return Duration.standardSeconds(512);
 	}
 }
