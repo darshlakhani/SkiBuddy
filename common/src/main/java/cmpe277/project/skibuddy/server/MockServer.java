@@ -3,6 +3,9 @@ package cmpe277.project.skibuddy.server;
 import android.content.Context;
 import android.os.Handler;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+
 import org.joda.time.DateTime;
 
 import java.util.LinkedList;
@@ -25,6 +28,7 @@ public class MockServer implements Server {
 
     public MockServer(Context context){
         this.context = context;
+        Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
     }
 
     @SuppressWarnings("unchecked")
@@ -86,6 +90,26 @@ public class MockServer implements Server {
         };
         randomUser.setTagline(taglines[random.nextInt(taglines.length)]);
         return randomUser;
+    }
+
+    @Override
+    public User authenticateUser(String authentication_token) {
+        return null;
+    }
+
+    @Override
+    public User getUser(UUID userID) {
+        return null;
+    }
+
+    @Override
+    public List<Run> getRuns(UUID eventID) {
+        return null;
+    }
+
+    @Override
+    public List<Run> getUserRuns(UUID userID) {
+        return null;
     }
 
     @Override
@@ -165,13 +189,33 @@ public class MockServer implements Server {
 
     @Override
     public void storeEvent(Event event, final ServerCallback<UUID> callback) {
-        doAfterRandomTimeout(new Runnable() {
+        /*doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
                 callback.postResult(UUID.randomUUID());
                 invokeCallback(callback);
             }
-        });
+        });*/
+        ParseObject testObject = new ParseObject("Event");
+        testObject.put("eventName", "ski2");
+        testObject.saveInBackground();
+
+
+    }
+
+    @Override
+    public List<Event> getEvents() {
+        return null;
+    }
+
+    @Override
+    public List<User> getEventParticipants(UUID eventID) {
+        return null;
+    }
+
+    @Override
+    public UUID storeEvent(Event event) {
+        return null;
     }
 
     @Override

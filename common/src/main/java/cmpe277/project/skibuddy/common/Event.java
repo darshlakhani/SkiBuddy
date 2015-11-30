@@ -1,5 +1,9 @@
 package cmpe277.project.skibuddy.common;
 
+import android.util.Log;
+
+import com.parse.ParseObject;
+
 import org.joda.time.DateTime;
 
 import java.util.LinkedList;
@@ -88,5 +92,14 @@ public class Event {
 
 	public void setEventID(UUID eventID) {
 		this.eventID = eventID;
+	}
+
+	public void setEvent()
+	{
+		ParseObject testObject = new ParseObject("Event");
+		Log.i("Name Tag",this.name);
+		System.out.print(this.name);
+		testObject.put("eventName", this.name);
+		testObject.saveInBackground();
 	}
 }

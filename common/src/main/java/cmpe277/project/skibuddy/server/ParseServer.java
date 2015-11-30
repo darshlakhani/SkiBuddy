@@ -13,7 +13,7 @@ import java.util.UUID;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
-import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+//import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.common.User;
@@ -39,7 +39,7 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public List<Run> getRuns(UUID eventID) throws NotAuthenticatedException {
+    public List<Run> getRuns(UUID eventID)  {
         return null;
     }
 
@@ -49,22 +49,57 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void storeRun(Run run) throws NotAuthenticatedException {
+    public void authenticateUser(String authentication_token, ServerCallback<User> callback) {
 
     }
 
     @Override
-    public List<Event> getEvents() throws NotAuthenticatedException {
+    public void getUser(UUID userID, ServerCallback<User> callback) {
+
+    }
+
+    @Override
+    public void getRuns(UUID eventID, ServerCallback<List<Run>> callback) {
+
+    }
+
+    @Override
+    public void getUserRuns(UUID userID, ServerCallback<List<Run>> callback) {
+
+    }
+
+    @Override
+    public void storeRun(Run run) {
+
+    }
+
+    @Override
+    public void getEvents(ServerCallback<List<Event>> callback) {
+
+    }
+
+    @Override
+    public void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback) {
+
+    }
+
+    @Override
+    public void storeEvent(Event event, ServerCallback<UUID> callback) {
+
+    }
+
+    @Override
+    public List<Event> getEvents()  {
         return null;
     }
 
     @Override
-    public List<User> getEventParticipants(UUID eventID) throws NotAuthenticatedException {
+    public List<User> getEventParticipants(UUID eventID)  {
         return null;
     }
 
     @Override
-    public UUID storeEvent(Event event) throws NotAuthenticatedException {
+    public UUID storeEvent(Event event)  {
         if(event.getEventID() == null)
             event.setEventID(UUID.randomUUID());
 
@@ -79,27 +114,27 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void inviteUser(User userID, Event event) throws NotAuthenticatedException {
+    public void inviteUser(User userID, Event event)  {
 
     }
 
     @Override
-    public void acceptInvitation(Event event) throws NotAuthenticatedException {
+    public void acceptInvitation(Event event) {
 
     }
 
     @Override
-    public void rejectInvitation(Event event) throws NotAuthenticatedException {
+    public void rejectInvitation(Event event)  {
 
     }
 
     @Override
-    public void updateLocation(Location location) throws NotAuthenticatedException {
+    public void updateLocation(Location location)  {
 
     }
 
     @Override
-    public void registerLocationListener(LocationListener listener, UUID eventID) throws NotAuthenticatedException {
+    public void registerLocationListener(LocationListener listener, UUID eventID)  {
 
     }
 
@@ -108,7 +143,7 @@ public class ParseServer implements Server {
 
     }
 }
-=======
+//=======
 //package cmpe277.project.skibuddy.server;
 //
 //import android.content.Context;
@@ -235,4 +270,4 @@ public class ParseServer implements Server {
 //
 //    }
 //}
->>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
+//>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
