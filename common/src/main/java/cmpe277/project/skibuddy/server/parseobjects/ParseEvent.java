@@ -5,23 +5,21 @@ import com.parse.ParseObject;
 
 import org.joda.time.DateTime;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.server.Mapper;
 
 /**
  * Created by eh on 11/29/2015.
  */
 @ParseClassName("Event")
 public class ParseEvent extends ParseObject implements Event {
-    private final String NAME_FIELD = "NAME";
-    private final String DESCRIPTION_FIELD = "DESCRIPTION";
-    private final String STARTDATE_FIELD = "STARTDATE";
-    private final String ENDDATE_FIELD = "ENDDATE";
-    private final String HOSTID_FIELD = "HOSTID";
-    private final String EVENTID_FIELD = "EVENTID";
+    public static final String NAME_FIELD = "NAME";
+    public static final String DESCRIPTION_FIELD = "DESCRIPTION";
+    public static final String STARTDATE_FIELD = "STARTDATE";
+    public static final String ENDDATE_FIELD = "ENDDATE";
+    public static final String HOSTID_FIELD = "HOSTID";
+    public static final String EVENTID_FIELD = "EVENTID";
 
     @Override
     public String getName() {

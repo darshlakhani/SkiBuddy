@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.List;
