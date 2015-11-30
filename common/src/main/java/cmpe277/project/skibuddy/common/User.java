@@ -2,71 +2,38 @@ package cmpe277.project.skibuddy.common;
 
 import org.joda.time.Duration;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class User {
-	private String name;
-	private String tagline;
-	private String profilePictureURL;
-	private UUID id;
-	private Location position;
-	private List<Run> runs = new LinkedList<Run>();
+/**
+ * Created by eh on 11/29/2015.
+ */
+public interface User {
+    String getName();
 
-	public String getName() {
-		return name;
-	}
+    void setName(String name);
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    String getTagline();
 
-	public String getTagline() {
-		return tagline;
-	}
+    void setTagline(String tagline);
 
-	public void setTagline(String tagline) {
-		this.tagline = tagline;
-	}
+    String getProfilePictureURL();
 
-	public String getProfilePictureURL() {
-		return profilePictureURL;
-	}
+    void setProfilePictureURL(String profilePictureURL);
 
-	public void setProfilePictureURL(String profilePictureURL) {
-		this.profilePictureURL = profilePictureURL;
-	}
+    UUID getId();
 
-	public UUID getId() {
-		return id;
-	}
+    void setId(UUID id);
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    Location getPosition();
 
-	public Location getPosition() {
-		return position;
-	}
+    void setPosition(Location position);
 
-	public void setPosition(Location position) {
-		this.position = position;
-	}
+    List<Run> getRuns();
 
-	public List<Run> getRuns() {
-		return runs;
-	}
+    double getTotalDistance();
 
-	public int getTotalDistance() {
-		throw new UnsupportedOperationException();
-	}
+    Duration getTotalTime();
 
-	public Duration getTotalTime() {
-		throw new UnsupportedOperationException();
-	}
-
-	public int getTopSpeed() {
-		throw new UnsupportedOperationException();
-	}
+    double getTopSpeed();
 }
