@@ -1,6 +1,10 @@
-package cmpe277.project.skibuddy.common;
+package cmpe277.project.skibuddy.server;
 
-public class PojoInvitation implements Invitation {
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.Invitation;
+import cmpe277.project.skibuddy.common.User;
+
+class PojoInvitation implements Invitation {
 	private User invitee;
 	private Event event;
 

@@ -1,10 +1,13 @@
-package cmpe277.project.skibuddy.common;
+package cmpe277.project.skibuddy.server;
 
 import org.joda.time.DateTime;
 
 import java.util.UUID;
 
-public class PojoEvent implements Event {
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.User;
+
+class PojoEvent implements Event {
 	private UUID eventID;
 	private String name;
 	private String description;

@@ -1,4 +1,4 @@
-package cmpe277.project.skibuddy.common;
+package cmpe277.project.skibuddy.server;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -6,7 +6,12 @@ import org.joda.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PojoRun implements Run {
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.User;
+
+class PojoRun implements Run {
 	private List<Location> track = new LinkedList<Location>();
 	private DateTime start;
 	private DateTime end;

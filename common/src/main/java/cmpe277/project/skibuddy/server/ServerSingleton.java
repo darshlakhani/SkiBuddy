@@ -5,11 +5,6 @@ import android.content.Context;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Invitation;
 import cmpe277.project.skibuddy.common.Location;
-import cmpe277.project.skibuddy.common.PojoEvent;
-import cmpe277.project.skibuddy.common.PojoInvitation;
-import cmpe277.project.skibuddy.common.PojoLocation;
-import cmpe277.project.skibuddy.common.PojoRun;
-import cmpe277.project.skibuddy.common.PojoUser;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 

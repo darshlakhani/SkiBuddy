@@ -12,11 +12,8 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Location;
-import cmpe277.project.skibuddy.common.PojoEvent;
 import cmpe277.project.skibuddy.common.LocationListener;
-import cmpe277.project.skibuddy.common.PojoRun;
 import cmpe277.project.skibuddy.common.Run;
-import cmpe277.project.skibuddy.common.PojoUser;
 import cmpe277.project.skibuddy.common.User;
 
 /**

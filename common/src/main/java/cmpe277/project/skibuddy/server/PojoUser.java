@@ -1,4 +1,4 @@
-package cmpe277.project.skibuddy.common;
+package cmpe277.project.skibuddy.server;
 
 import org.joda.time.Duration;
 
@@ -6,7 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class PojoUser implements User {
+import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.User;
+
+class PojoUser implements User {
 	private String name;
 	private String tagline;
 	private String profilePictureURL;
