@@ -91,12 +91,16 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void storeEvent(Event event, ServerCallback<UUID> callback) {
-        ParseEvent parseEvent = (ParseEvent)event;
-        parseEvent.saveInBackground();
-
-        callback.postResult(parseEvent.getEventID());
-        invokeCallback(callback);
+    public void storeEvent(Event event, final ServerCallback<UUID> callback) {
+        final ParseEvent parseEvent = (ParseEvent)event;
+        parseEvent.saveInBackground().continueWith(new Continuation<Void, Void>() {
+            @Override
+            public Void then(Task<Void> task) throws Exception {
+                callback.postResult(parseEvent.getEventID());
+                invokeCallback(callback);
+                return null;
+            }
+        });
     }
 
     @Override

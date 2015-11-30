@@ -45,38 +45,22 @@ public class ParseEvent extends ParseObject implements Event {
 
     @Override
     public DateTime getStart() {
-        try {
-            return new Mapper().getMapper().readValue(getString(STARTDATE_FIELD), DateTime.class);
-        } catch (IOException e) {
-            return null;
-        }
+        return new DateTime(getDate(STARTDATE_FIELD));
     }
 
     @Override
     public void setStart(DateTime start) {
-        try {
-            put(STARTDATE_FIELD, new Mapper().getMapper().writeValueAsString(start));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        put(STARTDATE_FIELD, start.toDate());
     }
 
     @Override
     public DateTime getEnd() {
-        try {
-            return new Mapper().getMapper().readValue(getString(ENDDATE_FIELD), DateTime.class);
-        } catch (IOException e) {
-            return null;
-        }
+        return new DateTime(getDate(ENDDATE_FIELD));
     }
 
     @Override
     public void setEnd(DateTime end) {
-        try {
-            put(ENDDATE_FIELD, new Mapper().getMapper().writeValueAsString(end));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        put(ENDDATE_FIELD, end.toDate());
     }
 
     @Override
