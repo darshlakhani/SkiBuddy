@@ -1,5 +1,6 @@
 package cmpe277.project.skibuddy;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Build;
@@ -20,7 +21,7 @@ import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
-public class CreateEvent extends AppCompatActivity {
+public class CreateEvent extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
