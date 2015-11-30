@@ -11,8 +11,10 @@ import java.util.Random;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
@@ -154,14 +156,26 @@ public class MockServer implements Server {
     }
 
     @Override
-    public void getEventParticipants(UUID eventID, final ServerCallback<List<User>> callback) {
+    public void getEventParticipants(UUID eventID, final ServerCallback<List<EventParticipant>> callback) {
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
                 int userCount = random.nextInt(5);
-                List<User> users = new LinkedList<User>();
-                for (int i = 0; i < userCount; i++)
-                    users.add(getRandomUser());
+                List<EventParticipant> users = new LinkedList<>();
+                for (int i = 0; i < userCount; i++) {
+                    EventParticipant toAdd = (EventParticipant)getRandomUser();
+                    if (i == 0){
+                        toAdd.setParticipationStatus(ParticipationStatus.HOST);
+                    } else {
+                        if(random.nextBoolean()){
+                            toAdd.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                        } else {
+                            toAdd.setParticipationStatus(ParticipationStatus.INVITEE);
+                        }
+                    }
+
+                    users.add(toAdd);
+                }
                 callback.postResult(users);
                 invokeCallback(callback);
             }

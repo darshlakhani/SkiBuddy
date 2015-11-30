@@ -3,7 +3,6 @@ package cmpe277.project.skibuddy.server;
 import android.content.Context;
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.Invitation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
@@ -38,7 +37,4 @@ public class ServerSingleton {
 		return new PojoUser();
 	}
 
-	public static Invitation createInvitation(){
-		return new PojoInvitation();
-	}
 }

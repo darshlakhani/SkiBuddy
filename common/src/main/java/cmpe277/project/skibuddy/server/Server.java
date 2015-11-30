@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.Run;
@@ -52,7 +53,7 @@ public interface Server {
 	 * Returns a list of all users that participate in the specified event.
 	 * Returns null if the user isn't involved in the specified event.
 	 */
-	void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback);
+	void getEventParticipants(UUID eventID, ServerCallback<List<EventParticipant>> callback);
 
 	/**
 	 * Creates or updates the specified event on the server.
