@@ -2,9 +2,13 @@ package cmpe277.project.skibuddy.server;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.List;
 import java.util.UUID;
@@ -75,8 +79,21 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void getEvent(UUID eventID, ServerCallback<Event> callback) {
-
+    public void getEvent(UUID eventID, final ServerCallback<Event> callback) {
+        ParseQuery<ParseEvent> query = ParseQuery.getQuery(ParseEvent.class);
+        query.whereEqualTo(ParseEvent.EVENTID_FIELD, eventID.toString());
+        query.findInBackground(new FindCallback<ParseEvent>() {
+            @Override
+            public void done(List<ParseEvent> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(objects.get(0));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
