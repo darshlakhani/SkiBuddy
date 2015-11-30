@@ -29,8 +29,6 @@ public interface User {
 
     void setPosition(Location position);
 
-    List<Run> getRuns();
-
     double getTotalDistance();
 
     Duration getTotalTime();

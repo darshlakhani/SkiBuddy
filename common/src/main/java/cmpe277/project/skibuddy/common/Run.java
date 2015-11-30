@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by eh on 11/29/2015.
@@ -19,17 +20,17 @@ public interface Run {
 
     void setEnd(DateTime end);
 
-    User getUser();
+    UUID getUserId();
 
-    void setUser(User user);
+    void setUserId(UUID user);
 
-    Event getEvent();
+    UUID getEventId();
 
-    void setEvent(Event event);
+    void setEventId(UUID event);
 
-    int getDistance();
+    double getDistance();
 
-    int getTopSpeed();
+    double getTopSpeed();
 
     Duration getTotalTime();
 }

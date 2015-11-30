@@ -14,6 +14,7 @@ import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
@@ -113,7 +114,7 @@ public class MockServer implements Server {
                 Run run1 = new PojoRun();
                 run1.setStart(new DateTime(2015,10,23,19,43));
                 run1.setEnd(new DateTime(2015, 10, 23, 19, 54));
-                run1.setUser(getRandomUser());
+                run1.setUserId(UUID.randomUUID());
                 runs.add(run1);
                 callback.postResult(runs);
                 invokeCallback(callback);
@@ -137,6 +138,23 @@ public class MockServer implements Server {
     }
 
     @Override
+    public void getEvent(UUID eventID, final ServerCallback<Event> callback) {
+        doAfterRandomTimeout(new Runnable() {
+            @Override
+            public void run() {
+                Event someEvent = new PojoEvent();
+                someEvent.setName("Go Skiing");
+                someEvent.setStart(new DateTime(2016, 1, 2, 10, 0, 0));
+                someEvent.setEnd(new DateTime(2016, 1, 2, 19, 0, 0));
+                someEvent.setDescription("Let's go skiing in Tahoe!");
+                someEvent.setHostId(UUID.randomUUID());
+                callback.postResult(someEvent);
+                invokeCallback(callback);
+            }
+        });
+    }
+
+    @Override
     public void getEvents(final ServerCallback<List<Event>> callback) {
         doAfterRandomTimeout(new Runnable() {
             @Override
@@ -146,7 +164,7 @@ public class MockServer implements Server {
                 someEvent.setStart(new DateTime(2016, 1, 2, 10, 0, 0));
                 someEvent.setEnd(new DateTime(2016, 1, 2, 19, 0, 0));
                 someEvent.setDescription("Let's go skiing in Tahoe!");
-                someEvent.setHost(getRandomUser());
+                someEvent.setHostId(UUID.randomUUID());
                 List<Event> events = new LinkedList<Event>();
                 events.add(someEvent);
                 callback.postResult(events);
@@ -221,5 +239,10 @@ public class MockServer implements Server {
     @Override
     public void unregisterLocationListener(LocationListener listener) {
 
+    }
+
+    @Override
+    public User getAuthenticatedUser() throws NotAuthenticatedException {
+        return getRandomUser();
     }
 }

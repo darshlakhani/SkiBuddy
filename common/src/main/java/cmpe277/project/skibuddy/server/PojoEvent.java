@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.User;
 
 class PojoEvent implements Event {
 	private UUID eventID;
@@ -13,22 +12,23 @@ class PojoEvent implements Event {
 	private String description;
 	private DateTime start;
 	private DateTime end;
-	private User host;
+	private UUID hostId;
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		PojoEvent event = (PojoEvent) o;
+		PojoEvent pojoEvent = (PojoEvent) o;
 
-		if (eventID != null ? !eventID.equals(event.eventID) : event.eventID != null) return false;
-		if (name != null ? !name.equals(event.name) : event.name != null) return false;
-		if (description != null ? !description.equals(event.description) : event.description != null)
+		if (eventID != null ? !eventID.equals(pojoEvent.eventID) : pojoEvent.eventID != null)
 			return false;
-		if (start != null ? !start.equals(event.start) : event.start != null) return false;
-		if (end != null ? !end.equals(event.end) : event.end != null) return false;
-		return !(host != null ? !host.equals(event.host) : event.host != null);
+		if (name != null ? !name.equals(pojoEvent.name) : pojoEvent.name != null) return false;
+		if (description != null ? !description.equals(pojoEvent.description) : pojoEvent.description != null)
+			return false;
+		if (start != null ? !start.equals(pojoEvent.start) : pojoEvent.start != null) return false;
+		if (end != null ? !end.equals(pojoEvent.end) : pojoEvent.end != null) return false;
+		return !(hostId != null ? !hostId.equals(pojoEvent.hostId) : pojoEvent.hostId != null);
 
 	}
 
@@ -39,7 +39,7 @@ class PojoEvent implements Event {
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (start != null ? start.hashCode() : 0);
 		result = 31 * result + (end != null ? end.hashCode() : 0);
-		result = 31 * result + (host != null ? host.hashCode() : 0);
+		result = 31 * result + (hostId != null ? hostId.hashCode() : 0);
 		return result;
 	}
 
@@ -84,13 +84,13 @@ class PojoEvent implements Event {
 	}
 
 	@Override
-	public User getHost() {
-		return host;
+	public UUID getHostId() {
+		return hostId;
 	}
 
 	@Override
-	public void setHost(User host) {
-		this.host = host;
+	public void setHostId(UUID hostId) {
+		this.hostId = hostId;
 	}
 
 	@Override
