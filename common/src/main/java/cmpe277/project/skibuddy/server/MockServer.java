@@ -12,8 +12,11 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.PojoEvent;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.PojoRun;
 import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.PojoUser;
 import cmpe277.project.skibuddy.common.User;
 
 /**
@@ -61,7 +64,7 @@ public class MockServer implements Server {
     }
 
     private User getRandomUser(){
-        User randomUser = new User();
+        User randomUser = new PojoUser();
         String[] names = {
                 "John Doe",
                 "Daffy Duck",
@@ -108,7 +111,7 @@ public class MockServer implements Server {
             @Override
             public void run() {
                 List<Run> runs = new LinkedList<Run>();
-                Run run1 = new Run();
+                Run run1 = new PojoRun();
                 run1.setStart(new DateTime(2015,10,23,19,43));
                 run1.setEnd(new DateTime(2015, 10, 23, 19, 54));
                 run1.setUser(getRandomUser());
@@ -139,7 +142,7 @@ public class MockServer implements Server {
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
-                Event someEvent = new Event();
+                Event someEvent = new PojoEvent();
                 someEvent.setName("Go Skiing");
                 someEvent.setStart(new DateTime(2016, 1, 2, 10, 0, 0));
                 someEvent.setEnd(new DateTime(2016, 1, 2, 19, 0, 0));

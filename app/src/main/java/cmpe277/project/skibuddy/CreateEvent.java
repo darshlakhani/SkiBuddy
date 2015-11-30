@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
@@ -50,7 +51,17 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        s.storeEvent(new Event(), new ServerCallback<UUID>() {
+        s.getEvents(new ServerCallback<List<Event>>() {
+            @Override
+            public void handleResult(List<Event> result) {
+
+            }
+        });
+
+        Event newEvent = ServerSingleton.createEvent();
+        newEvent.setName("Some cool event");
+
+        s.storeEvent(newEvent, new ServerCallback<UUID>() {
             @Override
             public void handleResult(UUID result) {
                 if(result == null){
