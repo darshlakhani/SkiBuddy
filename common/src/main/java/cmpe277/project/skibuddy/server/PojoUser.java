@@ -2,12 +2,9 @@ package cmpe277.project.skibuddy.server;
 
 import org.joda.time.Duration;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Location;
-import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
 class PojoUser implements User {
@@ -16,7 +13,6 @@ class PojoUser implements User {
 	private String profilePictureURL;
 	private UUID id;
 	private Location position;
-	private List<Run> runs = new LinkedList<Run>();
 
 	@Override
 	public String getName() {
@@ -66,11 +62,6 @@ class PojoUser implements User {
 	@Override
 	public void setPosition(Location position) {
 		this.position = position;
-	}
-
-	@Override
-	public List<Run> getRuns() {
-		return runs;
 	}
 
 	@Override

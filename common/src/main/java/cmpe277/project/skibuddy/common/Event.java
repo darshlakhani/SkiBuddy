@@ -24,9 +24,9 @@ public interface Event {
 
     void setEnd(DateTime end);
 
-    User getHost();
+    UUID getHostId();
 
-    void setHost(User host);
+    void setHostId(UUID host);
 
     UUID getEventID();
 
