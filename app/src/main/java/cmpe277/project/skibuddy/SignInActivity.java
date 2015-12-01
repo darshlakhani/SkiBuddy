@@ -23,8 +23,12 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.*;
 
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -37,6 +41,7 @@ public class SignInActivity extends AppCompatActivity implements
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
     private ImageView imageView;
+    private TextView tagline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,11 @@ public class SignInActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         mStatusTextView = (TextView) findViewById(R.id.status);
+
+        ///
+        imageView = (ImageView)findViewById(R.id.imageView);
+        tagline = (TextView)findViewById(R.id.tagline);
+        ///
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -75,6 +85,8 @@ public class SignInActivity extends AppCompatActivity implements
                 handleSignInResult(result);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         } else {
             showProgressDialog();
@@ -85,6 +97,8 @@ public class SignInActivity extends AppCompatActivity implements
                     try {
                         handleSignInResult(googleSignInResult);
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -102,11 +116,13 @@ public class SignInActivity extends AppCompatActivity implements
                 handleSignInResult(result);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) throws IOException {
+    private void handleSignInResult(GoogleSignInResult result) throws IOException, JSONException {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
@@ -114,6 +130,16 @@ public class SignInActivity extends AppCompatActivity implements
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
 
             ///
+            //profile picture initialization
+            final int PROFILE_PIC_SIZE = 100;
+            String personPhotoUrl = acct.getPhotoUrl().toString();
+            personPhotoUrl = personPhotoUrl.substring(0,
+                    personPhotoUrl.length() - 2)
+                    + PROFILE_PIC_SIZE;
+
+            new LoadProfileImage(imageView).execute(personPhotoUrl);
+
+            //TODO tagline initialization
 
             ///
 
@@ -175,11 +201,16 @@ public class SignInActivity extends AppCompatActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
+            tagline.setVisibility(View.VISIBLE);
+
         } else {
             mStatusTextView.setText(R.string.signed_out);
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+            imageView.setVisibility(View.INVISIBLE);
+            tagline.setVisibility(View.INVISIBLE);
         }
     }
 

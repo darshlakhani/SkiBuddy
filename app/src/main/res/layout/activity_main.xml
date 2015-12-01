@@ -40,11 +40,12 @@
             android:maxLines="5"
             android:padding="10dp"
             android:scrollbars="vertical"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_weight="0.55" />
 
         <ImageView
-            android:layout_width="218dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:layout_gravity="center_horizontal"
@@ -85,7 +86,7 @@
                 android:layout_weight="1"
                 android:text="@string/sign_out"
                 />
-            
+
         </LinearLayout>
 
     </RelativeLayout>
