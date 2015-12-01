@@ -7,10 +7,11 @@ import java.util.UUID;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.User;
 
-class PojoEvent implements Event {
+public class PojoEvent implements Event {
 	private UUID eventID;
 	private String name;
 	private String description;
+	//private String edate;
 	private DateTime start;
 	private DateTime end;
 	private User host;
@@ -62,6 +63,18 @@ class PojoEvent implements Event {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	/*@Override
+	public String getDate() {
+		return null;
+	}
+
+	@Override
+	public void setDate(String date) {
+
+		this.edate = date;
+
+	}*/
 
 	@Override
 	public DateTime getStart() {
