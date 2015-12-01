@@ -42,7 +42,7 @@
             android:scrollbars="vertical"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:layout_weight="0.55" />
+            android:layout_weight="0.27" />
 
         <ImageView
             android:layout_width="150dp"
