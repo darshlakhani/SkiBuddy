@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 //import cmpe277.project.skibuddy.common.NotAuthenticatedException;
@@ -59,6 +60,11 @@ public class ParseServer implements Server {
     }
 
     @Override
+    public void storeUser(User user) {
+
+    }
+
+    @Override
     public void getRuns(UUID eventID, ServerCallback<List<Run>> callback) {
 
     }
@@ -79,10 +85,15 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback) {
+    public void getEventParticipants(UUID eventID, ServerCallback<List<EventParticipant>> callback) {
 
     }
 
+    /*@Override
+    public void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback) {
+
+    }
+*/
     @Override
     public void storeEvent(Event event, ServerCallback<UUID> callback) {
 

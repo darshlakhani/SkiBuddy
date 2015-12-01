@@ -14,8 +14,10 @@ import java.util.Random;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
@@ -65,7 +67,7 @@ public class MockServer implements Server {
     }
 
     private User getRandomUser(){
-        User randomUser = new User();
+        User randomUser = new PojoUser();
         String[] names = {
                 "John Doe",
                 "Daffy Duck",
@@ -122,12 +124,17 @@ public class MockServer implements Server {
         returnRandomUser(callback);
     }
 
+    @Override
+    public void storeUser(User user) {
+
+    }
+
     private void returnRandomRunList(final ServerCallback<List<Run>> callback){
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
                 List<Run> runs = new LinkedList<Run>();
-                Run run1 = new Run();
+                Run run1 = new PojoRun();
                 run1.setStart(new DateTime(2015,10,23,19,43));
                 run1.setEnd(new DateTime(2015, 10, 23, 19, 54));
                 run1.setUser(getRandomUser());
@@ -158,7 +165,7 @@ public class MockServer implements Server {
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
-                Event someEvent = new Event();
+                Event someEvent = new PojoEvent();
                 someEvent.setName("Go Skiing");
                 someEvent.setStart(new DateTime(2016, 1, 2, 10, 0, 0));
                 someEvent.setEnd(new DateTime(2016, 1, 2, 19, 0, 0));
@@ -173,14 +180,26 @@ public class MockServer implements Server {
     }
 
     @Override
-    public void getEventParticipants(UUID eventID, final ServerCallback<List<User>> callback) {
+    public void getEventParticipants(UUID eventID, final ServerCallback<List<EventParticipant>> callback) {
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
                 int userCount = random.nextInt(5);
-                List<User> users = new LinkedList<User>();
-                for (int i = 0; i < userCount; i++)
-                    users.add(getRandomUser());
+                List<EventParticipant> users = new LinkedList<>();
+                for (int i = 0; i < userCount; i++) {
+                    EventParticipant toAdd = (EventParticipant)getRandomUser();
+                    if (i == 0){
+                        toAdd.setParticipationStatus(ParticipationStatus.HOST);
+                    } else {
+                        if(random.nextBoolean()){
+                            toAdd.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                        } else {
+                            toAdd.setParticipationStatus(ParticipationStatus.INVITEE);
+                        }
+                    }
+
+                    users.add(toAdd);
+                }
                 callback.postResult(users);
                 invokeCallback(callback);
             }
@@ -196,9 +215,12 @@ public class MockServer implements Server {
                 invokeCallback(callback);
             }
         });*/
-        ParseObject testObject = new ParseObject("Event");
-        testObject.put("eventName", "ski2");
-        testObject.saveInBackground();
+        ParseObject eventObject = new ParseObject("Event");
+        eventObject.put("eventName", event.getName());
+        eventObject.put("eventDescription", event.getDescription());
+        eventObject.put("startTime", event.getStart());
+        eventObject.put("endTime", event.getEnd());
+        eventObject.saveInBackground();
 
 
     }

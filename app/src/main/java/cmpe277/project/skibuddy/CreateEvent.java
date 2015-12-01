@@ -14,9 +14,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 //<<<<<<< HEAD
+//<<<<<<< HEAD
 import com.parse.Parse;
 import com.parse.ParseObject;
 //=======
+//=======
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.List;
+//>>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
 import java.util.UUID;
 //>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
 
@@ -24,6 +32,7 @@ import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.ParseServer;
 import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.PojoEvent;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
@@ -72,8 +81,32 @@ public class CreateEvent extends AppCompatActivity {
                         }*/
                 EditText etEventName = (EditText) findViewById(R.id.etEventName);
                 final String eventName = etEventName.getText().toString();
-                    Event event = new Event();
+
+                EditText etEventDesc = (EditText) findViewById(R.id.etEventDescription);
+                String eventDescription = etEventDesc.getText().toString();
+
+
+                EditText etDate = (EditText) findViewById(R.id.etEventDate);
+                String eventDate = etDate.getText().toString();
+
+                EditText etStartTime = (EditText) findViewById(R.id.etEventStartTime);
+                String startTime = etStartTime.getText().toString();
+                    startTime = eventDate + " " + startTime;
+
+                EditText etEndtime = (EditText) findViewById(R.id.etEventEndTime);
+                String endTime = etEndtime.getText().toString();
+                endTime = eventDate + " " + endTime;
+
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm");
+                DateTime sTime = formatter.parseDateTime(startTime);
+
+                DateTime eTime = formatter.parseDateTime(endTime);
+
+                PojoEvent event = new PojoEvent();
                     event.setName(eventName);
+                    event.setDescription(eventDescription);
+                    event.setStart(sTime);
+                    event.setEnd(eTime);
                     ss.storeEvent(event,new ServerCallback<UUID>() {
                         @Override
                         public void handleResult(UUID result) {
@@ -84,13 +117,17 @@ public class CreateEvent extends AppCompatActivity {
                         }
                     });
 
-
-                Toast t = Toast.makeText(self, eventName, Toast.LENGTH_LONG);
+                    String tdsp = endTime +","+ startTime +","+eventDate;
+                Log.i("tag1", endTime);
+                Log.i("tag2", startTime);
+                Log.i("tag3", eventDate);
+                Toast t = Toast.makeText(self, startTime, Toast.LENGTH_LONG);
                         t.show();
                     }
                 });
 
-              /*  ss.storeEvent(new Event(), new ServerCallback<UUID>() {
+//<<<<<<< HEAD
+           /*   ss.storeEvent(event, new ServerCallback<UUID>() {
                     @Override
                     public void handleResult(UUID result) {
                         if (result == null) {
@@ -100,7 +137,26 @@ public class CreateEvent extends AppCompatActivity {
                     }
                 });
 
+/*
+=======
+        s.getEvents(new ServerCallback<List<Event>>() {
+            @Override
+            public void handleResult(List<Event> result) {
 
+            }
+        });
+
+        Event newEvent = ServerSingleton.createEvent();
+        newEvent.setName("Some cool event");
+
+        s.storeEvent(newEvent, new ServerCallback<UUID>() {
+            @Override
+            public void handleResult(UUID result) {
+                if(result == null){
+                    Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+>>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
             }
         });
 */
