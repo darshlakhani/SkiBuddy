@@ -1,6 +1,6 @@
 package cmpe277.project.skibuddy;
 
-<<<<<<< HEAD
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -61,24 +61,5 @@ public class InviteUser extends ListActivity {
 
         return null;
     }
-=======
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 
-/**
- * Created by rnagpal on 11/30/15.
- */
-public class InviteUser extends Activity {
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_user);
-
-        Intent i = getIntent();
-        String myemail = i.getStringExtra("email");
-    }
-
->>>>>>> c17bd8870c8c3a064a164792ea0f99dd63a2cfa2
 }
