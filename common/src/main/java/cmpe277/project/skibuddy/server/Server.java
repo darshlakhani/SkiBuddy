@@ -33,7 +33,7 @@ public interface Server {
 	/**
 	 * Stores a user. Set UUID to 'UUID.randomUUID' to register a new user
 	 */
-	void storeUser(User user);
+	void storeUser(String authentication_token, User user);
 
 	/**
 	 * Returns all the runs associated with the event that is identified with the specified ID.
