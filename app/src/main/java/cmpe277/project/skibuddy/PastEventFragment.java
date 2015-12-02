@@ -71,14 +71,15 @@ public class PastEventFragment extends ListFragment {
                 }
                 setListAdapter(new ParticipantAdapter(getActivity(), PAST_EVENT_LIST));
 
-                getListView().setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
         }
+        });
+
+        getListView().setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
+                        .show();
+            }
         });
     }
 
