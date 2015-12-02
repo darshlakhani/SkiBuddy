@@ -14,26 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-//<<<<<<< HEAD
-//<<<<<<< HEAD
-import com.parse.Parse;
-import com.parse.ParseObject;
-//=======
-//=======
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.List;
-//>>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
 import java.util.UUID;
-//>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
 
-import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.User;
-import cmpe277.project.skibuddy.server.ParseServer;
-import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.PojoEvent;
+import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
@@ -44,24 +32,6 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-//<<<<<<< HEAD
-        /*Server s = new ParseServer(this);
-
-//<<<<<<< HEAD
-      *//*  Parse.initialize(this, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
-
-        ParseObject testObject = new ParseObject("Event");
-        testObject.put("eventName", "ski1");
-        testObject.saveInBackground(); *//*
-//=======
-        try {
-            s.storeEvent(new Event());
-        } catch (Exception e) {
-            Toast t = Toast.makeText(this, "Couldn't save event", Toast.LENGTH_SHORT);
-            t.show();
-//        }*/
-//>>>>>>> 626ea19ae1769d73a9b3b2b961c0f7b89c7ab494
-//=======
         Button createEventButton = (Button) findViewById(R.id.btCreateEventButton);
 
 

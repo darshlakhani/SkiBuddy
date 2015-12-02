@@ -31,6 +31,12 @@ public interface Server {
 	void getUser(UUID userID, ServerCallback<User> callback);
 
 	/**
+	 * Returns a list of users whose names start with the specified string. Returns
+	 * empty list when no users are found.
+	 */
+	void getUsersByName(String nameStartsWith, ServerCallback<List<User>> callback);
+
+	/**
 	 * Stores a user. Set UUID to 'UUID.randomUUID' to register a new user
 	 */
 	void storeUser(String authentication_token, User user);
