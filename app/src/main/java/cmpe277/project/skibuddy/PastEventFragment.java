@@ -18,7 +18,7 @@ import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 import cmpe277.project.skibuddy.server.Server;
-import cmpe277.project.skibuddy.server.MockServer;
+
 
 
 
@@ -49,16 +49,19 @@ public class PastEventFragment extends ListFragment {
         final Server s = new ServerSingleton().getServerInstance(getActivity());
 
         s.getEvents(new ServerCallback<List<Event>>() {
+            List<Event> eventsList = new ArrayList<Event>();
             int index = 0;
             @Override
             public void handleResult(List<Event> result) {
-                Log.d("Event name", result.get(0).getName().toString());
+                eventsList = result;
+                Log.d("Event name", eventsList.get(0).getName().toString());
                 for (int i = 0; i < result.size(); i++) {
                     PAST_EVENT_LIST[index] = result.get(i).getName();
                     index++;
                 }
                 setListAdapter(new ParticipantAdapter(getActivity(), PAST_EVENT_LIST));
-        }
+
+            }
         });
 
         getListView().setOnItemClickListener(new OnItemClickListener() {

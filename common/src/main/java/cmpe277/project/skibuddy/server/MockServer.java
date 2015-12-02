@@ -3,9 +3,6 @@ package cmpe277.project.skibuddy.server;
 import android.content.Context;
 import android.os.Handler;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
-
 import org.joda.time.DateTime;
 
 import java.util.LinkedList;
@@ -30,7 +27,6 @@ public class MockServer implements Server {
 
     public MockServer(Context context){
         this.context = context;
-        Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
     }
 
     @SuppressWarnings("unchecked")
@@ -208,13 +204,14 @@ public class MockServer implements Server {
 
     @Override
     public void storeEvent(Event event, final ServerCallback<UUID> callback) {
-        /*doAfterRandomTimeout(new Runnable() {
+        doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
                 callback.postResult(UUID.randomUUID());
                 invokeCallback(callback);
             }
-        });*/
+
+        });
         ParseObject eventObject = new ParseObject("Event");
         eventObject.put("eventName", event.getName());
         eventObject.put("eventDescription", event.getDescription());
@@ -222,6 +219,9 @@ public class MockServer implements Server {
         eventObject.put("endTime", event.getEnd());
         eventObject.saveInBackground();
 
+
+
+        });
 
     }
 
