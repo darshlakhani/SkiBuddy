@@ -129,6 +129,23 @@ public class MockServer implements Server {
 
     }
 
+    @Override
+    public void getUsersByName(String nameStartsWith, final ServerCallback<List<User>> callback) {
+        doAfterRandomTimeout(new Runnable() {
+            @Override
+            public void run() {
+                int userCount = random.nextInt(5);
+                List<User> users = new LinkedList<>();
+                for (int i = 0; i < userCount; i++) {
+                    users.add(getRandomUser());
+                }
+                callback.postResult(users);
+                Handler mainHandler = new Handler(context.getMainLooper());
+                mainHandler.post(callback);
+            }
+        });
+    }
+
     private void returnRandomRunList(final ServerCallback<List<Run>> callback){
         doAfterRandomTimeout(new Runnable() {
             @Override
