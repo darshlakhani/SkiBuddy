@@ -23,17 +23,20 @@ import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
+import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
 /**
  * Created by eh on 11/29/2015.
  */
 public class ParseServer implements Server {
     final Context context;
+    private ParseUser user;
 
     public ParseServer(Context context){
         this.context = context;
 
         ParseObject.registerSubclass(ParseEvent.class);
+        ParseObject.registerSubclass(ParseUser.class);
 
         Parse.initialize(context, "REO5YRRyjUfaHVNB4dplAfCRxTr8rJndVTxIOP0Q", "0yAKP0rwx6Ske9TUA4gmRXrmCUjXyUcmtFYv9ENq");
     }
@@ -44,23 +47,57 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void authenticateUser(String authentication_token, ServerCallback<User> callback) {
-
+    public void authenticateUser(String authentication_token, final ServerCallback<User> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(ParseUser.AUTHTOKEN_FIELD, authentication_token);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0){
+                        callback.postResult(objects.get(0));
+                        user = objects.get(0);
+                    }
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
     public User getAuthenticatedUser() throws NotAuthenticatedException {
-        return null;
+        if (user == null)
+            throw new NotAuthenticatedException();
+
+        return user;
     }
 
     @Override
-    public void getUser(UUID userID, ServerCallback<User> callback) {
-
+    public void getUser(UUID userID, final ServerCallback<User> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(ParseUser.ID_FIELD, userID.toString());
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(objects.get(0));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public void storeUser(User user) {
-
+    public void storeUser(String authentication_token, User user) {
+        ParseUser parseUser = (ParseUser)user;
+        parseUser.setAuthToken(authentication_token);
+        this.user = parseUser;
+        parseUser.saveInBackground();
     }
 
     @Override

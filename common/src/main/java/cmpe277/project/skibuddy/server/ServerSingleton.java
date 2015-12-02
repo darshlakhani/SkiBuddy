@@ -9,6 +9,7 @@ import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
+import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
 public class ServerSingleton {
 
@@ -39,7 +40,9 @@ public class ServerSingleton {
 	}
 
 	public static User createUser(){
-		return new PojoParticipant();
+		ParseUser parseUser = new ParseUser();
+		parseUser.setId(UUID.randomUUID());
+		return parseUser;
 	}
 
 }
