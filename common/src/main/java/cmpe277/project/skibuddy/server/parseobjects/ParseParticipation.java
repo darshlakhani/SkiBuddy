@@ -13,6 +13,8 @@ import cmpe277.project.skibuddy.common.ParticipationStatus;
 @ParseClassName("Participation")
 public class ParseParticipation extends ParseObject {
     public static final String EVENT_FIELD = "EVENT";
+    public static final String EVENTID_FIELD = "EVENT_ID";
+    public static final String USERID_FIELD = "USER_ID";
     public static final String USER_FIELD = "USER";
     public static final String PARTICIPATION_FIELD = "PARTICIPATION";
 
@@ -22,6 +24,7 @@ public class ParseParticipation extends ParseObject {
 
     public void setEvent(ParseEvent event){
         put(EVENT_FIELD, event);
+        put(EVENTID_FIELD, event.getEventID().toString());
     }
 
     public ParseUser getUser(){
@@ -30,6 +33,7 @@ public class ParseParticipation extends ParseObject {
 
     public void setUser(ParseUser user){
         put(USER_FIELD, user);
+        put(USERID_FIELD, user.getId().toString());
     }
 
     public ParticipationStatus getParticipationStatus(){

@@ -6,18 +6,15 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
-import cmpe277.project.skibuddy.common.User;
-import cmpe277.project.skibuddy.common.Event;
 
 public class PojoEvent implements EventRelation {
-	private UUID hostId;
 	private UUID eventID;
 	private String name;
 	private String description;
 	//private String edate;
 	private DateTime start;
 	private DateTime end;
-	private User host;
+	private UUID hostId;
 	private ParticipationStatus participationStatus;
 
 	@Override

@@ -10,6 +10,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ import bolts.Continuation;
 import bolts.Task;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
@@ -24,6 +27,7 @@ import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
+import cmpe277.project.skibuddy.server.parseobjects.ParseEventParticipant;
 import cmpe277.project.skibuddy.server.parseobjects.ParseParticipation;
 import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
@@ -137,13 +141,25 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void getEvents(ServerCallback<List<Event>> callback) {
+    public void getEvents(ServerCallback<List<EventRelation>> callback) {
 
     }
 
     @Override
-    public void getEventParticipants(UUID eventID, ServerCallback<List<EventParticipant>> callback) {
-
+    public void getEventParticipants(UUID eventID, final ServerCallback<List<EventParticipant>> callback) {
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, eventID.toString());
+        query.include(ParseParticipation.EVENT_FIELD);
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                List<EventParticipant> result = new ArrayList<>(objects.size());
+                for (ParseParticipation participation : objects)
+                    result.add(new ParseEventParticipant(participation));
+                callback.postResult(result);
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
