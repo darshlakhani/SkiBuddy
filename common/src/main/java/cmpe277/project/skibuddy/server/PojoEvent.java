@@ -7,7 +7,7 @@ import java.util.UUID;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.User;
 
-public class PojoEvent implements Event {
+class PojoEvent implements Event {
 	private UUID eventID;
 	private String name;
 	private String description;
