@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.Run;
@@ -55,7 +56,7 @@ public interface Server {
 	 * Returns all events that the current user is involved with (either as a participant, host, or invitee).
 	 * If unauthorized, or unsuccessful, returns null.
 	 */
-	void getEvents(ServerCallback<List<Event>> callback);
+	void getEvents(ServerCallback<List<EventRelation>> callback);
 
 	/**
 	 * Returns a list of all users that participate in the specified event.
