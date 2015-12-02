@@ -4,12 +4,21 @@ import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
 public interface Server {
+
+	User authenticateUser(String authentication_token);
+
+	User getUser(UUID userID);
+
+	List<Run> getRuns(UUID eventID);
+
+	List<Run> getUserRuns(UUID userID);
 
 	/**
 	 * Returns the user object of the user that is logging in (if successful). If unsuccessful returns null.
@@ -20,6 +29,11 @@ public interface Server {
 	 * Returns the requested user. If unsuccessful returns null.
 	 */
 	void getUser(UUID userID, ServerCallback<User> callback);
+
+	/**
+	 * Stores a user. Set UUID to 'UUID.randomUUID' to register a new user
+	 */
+	void storeUser(String authentication_token, User user);
 
 	/**
 	 * Returns all the runs associated with the event that is identified with the specified ID.
@@ -47,7 +61,7 @@ public interface Server {
 	 * Returns a list of all users that participate in the specified event.
 	 * Returns null if the user isn't involved in the specified event.
 	 */
-	void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback);
+	void getEventParticipants(UUID eventID, ServerCallback<List<EventParticipant>> callback);
 
 	/**
 	 * Creates or updates the specified event on the server.
@@ -55,6 +69,12 @@ public interface Server {
 	 * Returns null if the user can't update the specified event, UUID after successfully creating/updating the event
 	 */
 	void storeEvent(Event event, ServerCallback<UUID> callback);
+
+	List<Event> getEvents();
+
+	List<User> getEventParticipants(UUID eventID);
+
+	UUID storeEvent(Event event);
 
 	/**
 	 * Invites the specified user to the specified events. Silently ignores the call if that user is already invited or participating in the event.

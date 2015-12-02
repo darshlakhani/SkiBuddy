@@ -1,68 +1,47 @@
 package cmpe277.project.skibuddy.common;
 
+import android.util.Log;
+
+import com.parse.ParseObject;
+
 import org.joda.time.DateTime;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
-public class Event {
-	private UUID eventID;
-	private String name;
-	private String description;
-	private DateTime start;
-	private DateTime end;
-	private User host;
+/**
+ * Created by eh on 11/29/2015.
+ */
+public interface Event {
+	String getName();
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+	void setName(String name);
 
-		Event event = (Event) o;
+	String getDescription();
 
-		if (eventID != null ? !eventID.equals(event.eventID) : event.eventID != null) return false;
-		if (name != null ? !name.equals(event.name) : event.name != null) return false;
-		if (description != null ? !description.equals(event.description) : event.description != null)
-			return false;
-		if (start != null ? !start.equals(event.start) : event.start != null) return false;
-		if (end != null ? !end.equals(event.end) : event.end != null) return false;
-		return !(host != null ? !host.equals(event.host) : event.host != null);
+	void setDescription(String description);
 
-	}
+	/*String getDate();
 
-	@Override
-	public int hashCode() {
-		int result = eventID != null ? eventID.hashCode() : 0;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (description != null ? description.hashCode() : 0);
-		result = 31 * result + (start != null ? start.hashCode() : 0);
-		result = 31 * result + (end != null ? end.hashCode() : 0);
-		result = 31 * result + (host != null ? host.hashCode() : 0);
-		return result;
-	}
+	void setDate(String date);
+*/
+	DateTime getStart();
 
-	public String getName() {
-		return name;
-	}
+	void setStart(DateTime start);
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	DateTime getEnd();
 
-	public String getDescription() {
-		return description;
-	}
+	void setEnd(DateTime end);
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	User getHost();
 
-	public DateTime getStart() {
-		return start;
-	}
+	void setHost(User host);
 
-	public void setStart(DateTime start) {
+	UUID getEventID();
+
+	void setEventID(UUID eventID);
+}
+	//<<<<<<< HEAD
+	/*public void setStart(DateTime start) {
 		this.start = start;
 	}
 
@@ -89,4 +68,18 @@ public class Event {
 	public void setEventID(UUID eventID) {
 		this.eventID = eventID;
 	}
+
+	public void setEvent()
+	{
+		ParseObject testObject = new ParseObject("Event");
+		Log.i("Name Tag",this.name);
+		System.out.print(this.name);
+		testObject.put("eventName", this.name);
+		testObject.saveInBackground();
+	}
 }
+//=======
+    void setEventID(UUID eventID);
+}
+//>>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
+*/
