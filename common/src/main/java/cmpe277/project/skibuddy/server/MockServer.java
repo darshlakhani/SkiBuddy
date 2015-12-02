@@ -215,12 +215,12 @@ public class MockServer implements Server {
                 invokeCallback(callback);
             }
         });*/
-        ParseObject eventObject = new ParseObject("Event");
+        /*ParseObject eventObject = new ParseObject("Event");
         eventObject.put("eventName", event.getName());
         eventObject.put("eventDescription", event.getDescription());
         eventObject.put("startTime", event.getStart());
         eventObject.put("endTime", event.getEnd());
-        eventObject.saveInBackground();
+        eventObject.saveInBackground();*/
 
 
     }

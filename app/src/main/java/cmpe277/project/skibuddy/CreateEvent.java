@@ -2,6 +2,7 @@ package cmpe277.project.skibuddy;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,7 @@ import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class CreateEvent extends AppCompatActivity {
-
+    public final static String EXTRA_MESSAGE = "cmpe277.project.skibuddy";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class CreateEvent extends AppCompatActivity {
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 /*ss.authenticateUser("abc", new ServerCallback<User>() {
                     @Override
                     public void handleResult(User result) {
@@ -96,7 +98,7 @@ public class CreateEvent extends AppCompatActivity {
                 EditText etEndtime = (EditText) findViewById(R.id.etEventEndTime);
                 String endTime = etEndtime.getText().toString();
                 endTime = eventDate + " " + endTime;
-
+/*
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm");
                 DateTime sTime = formatter.parseDateTime(startTime);
 
@@ -106,8 +108,8 @@ public class CreateEvent extends AppCompatActivity {
                     event.setName(eventName);
                     event.setDescription(eventDescription);
                     event.setStart(sTime);
-                    event.setEnd(eTime);
-                    ss.storeEvent(event,new ServerCallback<UUID>() {
+                    event.setEnd(eTime);*/
+                   /* ss.storeEvent(event, new ServerCallback<UUID>() {
                         @Override
                         public void handleResult(UUID result) {
                             if (result == null) {
@@ -115,7 +117,7 @@ public class CreateEvent extends AppCompatActivity {
                                 t.show();
                             }
                         }
-                    });
+                    });*/
 
                     String tdsp = endTime +","+ startTime +","+eventDate;
                 Log.i("tag1", endTime);
@@ -123,7 +125,15 @@ public class CreateEvent extends AppCompatActivity {
                 Log.i("tag3", eventDate);
                 Toast t = Toast.makeText(self, startTime, Toast.LENGTH_LONG);
                         t.show();
-                    }
+
+                Intent intent = new Intent(getApplicationContext(), InviteUser.class);
+                startActivity(intent);
+
+
+            }
+
+
+
                 });
 
 //<<<<<<< HEAD
