@@ -5,9 +5,12 @@ import org.joda.time.DateTime;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.User;
 
-public class PojoEvent implements Event {
+public class PojoEvent implements EventRelation {
 	private UUID eventID;
 	private String name;
 	private String description;
@@ -15,6 +18,17 @@ public class PojoEvent implements Event {
 	private DateTime start;
 	private DateTime end;
 	private User host;
+	private ParticipationStatus participationStatus;
+
+	@Override
+	public ParticipationStatus getParticipationStatus() {
+		return participationStatus;
+	}
+
+	@Override
+	public void setParticipationStatus(ParticipationStatus participationStatus) {
+		this.participationStatus = participationStatus;
+	}
 
 	@Override
 	public boolean equals(Object o) {
