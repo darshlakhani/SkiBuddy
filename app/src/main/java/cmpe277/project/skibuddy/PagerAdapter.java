@@ -3,9 +3,12 @@ package cmpe277.project.skibuddy;
 /**
  * Created by akankshanagpal on 12/1/15.
  */
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
