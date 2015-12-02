@@ -91,26 +91,6 @@ public class MockServer implements Server {
     }
 
     @Override
-    public User authenticateUser(String authentication_token) {
-        return null;
-    }
-
-    @Override
-    public User getUser(UUID userID) {
-        return null;
-    }
-
-    @Override
-    public List<Run> getRuns(UUID eventID) {
-        return null;
-    }
-
-    @Override
-    public List<Run> getUserRuns(UUID userID) {
-        return null;
-    }
-
-    @Override
     public void authenticateUser(String authentication_token, ServerCallback<User> callback) {
         returnRandomUser(callback);
     }
@@ -228,21 +208,6 @@ public class MockServer implements Server {
                 invokeCallback(callback);
             }
         });
-    }
-
-    @Override
-    public List<Event> getEvents() {
-        return null;
-    }
-
-    @Override
-    public List<User> getEventParticipants(UUID eventID) {
-        return null;
-    }
-
-    @Override
-    public UUID storeEvent(Event event) {
-        return null;
     }
 
     @Override
