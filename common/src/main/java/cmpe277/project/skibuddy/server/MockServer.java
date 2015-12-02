@@ -67,7 +67,7 @@ public class MockServer implements Server {
     }
 
     private User getRandomUser(){
-        User randomUser = new PojoUser();
+        User randomUser = new PojoParticipant();
         String[] names = {
                 "John Doe",
                 "Daffy Duck",
