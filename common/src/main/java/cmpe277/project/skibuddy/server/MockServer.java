@@ -125,7 +125,7 @@ public class MockServer implements Server {
     }
 
     @Override
-    public void storeUser(User user) {
+    public void storeUser(String authToken, User user) {
 
     }
 
