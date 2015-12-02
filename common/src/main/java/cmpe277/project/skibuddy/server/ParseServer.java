@@ -20,9 +20,11 @@ import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
+import cmpe277.project.skibuddy.server.parseobjects.ParseParticipation;
 import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
 /**
@@ -37,6 +39,7 @@ public class ParseServer implements Server {
 
         ParseObject.registerSubclass(ParseEvent.class);
         ParseObject.registerSubclass(ParseUser.class);
+        ParseObject.registerSubclass(ParseParticipation.class);
 
         Parse.initialize(context, "REO5YRRyjUfaHVNB4dplAfCRxTr8rJndVTxIOP0Q", "0yAKP0rwx6Ske9TUA4gmRXrmCUjXyUcmtFYv9ENq");
     }
@@ -149,6 +152,11 @@ public class ParseServer implements Server {
         parseEvent.saveInBackground().continueWith(new Continuation<Void, Void>() {
             @Override
             public Void then(Task<Void> task) throws Exception {
+                ParseParticipation hostRelationship = new ParseParticipation();
+                hostRelationship.setUser(user);
+                hostRelationship.setEvent(parseEvent);
+                hostRelationship.setParticipationStatus(ParticipationStatus.HOST);
+                hostRelationship.saveInBackground();
                 callback.postResult(parseEvent.getEventID());
                 invokeCallback(callback);
                 return null;
