@@ -25,9 +25,9 @@ public interface User {
 
     void setId(UUID id);
 
-    Location getPosition();
+    SkiBuddyLocation getPosition();
 
-    void setPosition(Location position);
+    void setPosition(SkiBuddyLocation position);
 
     double getTotalDistance();
 

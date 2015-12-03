@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
 public class PojoRun implements Run {
 	UUID runId;
-	private LinkedList<Location> track = new LinkedList<Location>();
+	private LinkedList<SkiBuddyLocation> track = new LinkedList<SkiBuddyLocation>();
 	private DateTime start;
 	private DateTime end;
 	private UUID userId;
@@ -35,7 +35,7 @@ public class PojoRun implements Run {
 	/**
 	 * For existing runs
 	 */
-	public PojoRun(List<Location> track){
+	public PojoRun(List<SkiBuddyLocation> track){
 		this.track = new LinkedList<>(track);
 	}
 
@@ -75,14 +75,14 @@ public class PojoRun implements Run {
 	}
 
 	@Override
-	public List<Location> getTrack() {
+	public List<SkiBuddyLocation> getTrack() {
 		return track;
 	}
 
 	@Override
-	public void extendTrack(Location newLocation) {
+	public void extendTrack(SkiBuddyLocation newLocation) {
 		// Get previous location to be able to establish distance and speed
-		Location previousLocation = null;
+		SkiBuddyLocation previousLocation = null;
 		if (track.size() > 0)
 			previousLocation = track.getLast();
 
@@ -111,7 +111,7 @@ public class PojoRun implements Run {
 	/**
 	 * Distance in meters between locations A and B
 	 */
-	private static double distance(Location a, Location b){
+	private static double distance(SkiBuddyLocation a, SkiBuddyLocation b){
 		return Haversine.distance(a.getLatitude(), a.getLongitude(), b.getLatitude(), b.getLongitude());
 	}
 

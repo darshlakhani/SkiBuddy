@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
@@ -31,7 +31,7 @@ public class ServerSingleton {
 		return toReturn;
 	}
 
-	public static Location createLocation(){
+	public static SkiBuddyLocation createLocation(){
 		return new PojoLocation();
 	}
 

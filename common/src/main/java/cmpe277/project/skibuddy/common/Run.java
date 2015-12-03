@@ -14,9 +14,9 @@ public interface Run {
 
     void setRunId(UUID runId);
 
-    List<Location> getTrack();
+    List<SkiBuddyLocation> getTrack();
 
-    void extendTrack(Location location);
+    void extendTrack(SkiBuddyLocation location);
 
     DateTime getStart();
 
