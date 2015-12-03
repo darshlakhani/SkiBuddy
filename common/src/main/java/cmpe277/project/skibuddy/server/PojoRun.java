@@ -5,6 +5,7 @@ import org.joda.time.Duration;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.Location;
@@ -12,11 +13,22 @@ import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
 class PojoRun implements Run {
+	UUID runId;
 	private List<Location> track = new LinkedList<Location>();
 	private DateTime start;
 	private DateTime end;
 	private User user;
 	private Event event;
+
+	@Override
+	public UUID getRunId() {
+		return runId;
+	}
+
+	@Override
+	public void setRunId(UUID runId) {
+		this.runId = runId;
+	}
 
 	@Override
 	public boolean equals(Object o) {
