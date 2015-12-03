@@ -4,11 +4,16 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by eh on 11/29/2015.
  */
 public interface Run {
+    UUID getRunId();
+
+    void setRunId(UUID runId);
+
     List<Location> getTrack();
 
     DateTime getStart();
