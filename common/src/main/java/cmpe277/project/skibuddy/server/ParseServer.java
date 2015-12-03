@@ -181,18 +181,46 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void inviteUser(User userID, Event event) {
-
+    public void inviteUser(User user, Event event) {
+        ParseParticipation participation = new ParseParticipation();
+        participation.setUser((ParseUser)user);
+        participation.setEvent((ParseEvent) event);
+        participation.setParticipationStatus(ParticipationStatus.INVITEE);
+        participation.saveInBackground();
     }
 
     @Override
     public void acceptInvitation(Event event) {
-
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, event.getEventID().toString());
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                if(e == null && objects.size() == 1){
+                    ParseParticipation invitationToAccept = objects.get(0);
+                    invitationToAccept.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                    invitationToAccept.saveInBackground();
+                }
+            }
+        });
     }
 
     @Override
     public void rejectInvitation(Event event) {
-
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, event.getEventID().toString());
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                if(e == null && objects.size() == 1){
+                    ParseParticipation invitationToAccept = objects.get(0);
+                    invitationToAccept.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                    invitationToAccept.deleteInBackground();
+                }
+            }
+        });
     }
 
     @Override
