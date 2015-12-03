@@ -14,11 +14,30 @@ import cmpe277.project.skibuddy.common.User;
 
 class PojoRun implements Run {
 	UUID runId;
-	private List<Location> track = new LinkedList<Location>();
+	private LinkedList<Location> track = new LinkedList<Location>();
 	private DateTime start;
 	private DateTime end;
 	private UUID userId;
 	private UUID eventId;
+	private DateTime lastLocationUpdate;
+	private double totalDistance = 0.0;
+	private double topSpeed;
+
+	private final double METERS_PER_SECOND_TO_KM_PER_HR = 3.6;
+
+	/**
+	 * For new runs
+	 */
+	public PojoRun(){
+
+	}
+
+	/**
+	 * For existing runs
+	 */
+	public PojoRun(List<Location> track){
+		this.track = new LinkedList<>(track);
+	}
 
 	@Override
 	public UUID getRunId() {
@@ -58,6 +77,37 @@ class PojoRun implements Run {
 	@Override
 	public List<Location> getTrack() {
 		return track;
+	}
+
+	@Override
+	public void extendTrack(Location newLocation) {
+		// Get previous location to be able to establish distance and speed
+		Location previousLocation = track.getLast();
+
+		// Add our new location to the list
+		track.add(newLocation);
+
+		// Calculate how far we traveled since our last update
+		double distance_traveled = distance(previousLocation, newLocation);
+		totalDistance += distance_traveled;
+
+		// If we also had a previous time, calculate our speed to see if we have a new top speed
+		DateTime now = DateTime.now();
+		if (lastLocationUpdate != null) {
+			double seconds = new Duration(lastLocationUpdate, now).getMillis() / 1000;
+			double speed = (distance_traveled / seconds) * METERS_PER_SECOND_TO_KM_PER_HR;
+			if (speed > topSpeed) topSpeed = speed;
+		}
+
+		// Store the current time so we can calculate speed later
+		lastLocationUpdate = now;
+	}
+
+	/**
+	 * Distance in meters between locations A and B
+	 */
+	private static double distance(Location a, Location b){
+		return Haversine.distance(a.getLatitude(), a.getLongitude(), b.getLatitude(), b.getLongitude());
 	}
 
 	@Override
@@ -102,16 +152,21 @@ class PojoRun implements Run {
 
 	@Override
 	public double getDistance() {
-		return 1423.14;
+		return totalDistance;
 	}
 
 	@Override
 	public double getTopSpeed() {
-		return 52.12;
+		return topSpeed;
 	}
 
 	@Override
 	public Duration getTotalTime() {
-		return Duration.standardSeconds(512);
+		if (start == null)
+			return Duration.ZERO;
+		else if (end == null)
+			return new Duration(start, DateTime.now());
+		else
+			return new Duration(start, end);
 	}
 }

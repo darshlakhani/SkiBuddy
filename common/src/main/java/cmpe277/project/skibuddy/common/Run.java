@@ -16,6 +16,8 @@ public interface Run {
 
     List<Location> getTrack();
 
+    void extendTrack(Location location);
+
     DateTime getStart();
 
     void setStart(DateTime start);
