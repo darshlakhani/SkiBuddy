@@ -37,3 +37,7 @@ dependencies {
     compile 'com.parse:parse-android:1.+'
     compile project(':common')
 }
+dependencies {
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    compile 'com.android.support:appcompat-v7:23.+'
+}
