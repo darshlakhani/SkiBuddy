@@ -6,9 +6,9 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:layout_marginLeft="5px"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="20px"
         android:layout_marginTop="5px"
         android:src="@drawable/invite" >
@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@+id/label"
+        android:layout_marginLeft="15dp"
         android:textSize="30px" >
     </TextView>
 
@@ -30,5 +31,7 @@
         android:text="Status"
         android:textSize="30px" >
     </TextView>
-
 </LinearLayout>
+
+
+

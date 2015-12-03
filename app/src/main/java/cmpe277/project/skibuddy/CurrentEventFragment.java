@@ -1,6 +1,8 @@
 package cmpe277.project.skibuddy;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
@@ -92,18 +95,64 @@ public class CurrentEventFragment extends ListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                         .show();
-                Intent i = new Intent(getActivity(), EventManagement.class);
                 String eventName = CURRENT_EVENT_LIST[position];
-                EventRelation erObj = erList.get(position);
-                HashMap<String, String> mp = new HashMap();
+                final EventRelation erObj = erList.get(position);
+                final HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());
                 mp.put("desc", erObj.getDescription());
                 mp.put("startDate", erObj.getStart().toString());
                 mp.put("endDate", erObj.getEnd().toString());
                 Log.d("end date", erObj.getEnd().toString());
 
-                i.putExtra("eventMap", mp);
-                startActivity(i);
+                Object status = erObj.getParticipationStatus();
+                String pStatus = new String();
+
+                if(status == ParticipationStatus.HOST)
+                {
+                    pStatus = "host";
+                }
+
+                if(status == ParticipationStatus.INVITEE)
+                {
+                    pStatus = "invite";
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+
+                    // set title
+                    alertDialogBuilder.setTitle("Confirm Invitation to Event");
+                    alertDialogBuilder
+                            .setMessage("Click yes to confirm!")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // if this button is clicked, close
+                                    // current activity
+                                    Log.d("Reply","Accept Invite");
+                                    Intent i = new Intent(getActivity(), EventManagement.class);
+                                    i.putExtra("eventMap", mp);
+                                    startActivity(i);
+                                    s.acceptInvitation(erObj);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Log.d("Reply", "reject Invite");
+                                    s.rejectInvitation(erObj);
+                                }
+                            });
+
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
+                }
+                else {
+
+                    Intent i = new Intent(getActivity(), EventManagement.class);
+                    i.putExtra("eventMap", mp);
+                    startActivity(i);
+                }
             }
         });
     }

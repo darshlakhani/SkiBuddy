@@ -13,12 +13,13 @@ import android.widget.Toast;
 import android.content.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-
+import android.app.AlertDialog;
 import java.io.File;
 import java.util.*;
 import android.util.Log;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 import cmpe277.project.skibuddy.server.Server;
@@ -101,6 +102,46 @@ public class PastEventFragment extends ListFragment {
                 Intent i = new Intent(getActivity(), EventManagement.class);
                 String eventName = PAST_EVENT_LIST[position];
                 EventRelation erObj = erList.get(position);
+
+                Object status = erObj.getParticipationStatus();
+                String pStatus = new String();
+
+                if(status == ParticipationStatus.HOST)
+                {
+                    pStatus = "host";
+                }
+
+                if(status == ParticipationStatus.INVITEE)
+                {
+                    pStatus = "invite";
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+
+                    // set title
+                    alertDialogBuilder.setTitle("Confirm Invitation to Event");
+                    alertDialogBuilder
+                            .setMessage("Click yes to confirm!")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // if this button is clicked, close
+                                    // current activity
+                                    Log.d("Reply","Accept Invite");
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Log.d("Reply", "reject Invite");
+                                }
+                            });
+
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
+                }
+
                 HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());
                 mp.put("desc", erObj.getDescription());
