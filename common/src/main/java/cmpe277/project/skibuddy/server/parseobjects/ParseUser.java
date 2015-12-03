@@ -20,6 +20,9 @@ public class ParseUser extends ParseObject implements User {
     public static final String PROFILEPIC_FIELD = "PROFILE_PIC";
     public static final String ID_FIELD = "USERID";
     public static final String AUTHTOKEN_FIELD = "AUTHTOKEN";
+    public static final String TOTALDISTANCE_FIELD = "TOTALDISTANCE";
+    public static final String TOTALTIME_FIELD = "TOTALTIME";
+    public static final String TOPSPEED_FIELD = "TOPSPEED";
 
     @Override
     public String getName() {
@@ -71,19 +74,31 @@ public class ParseUser extends ParseObject implements User {
 
     }
 
+    public void incrementTotalDistance(double distance){
+        increment(TOTALDISTANCE_FIELD, distance);
+    }
+
     @Override
     public double getTotalDistance() {
-        return 0;
+        return getDouble(TOTALDISTANCE_FIELD);
+    }
+
+    public void incrementTotalTime(Duration totalTime){
+        increment(TOTALTIME_FIELD, totalTime.getMillis());
     }
 
     @Override
     public Duration getTotalTime() {
-        return null;
+        return new Duration(getLong(TOTALTIME_FIELD));
+    }
+
+    public void setTopSpeed(double topSpeed){
+        put(TOPSPEED_FIELD, topSpeed);
     }
 
     @Override
     public double getTopSpeed() {
-        return 0;
+        return getDouble(TOPSPEED_FIELD);
     }
 
     public void getAuthToken(){

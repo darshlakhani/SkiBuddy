@@ -12,7 +12,7 @@ import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
-class PojoRun implements Run {
+public class PojoRun implements Run {
 	UUID runId;
 	private LinkedList<Location> track = new LinkedList<Location>();
 	private DateTime start;
@@ -29,7 +29,7 @@ class PojoRun implements Run {
 	 * For new runs
 	 */
 	public PojoRun(){
-
+		runId = UUID.randomUUID();
 	}
 
 	/**
@@ -82,21 +82,26 @@ class PojoRun implements Run {
 	@Override
 	public void extendTrack(Location newLocation) {
 		// Get previous location to be able to establish distance and speed
-		Location previousLocation = track.getLast();
+		Location previousLocation = null;
+		if (track.size() > 0)
+			previousLocation = track.getLast();
 
 		// Add our new location to the list
 		track.add(newLocation);
 
-		// Calculate how far we traveled since our last update
-		double distance_traveled = distance(previousLocation, newLocation);
-		totalDistance += distance_traveled;
-
-		// If we also had a previous time, calculate our speed to see if we have a new top speed
 		DateTime now = DateTime.now();
-		if (lastLocationUpdate != null) {
-			double seconds = new Duration(lastLocationUpdate, now).getMillis() / 1000;
-			double speed = (distance_traveled / seconds) * METERS_PER_SECOND_TO_KM_PER_HR;
-			if (speed > topSpeed) topSpeed = speed;
+
+		// Calculate how far we traveled since our last update, if we had a previous location
+		if (previousLocation != null) {
+			double distance_traveled = distance(previousLocation, newLocation);
+			totalDistance += distance_traveled;
+
+			// If we also had a previous time, calculate our speed to see if we have a new top speed
+			if (lastLocationUpdate != null) {
+				double seconds = new Duration(lastLocationUpdate, now).getMillis() / 1000;
+				double speed = (distance_traveled / seconds) * METERS_PER_SECOND_TO_KM_PER_HR;
+				if (speed > topSpeed) topSpeed = speed;
+			}
 		}
 
 		// Store the current time so we can calculate speed later
@@ -148,6 +153,14 @@ class PojoRun implements Run {
 	@Override
 	public void setEventId(UUID eventId) {
 		this.eventId = eventId;
+	}
+
+	public void setDistance(double distance){
+		totalDistance = distance;
+	}
+
+	public void setTopSpeed(double speed){
+		topSpeed = speed;
 	}
 
 	@Override

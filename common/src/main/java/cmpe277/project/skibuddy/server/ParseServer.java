@@ -9,11 +9,15 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.xml.datatype.Duration;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -30,6 +34,7 @@ import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEventParticipant;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEventRelation;
 import cmpe277.project.skibuddy.server.parseobjects.ParseParticipation;
+import cmpe277.project.skibuddy.server.parseobjects.ParseRun;
 import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
 /**
@@ -45,6 +50,7 @@ public class ParseServer implements Server {
         ParseObject.registerSubclass(ParseEvent.class);
         ParseObject.registerSubclass(ParseUser.class);
         ParseObject.registerSubclass(ParseParticipation.class);
+        ParseObject.registerSubclass(ParseRun.class);
 
         Parse.initialize(context, "REO5YRRyjUfaHVNB4dplAfCRxTr8rJndVTxIOP0Q", "0yAKP0rwx6Ske9TUA4gmRXrmCUjXyUcmtFYv9ENq");
     }
@@ -61,8 +67,8 @@ public class ParseServer implements Server {
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                if(e == null){
-                    if (objects.size() > 0){
+                if (e == null) {
+                    if (objects.size() > 0) {
                         callback.postResult(objects.get(0));
                         user = objects.get(0);
                     }
@@ -101,6 +107,24 @@ public class ParseServer implements Server {
     }
 
     @Override
+    public void getUsersByName(String nameStartsWith, final ServerCallback<List<User>> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereContains(ParseUser.NAME_FIELD, nameStartsWith);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(new LinkedList<User>(objects));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
+    }
+
+    @Override
     public void storeUser(String authentication_token, User user) {
         ParseUser parseUser = (ParseUser)user;
         parseUser.setAuthToken(authentication_token);
@@ -108,19 +132,51 @@ public class ParseServer implements Server {
         parseUser.saveInBackground();
     }
 
-    @Override
-    public void getRuns(UUID eventID, ServerCallback<List<Run>> callback) {
+    private void runQuery(ParseQuery<ParseRun> query, final ServerCallback<List<Run>> callback){
+        query.findInBackground(new FindCallback<ParseRun>() {
+            @Override
+            public void done(List<ParseRun> objects, ParseException e) {
+                List<Run> runs = new LinkedList<Run>();
+                for(ParseRun run : objects) {
+                    try {
+                        runs.add(run.get());
+                    } catch (IOException io){
+                        Log.w(ParseServer.class.getName(), "Couldn't decode run: " + io.getMessage());
+                    }
+                }
+                callback.postResult(runs);
+                invokeCallback(callback);
+            }
+        });
+    }
 
+    @Override
+    public void getRuns(UUID eventID, final ServerCallback<List<Run>> callback) {
+        ParseQuery<ParseRun> query = ParseQuery.getQuery(ParseRun.class);
+        query.whereEqualTo(ParseRun.EVENTID_FIELD, eventID.toString());
+        runQuery(query, callback);
     }
 
     @Override
     public void getUserRuns(UUID userID, ServerCallback<List<Run>> callback) {
-
+        ParseQuery<ParseRun> query = ParseQuery.getQuery(ParseRun.class);
+        query.whereEqualTo(ParseRun.USERID_FIELD, userID.toString());
+        runQuery(query, callback);
     }
 
     @Override
     public void storeRun(Run run) {
+        ParseRun newRun = new ParseRun();
+        newRun.store(run);
+        newRun.saveInBackground();
 
+        // After adding the run, we should update the user's stats
+        user.incrementTotalDistance(run.getDistance());
+        user.incrementTotalTime(run.getTotalTime());
+        if(run.getTopSpeed() > user.getTopSpeed())
+            user.setTopSpeed(run.getTopSpeed());
+
+        user.saveInBackground();
     }
 
     @Override

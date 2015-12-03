@@ -5,7 +5,7 @@ import cmpe277.project.skibuddy.common.Location;
 /**
  * Created by eh on 11/28/2015.
  */
-class PojoLocation implements Location {
+public class PojoLocation implements Location {
     private double latitude;
     private double longitude;
     private double elevation;
