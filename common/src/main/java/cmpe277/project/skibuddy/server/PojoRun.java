@@ -12,13 +12,32 @@ import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
-class PojoRun implements Run {
+public class PojoRun implements Run {
 	UUID runId;
-	private List<Location> track = new LinkedList<Location>();
+	private LinkedList<Location> track = new LinkedList<Location>();
 	private DateTime start;
 	private DateTime end;
-	private User user;
-	private Event event;
+	private UUID userId;
+	private UUID eventId;
+	private DateTime lastLocationUpdate;
+	private double totalDistance = 0.0;
+	private double topSpeed;
+
+	private final double METERS_PER_SECOND_TO_KM_PER_HR = 3.6;
+
+	/**
+	 * For new runs
+	 */
+	public PojoRun(){
+		runId = UUID.randomUUID();
+	}
+
+	/**
+	 * For existing runs
+	 */
+	public PojoRun(List<Location> track){
+		this.track = new LinkedList<>(track);
+	}
 
 	@Override
 	public UUID getRunId() {
@@ -35,13 +54,13 @@ class PojoRun implements Run {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		PojoRun run = (PojoRun) o;
+		PojoRun pojoRun = (PojoRun) o;
 
-		if (track != null ? !track.equals(run.track) : run.track != null) return false;
-		if (start != null ? !start.equals(run.start) : run.start != null) return false;
-		if (end != null ? !end.equals(run.end) : run.end != null) return false;
-		if (user != null ? !user.equals(run.user) : run.user != null) return false;
-		return !(event != null ? !event.equals(run.event) : run.event != null);
+		if (track != null ? !track.equals(pojoRun.track) : pojoRun.track != null) return false;
+		if (start != null ? !start.equals(pojoRun.start) : pojoRun.start != null) return false;
+		if (end != null ? !end.equals(pojoRun.end) : pojoRun.end != null) return false;
+		if (userId != null ? !userId.equals(pojoRun.userId) : pojoRun.userId != null) return false;
+		return !(eventId != null ? !eventId.equals(pojoRun.eventId) : pojoRun.eventId != null);
 
 	}
 
@@ -50,14 +69,50 @@ class PojoRun implements Run {
 		int result = track != null ? track.hashCode() : 0;
 		result = 31 * result + (start != null ? start.hashCode() : 0);
 		result = 31 * result + (end != null ? end.hashCode() : 0);
-		result = 31 * result + (user != null ? user.hashCode() : 0);
-		result = 31 * result + (event != null ? event.hashCode() : 0);
+		result = 31 * result + (userId != null ? userId.hashCode() : 0);
+		result = 31 * result + (eventId != null ? eventId.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public List<Location> getTrack() {
 		return track;
+	}
+
+	@Override
+	public void extendTrack(Location newLocation) {
+		// Get previous location to be able to establish distance and speed
+		Location previousLocation = null;
+		if (track.size() > 0)
+			previousLocation = track.getLast();
+
+		// Add our new location to the list
+		track.add(newLocation);
+
+		DateTime now = DateTime.now();
+
+		// Calculate how far we traveled since our last update, if we had a previous location
+		if (previousLocation != null) {
+			double distance_traveled = distance(previousLocation, newLocation);
+			totalDistance += distance_traveled;
+
+			// If we also had a previous time, calculate our speed to see if we have a new top speed
+			if (lastLocationUpdate != null) {
+				double seconds = new Duration(lastLocationUpdate, now).getMillis() / 1000;
+				double speed = (distance_traveled / seconds) * METERS_PER_SECOND_TO_KM_PER_HR;
+				if (speed > topSpeed) topSpeed = speed;
+			}
+		}
+
+		// Store the current time so we can calculate speed later
+		lastLocationUpdate = now;
+	}
+
+	/**
+	 * Distance in meters between locations A and B
+	 */
+	private static double distance(Location a, Location b){
+		return Haversine.distance(a.getLatitude(), a.getLongitude(), b.getLatitude(), b.getLongitude());
 	}
 
 	@Override
@@ -81,37 +136,50 @@ class PojoRun implements Run {
 	}
 
 	@Override
-	public User getUser() {
-		return user;
+	public UUID getUserId() {
+		return userId;
 	}
 
 	@Override
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(UUID userId) {
+		this.userId = userId;
 	}
 
 	@Override
-	public Event getEvent() {
-		return event;
+	public UUID getEventId() {
+		return eventId;
 	}
 
 	@Override
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setEventId(UUID eventId) {
+		this.eventId = eventId;
+	}
+
+	public void setDistance(double distance){
+		totalDistance = distance;
+	}
+
+	public void setTopSpeed(double speed){
+		topSpeed = speed;
 	}
 
 	@Override
-	public int getDistance() {
-		throw new UnsupportedOperationException();
+	public double getDistance() {
+		return totalDistance;
 	}
 
 	@Override
-	public int getTopSpeed() {
-		throw new UnsupportedOperationException();
+	public double getTopSpeed() {
+		return topSpeed;
 	}
 
 	@Override
 	public Duration getTotalTime() {
-		throw new UnsupportedOperationException();
+		if (start == null)
+			return Duration.ZERO;
+		else if (end == null)
+			return new Duration(start, DateTime.now());
+		else
+			return new Duration(start, end);
 	}
 }

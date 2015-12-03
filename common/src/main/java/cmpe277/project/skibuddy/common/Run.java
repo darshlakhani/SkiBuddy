@@ -16,6 +16,8 @@ public interface Run {
 
     List<Location> getTrack();
 
+    void extendTrack(Location location);
+
     DateTime getStart();
 
     void setStart(DateTime start);
@@ -24,17 +26,17 @@ public interface Run {
 
     void setEnd(DateTime end);
 
-    User getUser();
+    UUID getUserId();
 
-    void setUser(User user);
+    void setUserId(UUID user);
 
-    Event getEvent();
+    UUID getEventId();
 
-    void setEvent(Event event);
+    void setEventId(UUID event);
 
-    int getDistance();
+    double getDistance();
 
-    int getTopSpeed();
+    double getTopSpeed();
 
     Duration getTotalTime();
 }

@@ -14,15 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.util.UUID;
-
-import cmpe277.project.skibuddy.server.PojoEvent;
 import cmpe277.project.skibuddy.server.Server;
-import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class CreateEvent extends AppCompatActivity {
@@ -106,43 +98,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 });
 
-//<<<<<<< HEAD
-           /*   ss.storeEvent(event, new ServerCallback<UUID>() {
-                    @Override
-                    public void handleResult(UUID result) {
-                        if (result == null) {
-                            Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
-                            t.show();
-                        }
-                    }
-                });
-
-/*
-=======
-        s.getEvents(new ServerCallback<List<Event>>() {
-            @Override
-            public void handleResult(List<Event> result) {
-
-            }
-        });
-
-        Event newEvent = ServerSingleton.createEvent();
-        newEvent.setName("Some cool event");
-
-        s.storeEvent(newEvent, new ServerCallback<UUID>() {
-            @Override
-            public void handleResult(UUID result) {
-                if(result == null){
-                    Toast t = Toast.makeText(self, "Couldn't save event", Toast.LENGTH_SHORT);
-                    t.show();
-                }
->>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
-            }
-        });
-*/
 
 
-//>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
     }
 
     @Override

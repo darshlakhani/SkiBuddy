@@ -8,6 +8,7 @@ import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
@@ -17,6 +18,12 @@ public interface Server {
 	 * Returns the user object of the user that is logging in (if successful). If unsuccessful returns null.
 	 */
 	void authenticateUser(String authentication_token, ServerCallback<User> callback);
+
+	/**
+	 * Returns the currently logged in user.
+	 * @throws cmpe277.project.skibuddy.common.NotAuthenticatedException If no user currently logged in
+	 */
+	User getAuthenticatedUser() throws NotAuthenticatedException;
 
 	/**
 	 * Returns the requested user. If unsuccessful returns null.
@@ -49,6 +56,11 @@ public interface Server {
 	 * Persists the run on the server.
 	 */
 	void storeRun(Run run);
+
+	/**
+	 * Fetches the specified event. Returns null if the event couldn't be found.
+	 */
+	void getEvent(UUID eventID, ServerCallback<Event> callback);
 
 	/**
 	 * Returns all events that the current user is involved with (either as a participant, host, or invitee).
