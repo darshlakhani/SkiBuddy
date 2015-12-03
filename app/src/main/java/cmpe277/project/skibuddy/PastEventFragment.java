@@ -1,27 +1,30 @@
 package cmpe277.project.skibuddy;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.app.ListFragment;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-import android.content.*;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
-import java.io.File;
-import java.util.*;
-import android.util.Log;
-import cmpe277.project.skibuddy.common.Event;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
+import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
-import cmpe277.project.skibuddy.server.Server;
 
 
 
@@ -102,6 +105,14 @@ public class PastEventFragment extends ListFragment {
                 String eventName = PAST_EVENT_LIST[position];
                 EventRelation erObj = erList.get(position);
                 HashMap<String, String> mp = new HashMap();
+                Object status = erObj.getParticipationStatus();
+                String pStatus = new String();
+
+                if(status == ParticipationStatus.HOST )
+                {
+                    pStatus = "host";
+                }
+                mp.put("status",pStatus);
                 mp.put("name", erObj.getName());
                 mp.put("desc", erObj.getDescription());
                 mp.put("startDate", erObj.getStart().toString());

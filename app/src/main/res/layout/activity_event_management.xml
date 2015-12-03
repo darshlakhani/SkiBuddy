@@ -92,6 +92,7 @@ tools:context=".EventManagement">
     android:src="@drawable/invite"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
+    android:visibility="invisible"/>
     />
 
 
