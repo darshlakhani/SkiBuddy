@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
@@ -91,26 +92,6 @@ public class MockServer implements Server {
     }
 
     @Override
-    public User authenticateUser(String authentication_token) {
-        return null;
-    }
-
-    @Override
-    public User getUser(UUID userID) {
-        return null;
-    }
-
-    @Override
-    public List<Run> getRuns(UUID eventID) {
-        return null;
-    }
-
-    @Override
-    public List<Run> getUserRuns(UUID userID) {
-        return null;
-    }
-
-    @Override
     public void authenticateUser(String authentication_token, ServerCallback<User> callback) {
         returnRandomUser(callback);
     }
@@ -174,17 +155,18 @@ public class MockServer implements Server {
     }
 
     @Override
-    public void getEvents(final ServerCallback<List<Event>> callback) {
+    public void getEvents(final ServerCallback<List<EventRelation>> callback) {
         doAfterRandomTimeout(new Runnable() {
             @Override
             public void run() {
-                Event someEvent = new PojoEvent();
+                EventRelation someEvent = new PojoEvent();
                 someEvent.setName("Go Skiing");
                 someEvent.setStart(new DateTime(2016, 1, 2, 10, 0, 0));
                 someEvent.setEnd(new DateTime(2016, 1, 2, 19, 0, 0));
                 someEvent.setDescription("Let's go skiing in Tahoe!");
                 someEvent.setHost(getRandomUser());
-                List<Event> events = new LinkedList<Event>();
+                someEvent.setParticipationStatus(ParticipationStatus.INVITEE);
+                List<EventRelation> events = new LinkedList<>();
                 events.add(someEvent);
                 callback.postResult(events);
                 invokeCallback(callback);
@@ -228,21 +210,6 @@ public class MockServer implements Server {
                 invokeCallback(callback);
             }
         });
-    }
-
-    @Override
-    public List<Event> getEvents() {
-        return null;
-    }
-
-    @Override
-    public List<User> getEventParticipants(UUID eventID) {
-        return null;
-    }
-
-    @Override
-    public UUID storeEvent(Event event) {
-        return null;
     }
 
     @Override
