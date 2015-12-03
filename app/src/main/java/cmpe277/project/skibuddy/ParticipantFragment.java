@@ -2,27 +2,33 @@ package cmpe277.project.skibuddy;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cmpe277.project.skibuddy.common.Run;
+
 import java.util.List;
-import java.util.UUID;
-import android.support.v4.app.ListFragment;
+
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
+import java.util.*;
 
-
+/*
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RunFragment extends ListFragment {
+public class ParticipantFragment extends ListFragment {
+
+    //static final String[] PARTICIPANT_LIST =
+            //new String[] { "Bon Jovi", "Toothiya", "Weideryu", "Dulheraja"};
+
+    static final String[] PARTICIPANT_LIST = new String[100];
+    static final EventParticipant[] PARTICIPANT_LIST_FINAL = new EventParticipant[100];
 
 
-    public RunFragment() {
+    public ParticipantFragment() {
         // Required empty public constructor
     }
 
@@ -31,7 +37,7 @@ public class RunFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_run, container, false);
+        return inflater.inflate(R.layout.fragment_partcipant, container, false);
     }
 
     @Override
@@ -41,16 +47,17 @@ public class RunFragment extends ListFragment {
 
         final Server s = new ServerSingleton().getServerInstance(getActivity());
         UUID eventID = UUID.randomUUID();
-        s.getRuns(eventID, new ServerCallback<List<Run>>() {
+        s.getEventParticipants(eventID, new ServerCallback<List<EventParticipant>>() {
 
             @Override
-            public void handleResult(List<Run> result) {
+            public void handleResult(List<EventParticipant> result) {
 
-                if (result == null || result.size() < 1) {
+                if(result == null || result.size() < 1)
+                {
                     return;
                 }
 
-                setListAdapter(new RunAdapter(getActivity(), result));
+                setListAdapter(new ParticipantAdapter(getActivity(), result));
             }
         });
 

@@ -169,8 +169,18 @@ public class MockServer implements Server {
                 someEvent.setDescription("Let's go skiing in Tahoe!");
                 someEvent.setHost(getRandomUser());
                 someEvent.setParticipationStatus(ParticipationStatus.INVITEE);
+
+                EventRelation hostedEvent = new PojoEvent();
+                hostedEvent.setName("Skiing@AppleLake");
+                hostedEvent.setStart(new DateTime(2015, 11, 2, 10, 0, 0));
+                hostedEvent.setEnd(new DateTime(2015, 11, 4, 19, 0, 0));
+                hostedEvent.setDescription("Come join for Skiing at Apple Lake!");
+                hostedEvent.setHost(getRandomUser());
+                hostedEvent.setParticipationStatus(ParticipationStatus.HOST);
+
                 List<EventRelation> events = new LinkedList<>();
                 events.add(someEvent);
+                events.add(hostedEvent);
                 callback.postResult(events);
                 invokeCallback(callback);
             }

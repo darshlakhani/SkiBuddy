@@ -1,11 +1,9 @@
 package cmpe277.project.skibuddy;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,13 +16,13 @@ import cmpe277.project.skibuddy.common.EventRelation;
 /**
  * Created by akankshanagpal on 12/2/15.
  */
-public class ParticipantAdapter extends BaseAdapter {
+public class EventListAdapter extends BaseAdapter {
 
     private final Context context;
     private LayoutInflater inflater;
-    private final List<EventParticipant> values;
+    private final List<EventRelation> values;
 
-    public ParticipantAdapter(Context context, List<EventParticipant> values) {
+    public EventListAdapter(Context context, List<EventRelation> values) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.values = values;
@@ -67,12 +65,12 @@ public class ParticipantAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
 
-        EventParticipant participant = values.get(position);
-        holder.label.setText(participant.getName());
-        holder.tvStatus.setText(participant.getParticipationStatus().toString());
+        EventRelation event = values.get(position);
+        holder.label.setText(event.getName());
+        holder.tvStatus.setText(event.getHost().getName());
 
         // Change icon based on name
-        String s = participant.getName();
+        String s = event.getName();
 
         System.out.println("events "+ s);
         holder.logo.setImageResource(R.drawable.invite);

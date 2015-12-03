@@ -85,11 +85,14 @@ tools:context=".EventManagement">
 
 <ImageButton
     android:id="@+id/imageButton1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginRight="15dp"
     android:src="@drawable/invite"
     android:layout_alignParentBottom="true"
-    android:layout_alignParentEnd="true" />
+    android:layout_alignParentEnd="true"
+    />
 
 
 </RelativeLayout>

@@ -21,7 +21,7 @@ public class EventManagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                PartcipantFragment tab1 = new PartcipantFragment();
+                ParticipantFragment tab1 = new ParticipantFragment();
                 return tab1;
             case 1:
                 RunFragment tab2 = new RunFragment();

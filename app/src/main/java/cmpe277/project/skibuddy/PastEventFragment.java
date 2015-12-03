@@ -11,7 +11,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 import android.content.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
+import java.io.File;
 import java.util.*;
 import android.util.Log;
 import cmpe277.project.skibuddy.common.Event;
@@ -29,6 +32,7 @@ import cmpe277.project.skibuddy.server.Server;
 public class PastEventFragment extends ListFragment {
 
     static final String[] PAST_EVENT_LIST = new String[100];
+    static final EventRelation[] PAST_EVENT_LIST_FINAL = new EventRelation[100];
     static final ArrayList<EventRelation> erList = new ArrayList<>();
 
 
@@ -61,12 +65,30 @@ public class PastEventFragment extends ListFragment {
                     // we didn't get a result, something went wrong, or whatever
                     return;
                 }
+                Log.d("Result Size: ",String.valueOf(result.size()));
+                //Get Current Date Time
+                DateTime currentValue = new DateTime();
                 Log.d("Event name", result.get(0).getName().toString());
+                int index = 0;
+
                 for (int i = 0; i < result.size(); i++) {
-                    PAST_EVENT_LIST[i] = result.get(i).getName();
-                    erList.add(result.get(i));
+
+                    //Get DateTime from Event Object
+                    DateTime dateValue = result.get(i).getEnd();
+
+                    //Compare datetime from event with current datetime value
+                    int difference = DateTimeComparator.getInstance().compare(currentValue, dateValue);
+                    Log.d("Difference Value",String.valueOf(difference));
+
+                    //If Current date is greater, event should be in past and should be added to list
+                    if(difference == 1) {
+                        PAST_EVENT_LIST_FINAL[index] = result.get(i);
+                        PAST_EVENT_LIST[index] = result.get(i).getName();
+                        erList.add(result.get(i));
+                        index++;
+                    }
                 }
-                setListAdapter(new ParticipantAdapter(getActivity(), PAST_EVENT_LIST));
+                setListAdapter(new EventListAdapter(getActivity(),erList));
 
             }
         });
@@ -79,14 +101,14 @@ public class PastEventFragment extends ListFragment {
                 Intent i = new Intent(getActivity(), EventManagement.class);
                 String eventName = PAST_EVENT_LIST[position];
                 EventRelation erObj = erList.get(position);
-                HashMap<String,String> mp = new HashMap();
-                mp.put("name",erObj.getName());
-                mp.put("desc",erObj.getDescription());
-                mp.put("startDate",erObj.getStart().toString());
-                mp.put("endDate",erObj.getEnd().toString());
-                Log.d("end date",erObj.getEnd().toString() );
+                HashMap<String, String> mp = new HashMap();
+                mp.put("name", erObj.getName());
+                mp.put("desc", erObj.getDescription());
+                mp.put("startDate", erObj.getStart().toString());
+                mp.put("endDate", erObj.getEnd().toString());
+                Log.d("end date", erObj.getEnd().toString());
 
-                i.putExtra("eventMap",mp);
+                i.putExtra("eventMap", mp);
                 startActivity(i);
             }
         });
