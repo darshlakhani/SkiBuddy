@@ -21,11 +21,11 @@ import bolts.Task;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.EventRelation;
-import cmpe277.project.skibuddy.common.LocationListener;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
+import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEventParticipant;
@@ -302,12 +302,12 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void registerLocationListener(LocationListener listener, UUID eventID) {
+    public void registerLocationListener(SkiBuddyLocationListener listener, UUID eventID) {
 
     }
 
     @Override
-    public void unregisterLocationListener(LocationListener listener) {
+    public void unregisterLocationListener(SkiBuddyLocationListener listener) {
 
     }
 }
