@@ -28,6 +28,7 @@ import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
 import cmpe277.project.skibuddy.server.parseobjects.ParseEventParticipant;
+import cmpe277.project.skibuddy.server.parseobjects.ParseEventRelation;
 import cmpe277.project.skibuddy.server.parseobjects.ParseParticipation;
 import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
@@ -141,8 +142,27 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void getEvents(ServerCallback<List<EventRelation>> callback) {
+    public void getEvents(final ServerCallback<List<EventRelation>> callback) {
+        // No exception is defined on this function, so we can only ignore a call if
+        // no user is logged in.
+        if (user == null) {
+            Log.w(ParseServer.class.getName(), "User not logged in, exception should be thrown here really...");
+            return;
+        }
 
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.include(ParseParticipation.EVENT_FIELD);
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                List<EventRelation> result = new ArrayList<>(objects.size());
+                for (ParseParticipation participation : objects)
+                    result.add(new ParseEventRelation(participation));
+                callback.postResult(result);
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
