@@ -9,7 +9,7 @@ import cmpe277.project.skibuddy.common.User;
 
 public class ServerSingleton {
 
-	private Server server;
+	private static Server server;
 
 	/**
 	 * Returns the server singleton

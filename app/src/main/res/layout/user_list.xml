@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/ivProfile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
@@ -19,8 +19,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@+id/label"
+        android:textColor="@color/floatback"
         android:layout_toRightOf="@+id/ivProfile"
-        android:textSize="30dp" >
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:textSize="15sp" >
+
     </TextView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibTick"
+        android:text="Invite"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        />
 
 </RelativeLayout>

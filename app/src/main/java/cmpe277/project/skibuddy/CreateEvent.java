@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.server.PojoEvent;
@@ -40,6 +42,7 @@ public class CreateEvent extends AppCompatActivity {
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 /*ss.authenticateUser("abc", new ServerCallback<User>() {
                     @Override
@@ -93,11 +96,15 @@ public class CreateEvent extends AppCompatActivity {
                 Log.i("tag1", endTime);
                 Log.i("tag2", startTime);
                 Log.i("tag3", eventDate);
-                Toast t = Toast.makeText(self, startTime, Toast.LENGTH_LONG);
+                Toast t = Toast.makeText(self, eventName, Toast.LENGTH_LONG);
                         t.show();
 
                 Intent intent = new Intent(getApplicationContext(), InviteUser.class);
+                Bundle b = new Bundle();
+
+                //intent.putExtra("server",  ss);
                 startActivity(intent);
+
 
 
             }

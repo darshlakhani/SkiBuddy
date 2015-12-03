@@ -31,6 +31,7 @@ public class MockServer implements Server {
     public MockServer(Context context){
         this.context = context;
         Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
+
     }
 
     @SuppressWarnings("unchecked")
