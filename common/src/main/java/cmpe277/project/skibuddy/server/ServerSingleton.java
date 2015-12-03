@@ -34,7 +34,7 @@ public class ServerSingleton {
 	}
 
 	public static User createUser(){
-		return new PojoUser();
+		return new PojoParticipant();
 	}
 
 }
