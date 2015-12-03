@@ -11,6 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import java.util.HashMap;
 
 /**
  * Created by rnagpal on 11/30/15.
@@ -18,11 +21,26 @@ import android.widget.ImageButton;
 public class EventManagement extends AppCompatActivity {
 
     ImageButton button;
+    TextView tvEventName,tvDesc,tvStartDate,tvEndDate;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_management);
+        Intent intent = getIntent();
+        HashMap<String,String> mpResult = (HashMap<String,String>)intent.getSerializableExtra("eventMap");
+
+        tvEventName = (TextView)findViewById(R.id.tvEventName);
+        tvDesc = (TextView)findViewById(R.id.tvEventDesc);
+        tvStartDate = (TextView)findViewById(R.id.tvStartDate);
+        tvEndDate = (TextView)findViewById(R.id.tvEndDate);
+
+        tvEventName.setText(mpResult.get("name"));
+        tvDesc.setText(mpResult.get("desc"));
+        tvStartDate.setText(mpResult.get("startDate"));
+        tvEndDate.setText(mpResult.get("endDate"));
+
 
         //Code for Tab Implementation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

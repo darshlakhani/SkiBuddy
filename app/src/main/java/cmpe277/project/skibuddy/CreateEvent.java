@@ -15,22 +15,16 @@ import android.widget.Toast;
 
 //<<<<<<< HEAD
 //<<<<<<< HEAD
-import com.parse.Parse;
-import com.parse.ParseObject;
 //=======
 //=======
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.List;
 //>>>>>>> 1b2746c41940e8edcb18e05e69c77fd3773aa087
 import java.util.UUID;
 //>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
 
-import cmpe277.project.skibuddy.common.Event;
-import cmpe277.project.skibuddy.common.User;
-import cmpe277.project.skibuddy.server.ParseServer;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.PojoEvent;
 import cmpe277.project.skibuddy.server.ServerCallback;

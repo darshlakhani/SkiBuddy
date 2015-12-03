@@ -53,13 +53,18 @@ public class PartcipantFragment extends ListFragment {
         final Server s = new ServerSingleton().getServerInstance(getActivity());
         UUID eventID = UUID.randomUUID();
         s.getEventParticipants(eventID, new ServerCallback<List<EventParticipant>>() {
-            int index = 0;
+
             @Override
             public void handleResult(List<EventParticipant> result) {
+
+                if(result == null)
+                {
+                    return;
+                }
+
                 Log.d("Participant name", result.get(0).getName());
                 for (int i = 0; i < result.size(); i++) {
-                    PARTICIPANT_LIST[index] = result.get(i).getName();
-                    index++;
+                    PARTICIPANT_LIST[i] = result.get(i).getName();
                 }
                 setListAdapter(new ParticipantAdapter(getActivity(), PARTICIPANT_LIST));
             }
