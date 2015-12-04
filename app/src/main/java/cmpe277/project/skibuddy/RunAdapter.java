@@ -1,11 +1,9 @@
 package cmpe277.project.skibuddy;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,18 +11,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import cmpe277.project.skibuddy.common.EventParticipant;
-import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.Run;
 
 /**
  * Created by akankshanagpal on 12/2/15.
  */
-public class ParticipantAdapter extends BaseAdapter {
+public class RunAdapter extends BaseAdapter{
 
     private final Context context;
     private LayoutInflater inflater;
-    private final List<EventParticipant> values;
+    private final List<Run> values;
 
-    public ParticipantAdapter(Context context, List<EventParticipant> values) {
+    public RunAdapter(Context context, List<Run> values) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.values = values;
@@ -67,14 +65,16 @@ public class ParticipantAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
 
-        EventParticipant participant = values.get(position);
-        holder.label.setText(participant.getName());
-        holder.tvStatus.setText("");
+        Run run = values.get(position);
+
+        // TODO: get objects from the user objects
+        holder.label.setText("User name");
+        holder.tvStatus.setText("User distance");
 
         // Change icon based on name
-        String s = participant.getName();
+        //String s = run.getUser().getName();
 
-        System.out.println("events "+ s);
+        //System.out.println("events "+ s);
         holder.logo.setImageResource(R.drawable.invite);
 
         return view;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:padding="5dp" >
+
+<ImageView
+    android:id="@+id/logo1"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:src="@drawable/event" >
+</ImageView>
+
+<TextView
+    android:id="@+id/label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@+id/label"
+    android:layout_marginLeft="70dp"
+    android:textSize="15sp"
+    android:layout_marginTop="10dp"
+    android:textAppearance="@android:color/holo_blue_dark"
+    android:textColor="#145cff">
+</TextView>
+
+<TextView
+    android:id="@+id/tvStatus"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Status"
+    android:textSize="15sp"
+    android:layout_marginTop="28dp"
+    android:layout_marginLeft="70dp">
+</TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Event Type"
+        android:id="@+id/tvEventtype"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/tvStatus"
+        android:layout_marginStart="85dp" />
+
+
+</RelativeLayout>

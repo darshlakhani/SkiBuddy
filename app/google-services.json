@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_id": "skibuddy-da1a3",
+    "project_number": "991984700133",
+    "name": "SkiBuddy"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991984700133:android:60832fe44273d279",
+        "client_id": "android:cmpe277.project.skibuddy",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "cmpe277.project.skibuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991984700133-8nl5am5tqmbrnbhi833ee1dl5prvjggn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cmpe277.project.skibuddy",
+            "certificate_hash": "87083295D3001099528EB7F079C2FB46A9268607"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
