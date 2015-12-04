@@ -5,25 +5,25 @@ import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
 public interface Server {
 
-	User authenticateUser(String authentication_token);
-
-	User getUser(UUID userID);
-
-	List<Run> getRuns(UUID eventID);
-
-	List<Run> getUserRuns(UUID userID);
-
 	/**
 	 * Returns the user object of the user that is logging in (if successful). If unsuccessful returns null.
 	 */
 	void authenticateUser(String authentication_token, ServerCallback<User> callback);
+
+	/**
+	 * Returns the currently logged in user.
+	 * @throws cmpe277.project.skibuddy.common.NotAuthenticatedException If no user currently logged in
+	 */
+	User getAuthenticatedUser() throws NotAuthenticatedException;
 
 	/**
 	 * Returns the requested user. If unsuccessful returns null.
@@ -58,10 +58,15 @@ public interface Server {
 	void storeRun(Run run);
 
 	/**
+	 * Fetches the specified event. Returns null if the event couldn't be found.
+	 */
+	void getEvent(UUID eventID, ServerCallback<Event> callback);
+
+	/**
 	 * Returns all events that the current user is involved with (either as a participant, host, or invitee).
 	 * If unauthorized, or unsuccessful, returns null.
 	 */
-	void getEvents(ServerCallback<List<Event>> callback);
+	void getEvents(ServerCallback<List<EventRelation>> callback);
 
 	/**
 	 * Returns a list of all users that participate in the specified event.
@@ -75,12 +80,6 @@ public interface Server {
 	 * Returns null if the user can't update the specified event, UUID after successfully creating/updating the event
 	 */
 	void storeEvent(Event event, ServerCallback<UUID> callback);
-
-	List<Event> getEvents();
-
-	List<User> getEventParticipants(UUID eventID);
-
-	UUID storeEvent(Event event);
 
 	/**
 	 * Invites the specified user to the specified events. Silently ignores the call if that user is already invited or participating in the event.
