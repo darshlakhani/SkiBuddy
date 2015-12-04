@@ -2,7 +2,6 @@ package cmpe277.project.skibuddy.server.parseobjects;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parse.ParseClassName;
@@ -14,8 +13,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.server.Mapper;
 import cmpe277.project.skibuddy.server.PojoLocation;
 import cmpe277.project.skibuddy.server.PojoRun;
@@ -56,7 +55,7 @@ public class ParseRun extends ParseObject {
     }
 
     public Run get() throws IOException {
-        List<Location> track = mapper.readValue(getString(TRACK_FIELD),
+        List<SkiBuddyLocation> track = mapper.readValue(getString(TRACK_FIELD),
                 new TypeReference<List<PojoLocation>>(){});
 
         PojoRun run = new PojoRun(track);

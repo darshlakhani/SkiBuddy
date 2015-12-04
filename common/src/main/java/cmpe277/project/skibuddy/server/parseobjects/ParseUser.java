@@ -7,7 +7,7 @@ import org.joda.time.Duration;
 
 import java.util.UUID;
 
-import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.common.User;
 
 /**
@@ -65,12 +65,12 @@ public class ParseUser extends ParseObject implements User {
     }
 
     @Override
-    public Location getPosition() {
+    public SkiBuddyLocation getPosition() {
         return null;
     }
 
     @Override
-    public void setPosition(Location position) {
+    public void setPosition(SkiBuddyLocation position) {
 
     }
 

@@ -6,9 +6,9 @@ import java.util.UUID;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.EventRelation;
-import cmpe277.project.skibuddy.common.Location;
-import cmpe277.project.skibuddy.common.LocationListener;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
@@ -99,15 +99,15 @@ public interface Server {
 	/**
 	 * Sends a location update for the current user. Should be used while skiing in an event.
 	 */
-	void updateLocation(Location location);
+	void updateLocation(SkiBuddyLocation location);
 
 	/**
 	 * Registers a location listener for the specified event, the location listener will receive updates for all users in that event.
 	 */
-	void registerLocationListener(LocationListener listener, UUID eventID);
+	void registerLocationListener(SkiBuddyLocationListener listener, UUID eventID);
 
 	/**
 	 * Unregisters the specified location listener
 	 */
-	void unregisterLocationListener(LocationListener listener);
+	void unregisterLocationListener(SkiBuddyLocationListener listener);
 }
