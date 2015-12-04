@@ -1,5 +1,7 @@
 package cmpe277.project.skibuddy.server;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -98,7 +100,7 @@ public class PojoRun implements Run {
 
 			// If we also had a previous time, calculate our speed to see if we have a new top speed
 			if (lastLocationUpdate != null) {
-				double seconds = new Duration(lastLocationUpdate, now).getMillis() / 1000;
+				double seconds = (double)(new Duration(lastLocationUpdate, now).getMillis()) / 1000;
 				double speed = (distance_traveled / seconds) * METERS_PER_SECOND_TO_KM_PER_HR;
 				if (speed > topSpeed) topSpeed = speed;
 			}

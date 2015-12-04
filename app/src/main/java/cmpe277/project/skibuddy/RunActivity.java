@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,14 +23,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.LinkedList;
 import java.util.List;
 
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class RunActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private Button toggleRecordButton;
+    private TextView runStatus;
     private Run currentRun;
 
     @Override
@@ -51,6 +56,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
         final Context context = this;
 
         toggleRecordButton = (Button)findViewById(R.id.toggle_record_button);
+        runStatus = (TextView)findViewById(R.id.record_run_status);
         toggleRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,16 +64,51 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                     // Not recording, so start recording
                     currentRun = ServerSingleton.createRun();
                     toggleRecordButton.setText("STOP");
+
+                    // Call updateStatus to change the status to '0m 0km/h'
+                    updateStatus(currentRun);
                 } else {
                     // Done with run, store it
                     Run runToStore = currentRun;
                     currentRun = null;
+
+                    // Update status to set it to 'not recording'
+                    updateStatus(null);
+
+                    // Return button label to 'REC'
                     toggleRecordButton.setText("REC");
+
+                    // Show user quick stats of run
                     Toast t = Toast.makeText(context, String.format("Run distance: %.2f m", runToStore.getDistance()), Toast.LENGTH_LONG);
                     t.show();
+
+                    // Store run
+                    storeRun(runToStore);
                 }
             }
         });
+    }
+
+    private void storeRun(Run run){
+        Server s = new ServerSingleton().getServerInstance(this);
+        try {
+            User currentUser = s.getAuthenticatedUser();
+            run.setUserId(currentUser.getId());
+            s.storeRun(run);
+        } catch (NotAuthenticatedException ex){
+            Toast t = Toast.makeText(this, "User is not authenticated", Toast.LENGTH_LONG);
+            t.show();
+
+            //TODO: send user to login activity
+        }
+    }
+
+    private void updateStatus(Run run){
+        if(run == null){
+            runStatus.setText("Not recording");
+        } else {
+            runStatus.setText(String.format("Distance: %.2f m, Top Speed: %.2f km/h", run.getDistance(), run.getTopSpeed()));
+        }
     }
 
     private Polyline runLine;
@@ -113,6 +154,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
             currentRun.extendTrack(newLocation);
 
             drawRun(currentRun);
+            updateStatus(currentRun);
         }
     }
 
