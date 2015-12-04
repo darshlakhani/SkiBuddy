@@ -1,14 +1,12 @@
 package cmpe277.project.skibuddy.server.parseobjects;
 
-import com.parse.Parse;
-
 import org.joda.time.Duration;
 
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.EventParticipant;
-import cmpe277.project.skibuddy.common.Location;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 
 /**
  * Created by eh on 12/2/2015.
@@ -62,12 +60,12 @@ public class ParseEventParticipant implements EventParticipant {
     }
 
     @Override
-    public Location getPosition() {
+    public SkiBuddyLocation getPosition() {
         return participation.getUser().getPosition();
     }
 
     @Override
-    public void setPosition(Location position) {
+    public void setPosition(SkiBuddyLocation position) {
         participation.getUser().setPosition(position);
     }
 
