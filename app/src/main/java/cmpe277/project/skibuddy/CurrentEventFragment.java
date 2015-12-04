@@ -68,7 +68,6 @@ public class CurrentEventFragment extends ListFragment {
                 }
                 //Get Current Date Time
                 DateTime currentValue = new DateTime();
-                Log.d("Event name", result.get(0).getName().toString());
                 int index = 0;
 
                 for (int i = 0; i < result.size(); i++) {

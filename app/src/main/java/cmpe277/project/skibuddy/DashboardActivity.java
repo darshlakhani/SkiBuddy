@@ -59,15 +59,15 @@ public class DashboardActivity extends AppCompatActivity {
 
     public void addListenerOnButton() {
 
-        runButton = (ImageButton) findViewById(R.id.imageButton1);
+        runButton = (ImageButton) findViewById(R.id.dashboard_record_run_btn);
 
         runButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(DashboardActivity.this,
-                        "Run button is clicked!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(DashboardActivity.this, RunActivity.class);
+                startActivity(i);
 
             }
 

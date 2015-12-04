@@ -42,7 +42,7 @@
         android:background="@color/primary_dark_material_light"
         style="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle.Inverse">
         <ImageButton
-            android:id="@+id/imageButton1"
+            android:id="@+id/dashboard_record_run_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/record"

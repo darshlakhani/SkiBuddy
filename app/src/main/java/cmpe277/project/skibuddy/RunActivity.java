@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.joda.time.DateTime;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -77,6 +79,8 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                 if(currentRun == null){
                     // Not recording, so start recording
                     currentRun = ServerSingleton.createRun();
+
+                    currentRun.setStart(DateTime.now());
                     toggleRecordButton.setText("STOP");
 
                     // Call updateStatus to change the status to '0m 0km/h'
@@ -85,6 +89,9 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                     // Done with run, store it
                     Run runToStore = currentRun;
                     currentRun = null;
+
+                    // Set end time
+                    runToStore.setEnd(DateTime.now());
 
                     // Update status to set it to 'not recording'
                     updateStatus(null);

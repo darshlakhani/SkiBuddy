@@ -73,8 +73,6 @@ public class PastEventFragment extends ListFragment {
                 Log.d("Result Size: ",String.valueOf(result.size()));
                 //Get Current Date Time
                 DateTime currentValue = new DateTime();
-                Log.d("Event name", result.get(0).getName().toString());
-
 
                 int index = 0;
 

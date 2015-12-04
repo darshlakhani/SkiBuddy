@@ -118,7 +118,12 @@ public class MainActivity extends AppCompatActivity implements
                             if(result == null){
                                 User user = ServerSingleton.createUser();
                                 user.setName(name);
-                                user.setTagline(tagLine);
+
+                                if (tagLine != null)
+                                    user.setTagline(tagLine);
+                                else
+                                    user.setTagline("");
+
                                 s.storeUser("G+" + id, user);
                             }
 
