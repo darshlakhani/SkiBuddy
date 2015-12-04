@@ -3,6 +3,7 @@ package cmpe277.project.skibuddy;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class RunFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_run, container, false);
     }
 
@@ -41,21 +43,22 @@ public class RunFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-
         final Server s = new ServerSingleton().getServerInstance(getActivity());
-        UUID eventID = UUID.randomUUID();
-        s.getRuns(eventID, new ServerCallback<List<Run>>() {
 
-            @Override
-            public void handleResult(List<Run> result) {
+        // Get bundle, read either eventID or userID, depending on which one is populated,
+        // get the user's runs or the event's runs.
+        Bundle bundle = getArguments();
+        if(bundle.getString(BundleKeys.EVENTID_KEY) != null){
+            // get event runs
+            UUID eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
+            s.getRuns(eventID, new RunServerCallback());
 
-                if (result == null || result.size() < 1) {
-                    return;
-                }
-
-                setListAdapter(new RunAdapter(getActivity(), result));
-            }
-        });
+        } else if (bundle.getString(BundleKeys.UUID_KEY) != null) {
+            UUID userId = UUID.fromString(bundle.getString(BundleKeys.UUID_KEY));
+            s.getUserRuns(userId, new RunServerCallback());
+        } else {
+            Log.w(RunFragment.class.getName(), "RunFragment needs either an eventID or a userID");
+        }
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,6 +69,19 @@ public class RunFragment extends ListFragment {
         });
 
 
+    }
+
+    class RunServerCallback extends ServerCallback<List<Run>>{
+
+        @Override
+        public void handleResult(List<Run> result) {
+
+            if (result == null || result.size() < 1) {
+                return;
+            }
+
+            setListAdapter(new RunAdapter(getActivity(), result));
+        }
     }
 
 

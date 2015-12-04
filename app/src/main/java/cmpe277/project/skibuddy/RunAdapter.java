@@ -12,6 +12,10 @@ import java.util.List;
 
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.common.Run;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 /**
  * Created by akankshanagpal on 12/2/15.
@@ -22,8 +26,11 @@ public class RunAdapter extends BaseAdapter{
     private LayoutInflater inflater;
     private final List<Run> values;
 
+    private final Server s;
+
     public RunAdapter(Context context, List<Run> values) {
         inflater = LayoutInflater.from(context);
+        s = new ServerSingleton().getServerInstance(context);
         this.context = context;
         this.values = values;
     }
@@ -51,7 +58,7 @@ public class RunAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if(convertView == null){
             view = inflater.inflate(R.layout.list_participant, parent, false);
@@ -68,8 +75,13 @@ public class RunAdapter extends BaseAdapter{
         Run run = values.get(position);
 
         // TODO: get objects from the user objects
-        holder.label.setText("User name");
-        holder.tvStatus.setText("User distance");
+        holder.tvStatus.setText(String.valueOf(run.getDistance()));
+        s.getUser(run.getUserId(), new ServerCallback<User>() {
+            @Override
+            public void handleResult(User result) {
+                holder.label.setText(result.getName());
+            }
+        });
 
         // Change icon based on name
         //String s = run.getUser().getName();
