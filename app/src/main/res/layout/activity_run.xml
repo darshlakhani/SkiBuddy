@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <Button
-            android:layout_width="50dp"
+            android:id="@+id/toggle_record_button"
+            android:layout_width="70dp"
             android:layout_height="50dp"
             android:text="REC"/>
     </LinearLayout>
