@@ -48,7 +48,7 @@ public class EventManagement extends AppCompatActivity {
         tvEndDate.setText(mpResult.get("endDate"));
 
         if(mpResult.get("status")!=null &&mpResult.get("status").equals("host") && mpResult.get("event").equals("current")) {
-            invite.setVisibility(invite.VISIBLE);
+            invite.setVisibility(View.VISIBLE);
         }
 
         eventID = mpResult.get("id");

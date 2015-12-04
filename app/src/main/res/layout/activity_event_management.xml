@@ -2,112 +2,108 @@
 
 
 <RelativeLayout
-android:id="@+id/main_layout"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".EventManagement">
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvEventName"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="75dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Name"
-            android:textSize="18sp" />
+    tools:context=".EventManagement">
 
-        <TextView
-            android:id="@+id/tvEventDesc"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="18dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Description" /></LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvStartDate"
-                android:layout_marginTop="150dp"
-                android:layout_marginLeft="10dp"
+                android:id="@+id/tvEventName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Start Date" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="75dp"
+                android:text="Event Name"
+                android:textSize="18sp" />
 
             <TextView
-            android:id="@+id/tvLine"
-            android:layout_marginTop="150dp"
-            android:layout_marginLeft="150dp"
+                android:id="@+id/tvEventDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="18dp"
+                android:text="Event Description" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="150dp"
+            android:text="Start Date" />
+
+        <TextView
+            android:id="@+id/tvLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="150dp"
             android:text="------------" />
 
-            <TextView
-                android:id="@+id/tvEndDate"
-                android:layout_marginTop="150dp"
-                android:layout_marginLeft="220dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="End Date" />
+        <TextView
+            android:id="@+id/tvEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="220dp"
+            android:layout_marginTop="150dp"
+            android:text="End Date" />
 
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorPrimary"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="130dp"
+            android:background="?attr/colorPrimary"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:background="?attr/colorPrimary"
-    android:elevation="6dp"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
 
-
-<android.support.design.widget.TabLayout
-    android:id="@+id/tab_layout"
-    android:layout_marginTop="130dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/toolbar"
-    android:background="?attr/colorPrimary"
-    android:elevation="6dp"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-<android.support.v4.view.ViewPager
-    android:id="@+id/pager"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentStart="true" />
-
-<ImageButton
-    android:id="@+id/imageButton1"
-    android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:layout_marginBottom="15dp"
-    android:layout_marginRight="15dp"
-    android:src="@drawable/invite"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentEnd="true"
-    android:visibility="invisible"/>
-    />
-
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/invite"
+            android:visibility="invisible" />
 
     </RelativeLayout>
+
+</RelativeLayout>
