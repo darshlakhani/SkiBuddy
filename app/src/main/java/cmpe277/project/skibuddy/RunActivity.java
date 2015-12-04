@@ -1,6 +1,7 @@
 package cmpe277.project.skibuddy;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +16,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
@@ -53,6 +59,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                     currentRun = ServerSingleton.createRun();
                     toggleRecordButton.setText("STOP");
                 } else {
+                    // Done with run, store it
                     Run runToStore = currentRun;
                     currentRun = null;
                     toggleRecordButton.setText("REC");
@@ -61,6 +68,33 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                 }
             }
         });
+    }
+
+    private Polyline runLine;
+    private void drawRun(Run toDraw){
+        // If toDraw is null, set visibility to false
+        if(toDraw == null){
+            runLine.setVisible(false);
+            return;
+        }
+
+        // Draw the run
+        List<LatLng> points = runToLatLngList(toDraw);
+        if (runLine == null) {
+            PolylineOptions options = new PolylineOptions();
+            options.addAll(points);
+            options.color(Color.BLUE);
+            runLine = mMap.addPolyline(options);
+        } else {
+            runLine.setPoints(points);
+        }
+    }
+
+    private List<LatLng> runToLatLngList(Run input){
+        LinkedList<LatLng> toReturn = new LinkedList<>();
+        for (SkiBuddyLocation loc : input.getTrack())
+            toReturn.add(new LatLng(loc.getLatitude(), loc.getLongitude()));
+        return toReturn;
     }
 
     @Override
@@ -77,6 +111,8 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
             newLocation.setLatitude(location.getLatitude());
             newLocation.setLongitude(location.getLongitude());
             currentRun.extendTrack(newLocation);
+
+            drawRun(currentRun);
         }
     }
 
