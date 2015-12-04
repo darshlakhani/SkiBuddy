@@ -222,7 +222,7 @@ public class ParseServer implements Server {
     public void getEventParticipants(UUID eventID, final ServerCallback<List<EventParticipant>> callback) {
         ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
         query.whereEqualTo(ParseParticipation.EVENTID_FIELD, eventID.toString());
-        query.include(ParseParticipation.EVENT_FIELD);
+        query.include(ParseParticipation.USER_FIELD);
         query.findInBackground(new FindCallback<ParseParticipation>() {
             @Override
             public void done(List<ParseParticipation> objects, ParseException e) {

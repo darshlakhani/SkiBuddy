@@ -23,15 +23,11 @@ import java.util.*;
  */
 public class ParticipantFragment extends ListFragment {
 
-    //static final String[] PARTICIPANT_LIST =
-            //new String[] { "Bon Jovi", "Toothiya", "Weideryu", "Dulheraja"};
-
-    static final String[] PARTICIPANT_LIST = new String[100];
-    static final EventParticipant[] PARTICIPANT_LIST_FINAL = new EventParticipant[100];
-
+    private UUID eventID;
 
     public ParticipantFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -39,6 +35,7 @@ public class ParticipantFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        this.eventID = UUID.fromString(getArguments().getString(BundleKeys.EVENTID_KEY));
         return inflater.inflate(R.layout.fragment_partcipant, container, false);
     }
 
@@ -48,7 +45,6 @@ public class ParticipantFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         final Server s = new ServerSingleton().getServerInstance(getActivity());
-        UUID eventID = UUID.randomUUID();
         s.getEventParticipants(eventID, new ServerCallback<List<EventParticipant>>() {
 
             @Override

@@ -15,8 +15,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 /**
  * Created by Robin on 12/1/2015.
@@ -26,11 +31,13 @@ public class UserListAdapter extends ArrayAdapter<User> {
     //private final String[] values;
     List<User> users;
     String[ ] names;
+    UUID eventID;
 
-    public UserListAdapter(Context context,int resource,  List<User> result) {
+    public UserListAdapter(Context context,int resource,  List<User> result, UUID eventID) {
         super(context, resource,result);
         this.context = context;
         this.users =  result;
+        this.eventID = eventID;
     }
 
 
@@ -57,9 +64,11 @@ public class UserListAdapter extends ArrayAdapter<User> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.ivProfile);
         Button ib = (Button) rowView.findViewById(R.id.ibTick);
         User show = users.get(position);
+        ib.setTag(show);
 
         textView.setText(show.getName());
         imageView.setImageResource(R.drawable.invite);
+        final Server s = new ServerSingleton().getServerInstance(getContext());
 
         ib.setOnClickListener(new View.OnClickListener() {
 
@@ -70,7 +79,15 @@ public class UserListAdapter extends ArrayAdapter<User> {
                     ((Button) v).setText("Invited");
                     v.setSelected(true);
 
-                    Toast.makeText(getContext(), "User selected", Toast.LENGTH_LONG).show();
+                    final User toInvite = (User)v.getTag();
+                    s.getEvent(eventID, new ServerCallback<Event>() {
+                        @Override
+                        public void handleResult(Event result) {
+                            s.inviteUser(toInvite, result);
+                            Toast t = Toast.makeText(getContext(), "Invited user", Toast.LENGTH_LONG);
+                            t.show();
+                        }
+                    });
                 }
             }
         });

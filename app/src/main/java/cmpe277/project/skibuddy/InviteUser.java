@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
@@ -38,6 +39,7 @@ import cmpe277.project.skibuddy.server.ServerSingleton;
 public class InviteUser extends ListActivity {
     private EditText search;
     private ListView user;
+    private UUID eventID;
 
     private Handler handler;
     //private List<UserListAdapter> invUsers;
@@ -54,10 +56,15 @@ public class InviteUser extends ListActivity {
         setContentView(R.layout.invite_user);
 
         Intent i = getIntent();
+
+        Bundle bundle = i.getExtras();
+        eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
+
+        ss = new ServerSingleton().getServerInstance(self);
+
         Log.i("Invite User", "@@@@ action");
         self = getApplicationContext();
         //invUsers = new UserListAdapter(self,R.layout.user_list,);
-        ss = new ServerSingleton().getServerInstance(self);
         search = (EditText) findViewById(R.id.etSearch);
         //user = (ListView) findViewById(R.android.list);
 
@@ -113,10 +120,10 @@ public class InviteUser extends ListActivity {
                 /*UserListAdapter custom = new UserListAdapter(self, R.layout.user_list, result);
                 user.setAdapter(custom);*/
 
-                User resUsers[] = new User[result.size()];
-                result.toArray(resUsers);
+//                User resUsers[] = new User[result.size()];
+//                result.toArray(resUsers);
 
-                ArrayAdapter<User> adapter = new UserListAdapter(getApplicationContext(),R.layout.user_list,result);
+                ArrayAdapter<User> adapter = new UserListAdapter(getApplicationContext(),R.layout.user_list,result, eventID);
 
                 setListAdapter(adapter);
 

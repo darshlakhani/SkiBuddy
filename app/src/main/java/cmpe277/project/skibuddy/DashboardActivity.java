@@ -82,9 +82,6 @@ public class DashboardActivity extends AppCompatActivity {
                 Intent i = new Intent(DashboardActivity.this, CreateEvent.class);
                 startActivity(i);
 
-                Toast.makeText(DashboardActivity.this,
-                        "Create Event button is clicked!", Toast.LENGTH_SHORT).show();
-
             }
         });
 

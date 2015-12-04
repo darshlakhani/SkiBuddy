@@ -100,9 +100,30 @@ public class MainActivity extends AppCompatActivity implements
                     .addScope(new Scope(Scopes.EMAIL))
                     .build();
             // [END create_google_api_client]
+
+            final Server s = new ServerSingleton().getServerInstance(this);
+            final String UID = "qwes";
+            s.authenticateUser(UID, new ServerCallback<User>() {
+                @Override
+                public void handleResult(User result) {
+                    if(result == null){
+                        User user = ServerSingleton.createUser();
+                        user.setName("Ernst Haagsman");
+
+                        user.setTagline("");
+
+                        s.storeUser(UID, user);
+                    }
+
+                    // Launch new activity
+                    Intent i = new Intent(MainActivity.this, DashboardActivity.class);
+                    startActivity(i);
+                }
+            });
         }
 
         private void updateUI(boolean isSignedIn) {
+            final Server s =  new ServerSingleton().getServerInstance(this);
             if (isSignedIn) {
                 Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                 if (currentPerson != null) {
@@ -111,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements
                     final String id = currentPerson.getId();
                     final String tagLine = currentPerson.getTagline();
 
-                    final Server s =  new ServerSingleton().getServerInstance(this);
                     s.authenticateUser("G+" + id, new ServerCallback<User>() {
                         @Override
                         public void handleResult(User result) {
@@ -133,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     });
 
+
                     mStatus.setText(getString(R.string.signed_in_fmt, name));
                     ((TextView)findViewById(R.id.birthday)).setText(tagLine);
 
@@ -142,6 +163,26 @@ public class MainActivity extends AppCompatActivity implements
                         ((TextView) findViewById(R.id.email)).setText(currentAccount);
                     }
                 } else {
+
+                    final String UID = "qwes";
+                    s.authenticateUser(UID, new ServerCallback<User>() {
+                        @Override
+                        public void handleResult(User result) {
+                            if(result == null){
+                                User user = ServerSingleton.createUser();
+                                user.setName("Ernst Haagsman");
+
+                                user.setTagline("");
+
+                                s.storeUser(UID, user);
+                            }
+
+                            // Launch new activity
+                            Intent i = new Intent(MainActivity.this, DashboardActivity.class);
+                            startActivity(i);
+                        }
+                    });
+
                     // If getCurrentPerson returns null there is generally some error with the
                     // configuration of the application (invalid Client ID, Plus API not enabled, etc).
                     Log.w(TAG, getString(R.string.error_null_person));

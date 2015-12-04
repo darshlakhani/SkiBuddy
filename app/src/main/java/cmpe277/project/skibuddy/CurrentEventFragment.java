@@ -101,6 +101,7 @@ public class CurrentEventFragment extends ListFragment {
                 final EventRelation erObj = erList.get(position);
                 final HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());
+                mp.put("id",erObj.getEventID().toString());
                 mp.put("desc", erObj.getDescription());
                 //Store start date
                 mp.put("startDate", erObj.getStart().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));

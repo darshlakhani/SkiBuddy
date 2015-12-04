@@ -19,6 +19,7 @@ import java.util.HashMap;
  */
 public class EventManagement extends AppCompatActivity {
 
+    String eventID;
 
     TextView tvEventName,tvDesc,tvStartDate,tvEndDate;
     ImageButton invite;
@@ -50,6 +51,7 @@ public class EventManagement extends AppCompatActivity {
             invite.setVisibility(invite.VISIBLE);
         }
 
+        eventID = mpResult.get("id");
 
         //Code for Tab Implementation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,7 +64,7 @@ public class EventManagement extends AppCompatActivity {
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final EventManagerAdapter adapter = new EventManagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+                (getSupportFragmentManager(), tabLayout.getTabCount(), eventID);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -97,7 +99,7 @@ public class EventManagement extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 Intent intent = new Intent(context, InviteUser.class);
-                intent.putExtra("email", "myemail@gmail.com");
+                intent.putExtra(BundleKeys.EVENTID_KEY, eventID);
                 startActivity(intent);
 
             }

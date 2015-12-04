@@ -88,9 +88,9 @@ public class CreateEvent extends AppCompatActivity {
                     endTime = eventDate + " " + endTime;
 
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm");
-                DateTime sTime = formatter.parseDateTime(startTime);
-
-                DateTime eTime = formatter.parseDateTime(endTime);
+//                DateTime sTime = formatter.parseDateTime(startTime);
+//
+//                DateTime eTime = formatter.parseDateTime(endTime);
 
                 /*PojoEvent event = new PojoEvent();
                     event.setName(eventName);
@@ -116,8 +116,8 @@ public class CreateEvent extends AppCompatActivity {
 
                     e.setName(etEventName.getText().toString());
                     e.setDescription(etEventDesc.getText().toString());
-                    e.setStart(sTime);
-                    e.setEnd(eTime);
+                    e.setStart(DateTime.now());
+                    e.setEnd(DateTime.now().plusHours(4));
                     ss.storeEvent(e, new ServerCallback<UUID>() {
                         @Override
                         public void handleResult(UUID result) {
@@ -129,6 +129,8 @@ public class CreateEvent extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), InviteUser.class);
                     Bundle b = new Bundle();
 
+                    b.putString(BundleKeys.EVENTID_KEY, e.getEventID().toString());
+                    intent.putExtras(b);
 
                     startActivity(intent);
                 }
@@ -145,25 +147,25 @@ public class CreateEvent extends AppCompatActivity {
 
     private boolean checkEditText() {
 
-        if(etDate.getText().toString().trim().length()==0) {
-            return false;
-        }
-        if(etEndtime.getText().toString().trim().length()==0)
-        {
-            return false;
-        }
-        if(etEventDesc.getText().toString().trim().length()==0)
-        {
-            return  false;
-        }
-        if(etEventName.getText().toString().trim().length()==0)
-        {
-            return false;
-        }
-        if(etStartTime.getText().toString().trim().length()==0)
-        {
-            return false;
-        }
+//        if(etDate.getText().toString().trim().length()==0) {
+//            return false;
+//        }
+//        if(etEndtime.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
+//        if(etEventDesc.getText().toString().trim().length()==0)
+//        {
+//            return  false;
+//        }
+//        if(etEventName.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
+//        if(etStartTime.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
         return true;
     }
 

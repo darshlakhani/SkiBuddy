@@ -113,6 +113,7 @@ public class PastEventFragment extends ListFragment {
                 mp.put("name", erObj.getName());
                 mp.put("desc", erObj.getDescription());
 
+                mp.put("id",erObj.getEventID().toString());
                 //Store start date
                 mp.put("startDate", erObj.getStart().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
 
