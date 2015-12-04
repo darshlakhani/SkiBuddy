@@ -10,6 +10,9 @@ import cmpe277.project.skibuddy.common.Run;
 import java.util.List;
 import java.util.UUID;
 import android.support.v4.app.ListFragment;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
 import cmpe277.project.skibuddy.common.EventParticipant;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
@@ -54,15 +57,13 @@ public class RunFragment extends ListFragment {
             }
         });
 
-        /*setListAdapter(new ParticipantAdapter(getActivity(), PARTICIPANT_LIST));
-
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                         .show();
             }
-        });*/
+        });
 
 
     }

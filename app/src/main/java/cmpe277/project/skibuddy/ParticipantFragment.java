@@ -6,6 +6,8 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class ParticipantFragment extends ListFragment {
             }
         });
 
-        /*setListAdapter(new ParticipantAdapter(getActivity(), PARTICIPANT_LIST));
+
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,7 +71,7 @@ public class ParticipantFragment extends ListFragment {
                 Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                         .show();
             }
-        });*/
+        });
 
 
     }

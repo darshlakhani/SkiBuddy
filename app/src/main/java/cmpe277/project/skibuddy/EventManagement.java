@@ -1,6 +1,5 @@
 package cmpe277.project.skibuddy;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,26 +19,36 @@ import java.util.HashMap;
  */
 public class EventManagement extends AppCompatActivity {
 
-    ImageButton button;
+
     TextView tvEventName,tvDesc,tvStartDate,tvEndDate;
+    ImageButton invite;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_event_management);
         Intent intent = getIntent();
         HashMap<String,String> mpResult = (HashMap<String,String>)intent.getSerializableExtra("eventMap");
+
+
 
         tvEventName = (TextView)findViewById(R.id.tvEventName);
         tvDesc = (TextView)findViewById(R.id.tvEventDesc);
         tvStartDate = (TextView)findViewById(R.id.tvStartDate);
         tvEndDate = (TextView)findViewById(R.id.tvEndDate);
+        invite = (ImageButton) findViewById(R.id.imageButton1);
 
         tvEventName.setText(mpResult.get("name"));
+        setTitle(mpResult.get("name"));
         tvDesc.setText(mpResult.get("desc"));
         tvStartDate.setText(mpResult.get("startDate"));
         tvEndDate.setText(mpResult.get("endDate"));
+
+        if(mpResult.get("status")!=null &&mpResult.get("status").equals("host") && mpResult.get("event").equals("current")) {
+            invite.setVisibility(invite.VISIBLE);
+        }
 
 
         //Code for Tab Implementation
@@ -80,9 +89,9 @@ public class EventManagement extends AppCompatActivity {
 
         final Context context = this;
 
-        button = (ImageButton) findViewById(R.id.imageButton1);
 
-        button.setOnClickListener(new OnClickListener() {
+
+        invite.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {

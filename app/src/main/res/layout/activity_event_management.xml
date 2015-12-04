@@ -21,14 +21,17 @@ tools:context=".EventManagement">
     android:orientation="vertical">
         <TextView
             android:id="@+id/tvEventName"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="75dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Name" />
+            android:text="Event Name"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvEventDesc"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="18dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Description" /></LinearLayout>
@@ -37,14 +40,24 @@ tools:context=".EventManagement">
 
             <TextView
                 android:id="@+id/tvStartDate"
-                android:layout_marginTop="135dp"
+                android:layout_marginTop="150dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start Date" />
 
             <TextView
+            android:id="@+id/tvLine"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="------------" />
+
+            <TextView
                 android:id="@+id/tvEndDate"
-                android:layout_marginTop="165dp"
+                android:layout_marginTop="150dp"
+                android:layout_marginLeft="220dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="End Date" />
@@ -85,15 +98,15 @@ tools:context=".EventManagement">
 
 <ImageButton
     android:id="@+id/imageButton1"
-    android:layout_width="60dp"
-    android:layout_height="60dp"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
     android:layout_marginBottom="15dp"
     android:layout_marginRight="15dp"
     android:src="@drawable/invite"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
+    android:visibility="invisible"/>
     />
-
 
 </RelativeLayout>
 

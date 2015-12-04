@@ -13,11 +13,13 @@ import android.widget.Toast;
 import android.content.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.format.DateTimeFormat;
+
 import android.app.AlertDialog;
-import java.io.File;
+
 import java.util.*;
 import android.util.Log;
-import cmpe277.project.skibuddy.common.Event;
+
 import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.server.ServerCallback;
@@ -50,6 +52,8 @@ public class PastEventFragment extends ListFragment {
         return inflater.inflate(R.layout.fragment_past_event, container, false);
     }
 
+    final private String DATETIME_FORMAT = "MMM d, YY H:mm a";
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
@@ -70,6 +74,8 @@ public class PastEventFragment extends ListFragment {
                 //Get Current Date Time
                 DateTime currentValue = new DateTime();
                 Log.d("Event name", result.get(0).getName().toString());
+
+
                 int index = 0;
 
                 for (int i = 0; i < result.size(); i++) {
@@ -77,12 +83,15 @@ public class PastEventFragment extends ListFragment {
                     //Get DateTime from Event Object
                     DateTime dateValue = result.get(i).getEnd();
 
+                    //Get Participation Status
+                    Object participationStatus = result.get(i).getParticipationStatus();
+
                     //Compare datetime from event with current datetime value
                     int difference = DateTimeComparator.getInstance().compare(currentValue, dateValue);
                     Log.d("Difference Value",String.valueOf(difference));
 
                     //If Current date is greater, event should be in past and should be added to list
-                    if(difference == 1) {
+                    if(difference == 1 && participationStatus!=ParticipationStatus.INVITEE) {
                         PAST_EVENT_LIST_FINAL[index] = result.get(i);
                         PAST_EVENT_LIST[index] = result.get(i).getName();
                         erList.add(result.get(i));
@@ -99,9 +108,20 @@ public class PastEventFragment extends ListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                         .show();
-                Intent i = new Intent(getActivity(), EventManagement.class);
                 String eventName = PAST_EVENT_LIST[position];
-                EventRelation erObj = erList.get(position);
+                final EventRelation erObj = erList.get(position);
+
+                final HashMap<String, String> mp = new HashMap();
+                mp.put("name", erObj.getName());
+                mp.put("desc", erObj.getDescription());
+
+                //Store start date
+                mp.put("startDate", erObj.getStart().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
+
+                //Store end date
+                mp.put("endDate", erObj.getEnd().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
+
+                mp.put("event", "past");
 
                 Object status = erObj.getParticipationStatus();
                 String pStatus = new String();
@@ -109,6 +129,7 @@ public class PastEventFragment extends ListFragment {
                 if(status == ParticipationStatus.HOST)
                 {
                     pStatus = "host";
+                    mp.put("status",pStatus);
                 }
 
                 if(status == ParticipationStatus.INVITEE)
@@ -118,20 +139,25 @@ public class PastEventFragment extends ListFragment {
                             getActivity());
 
                     // set title
-                    alertDialogBuilder.setTitle("Confirm Invitation to Event");
+                    alertDialogBuilder.setTitle(erObj.getName());
                     alertDialogBuilder
-                            .setMessage("Click yes to confirm!")
+                            .setMessage("Do you want to accept the invitation?")
                             .setCancelable(false)
                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
                                     // if this button is clicked, close
                                     // current activity
                                     Log.d("Reply","Accept Invite");
+                                    Intent i = new Intent(getActivity(), EventManagement.class);
+                                    i.putExtra("eventMap", mp);
+                                    startActivity(i);
+                                    s.acceptInvitation(erObj);
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Log.d("Reply", "reject Invite");
+                                    s.rejectInvitation(erObj);
                                 }
                             });
 
@@ -140,21 +166,17 @@ public class PastEventFragment extends ListFragment {
 
                     // show it
                     alertDialog.show();
+                    mp.put("status",pStatus);
                 }
+                else {
 
-                HashMap<String, String> mp = new HashMap();
-                mp.put("name", erObj.getName());
-                mp.put("desc", erObj.getDescription());
-                mp.put("startDate", erObj.getStart().toString());
-                mp.put("endDate", erObj.getEnd().toString());
-                Log.d("end date", erObj.getEnd().toString());
-
-                i.putExtra("eventMap", mp);
-                startActivity(i);
+                    Intent i = new Intent(getActivity(), EventManagement.class);
+                    i.putExtra("eventMap", mp);
+                    startActivity(i);
+                }
             }
         });
     }
-
 
 }
 

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,8 @@ public class CurrentEventFragment extends ListFragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_current_event, container, false);
     }
+
+    final private String DATETIME_FORMAT = "MMM d, YY H:mm a";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -100,8 +103,12 @@ public class CurrentEventFragment extends ListFragment {
                 final HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());
                 mp.put("desc", erObj.getDescription());
-                mp.put("startDate", erObj.getStart().toString());
-                mp.put("endDate", erObj.getEnd().toString());
+                //Store start date
+                mp.put("startDate", erObj.getStart().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
+
+                //Store end date
+                mp.put("endDate", erObj.getEnd().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
+                mp.put("event","current");
                 Log.d("end date", erObj.getEnd().toString());
 
                 Object status = erObj.getParticipationStatus();
@@ -110,6 +117,7 @@ public class CurrentEventFragment extends ListFragment {
                 if(status == ParticipationStatus.HOST)
                 {
                     pStatus = "host";
+                    mp.put("status",pStatus);
                 }
 
                 if(status == ParticipationStatus.INVITEE)
@@ -119,9 +127,9 @@ public class CurrentEventFragment extends ListFragment {
                             getActivity());
 
                     // set title
-                    alertDialogBuilder.setTitle("Confirm Invitation to Event");
+                    alertDialogBuilder.setTitle(erObj.getName());
                     alertDialogBuilder
-                            .setMessage("Click yes to confirm!")
+                            .setMessage("Do you want to accept the invitation?")
                             .setCancelable(false)
                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
@@ -146,6 +154,7 @@ public class CurrentEventFragment extends ListFragment {
 
                     // show it
                     alertDialog.show();
+                    mp.put("status",pStatus);
                 }
                 else {
 

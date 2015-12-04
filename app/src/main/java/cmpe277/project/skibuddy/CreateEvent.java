@@ -159,7 +159,7 @@ public class CreateEvent extends AppCompatActivity {
 //>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
@@ -204,7 +204,7 @@ public class CreateEvent extends AppCompatActivity {
         }
 
         return true;
-    }
+    }*/
 
 
 }

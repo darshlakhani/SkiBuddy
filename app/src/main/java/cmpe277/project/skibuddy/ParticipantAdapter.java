@@ -69,7 +69,7 @@ public class ParticipantAdapter extends BaseAdapter {
 
         EventParticipant participant = values.get(position);
         holder.label.setText(participant.getName());
-        holder.tvStatus.setText(participant.getParticipationStatus().toString());
+        holder.tvStatus.setText("");
 
         // Change icon based on name
         String s = participant.getName();

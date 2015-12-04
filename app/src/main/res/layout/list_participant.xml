@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="5dp" >
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="60px"
-        android:layout_height="60px"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="20px"
-        android:layout_marginTop="5px"
+        android:layout_marginTop="10dp"
         android:src="@drawable/invite" >
     </ImageView>
 
@@ -19,19 +18,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@+id/label"
-        android:layout_marginLeft="15dp"
-        android:textSize="30px" >
+        android:layout_marginLeft="70dp"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@android:color/holo_blue_dark"
+        android:textColor="#145cff">
     </TextView>
 
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Status"
-        android:textSize="30px" >
+        android:textSize="15sp"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="70dp">
     </TextView>
-</LinearLayout>
 
 
-
+</RelativeLayout>

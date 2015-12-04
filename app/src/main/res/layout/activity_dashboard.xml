@@ -34,4 +34,36 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/tab_layout"/>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="500dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primary_dark_material_light"
+        style="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle.Inverse">
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/record"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:clickable="true"
+
+            style="@style/AppTheme" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/create"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="247dp"
+            android:clickable="true"
+
+            style="@style/AppTheme" />
+    </LinearLayout>
+
+
+
 </RelativeLayout>

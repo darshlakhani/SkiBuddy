@@ -10,4 +10,9 @@
         <item name="colorAccent">#FF4081</item>
     </style>
 
+    <!-- Dark Buttons -->
+    <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/blue_grey_500</item>
+    </style>
+
 </resources>
