@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
@@ -36,14 +37,18 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     private Button toggleRecordButton;
     private TextView runStatus;
     private Run currentRun;
+    private UUID eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+        // Start the location updates
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -53,6 +58,15 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
         }
         mapFragment.getMapAsync(this);
 
+        // Handle incoming bundle
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String eventUUID = bundle.getString(BundleKeys.EVENTID_KEY);
+            if (eventUUID != null)
+                eventId = UUID.fromString(eventUUID);
+        }
+
+        // Handle button clicks
         final Context context = this;
 
         toggleRecordButton = (Button)findViewById(R.id.toggle_record_button);
@@ -93,6 +107,10 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
         Server s = new ServerSingleton().getServerInstance(this);
         try {
             User currentUser = s.getAuthenticatedUser();
+
+            // EventID will be null if none was supplied in the bundle
+            run.setEventId(eventId);
+
             run.setUserId(currentUser.getId());
             s.storeRun(run);
         } catch (NotAuthenticatedException ex){
