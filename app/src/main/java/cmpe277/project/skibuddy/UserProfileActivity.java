@@ -1,6 +1,5 @@
 package cmpe277.project.skibuddy;
 
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +17,6 @@ public class UserProfileActivity extends Activity {
     ImageView imageView;
 
     ArrayList<String> arrStr = new ArrayList<String>();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,6 @@ public class UserProfileActivity extends Activity {
         }
 
         //Profile picture
-
         final int PROFILE_PIC_SIZE = 500;
         String uriStr = arrStr.get(2);
         if (uriStr != null || uriStr != "") {
