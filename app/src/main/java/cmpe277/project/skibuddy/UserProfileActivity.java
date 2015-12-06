@@ -30,38 +30,43 @@ public class UserProfileActivity extends Activity {
         imageView = (ImageView) findViewById(R.id.imageView);
         name = (TextView) findViewById(R.id.name);
         tagline = (TextView) findViewById(R.id.tagline);
-        imageView.setImageBitmap(null);
 
-        setUserProfile();
+        if (arrStr != null && arrStr.size() != 0) {
+            setUserProfile();
+        }
     }
 
     public void setUserProfile () {
-            //User name
-            name.setText(getString(R.string.signed_in_fmt, arrStr.get(0)));
+        imageView.setImageBitmap(null);
+        //User name
+        name.setText(getString(R.string.signed_in_fmt, arrStr.get(0)));
 
-            //Tagline
-            String taglineStr = arrStr.get(1);
+        //Tagline
+        String taglineStr = arrStr.get(1);
 
-            if (taglineStr != null) {
-                tagline.setText(getString(R.string.tagline, taglineStr));
-            } else {
-                tagline.setText(getString(R.string.tagline_na));
-            }
+        if (taglineStr != null) {
+            tagline.setText(getString(R.string.tagline, taglineStr));
+        } else {
+            tagline.setText(getString(R.string.tagline_na));
+        }
 
-            //Profile picture
-            final int PROFILE_PIC_SIZE = 500;
-            String uriStr = arrStr.get(2);
+        //Profile picture
+
+        final int PROFILE_PIC_SIZE = 500;
+        String uriStr = arrStr.get(2);
+        if (uriStr != null || uriStr != "") {
             String shorter_url =
                     uriStr.substring(0,
                             uriStr.length() - 2)
                             + PROFILE_PIC_SIZE;
             new LoadProfileImage(imageView).execute(shorter_url);
-
+        }
+        else imageView.setImageBitmap(null);
     }
 
     /**
      * Background Async task to load user profile picture from url
-     * */
+     */
     private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
