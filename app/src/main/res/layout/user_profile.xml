@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageView"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10px"/>
+
+        <TextView
+            android:layout_width="250dip"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5px"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView" />
+
+        <TextView
+            android:layout_width="250dip"
+            android:layout_height="wrap_content"
+            android:id="@+id/tagline"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5px"
+            android:layout_below="@+id/name"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_alignBottom="@+id/imageView" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.46">
+
+        <LinearLayout
+            android:id="@+id/sign_out_and_disconnect"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
