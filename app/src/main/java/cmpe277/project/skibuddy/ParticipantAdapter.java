@@ -1,50 +1,82 @@
 package cmpe277.project.skibuddy;
 
-
-
 import android.content.Context;
+import android.support.v7.widget.RecyclerView.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ParticipantAdapter extends ArrayAdapter<String> {
-    private final Context context;
-    private final String[] values;
+import java.util.List;
 
-    public ParticipantAdapter(Context context, String[] values) {
-        super(context, R.layout.list_participant, values);
+import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
+
+/**
+ * Created by akankshanagpal on 12/2/15.
+ */
+public class ParticipantAdapter extends BaseAdapter {
+
+    private final Context context;
+    private LayoutInflater inflater;
+    private final List<EventParticipant> values;
+
+    public ParticipantAdapter(Context context, List<EventParticipant> values) {
+        inflater = LayoutInflater.from(context);
         this.context = context;
         this.values = values;
     }
 
+    private class ViewHolder {
+        public TextView label, tvStatus;
+        public ImageView logo;
+    }
+
+    @Override
+    public int getCount() {
+        return values.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return values.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view;
+        ViewHolder holder;
 
-        View rowView = inflater.inflate(R.layout.list_participant, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.label);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
-        textView.setText(values[position]);
-
-        // Change icon based on name
-        String s = values[position];
-
-        System.out.println(s);
-
-        if (s.equals("Bon Jovi")) {
-            imageView.setImageResource(R.drawable.invite);
-        } else if (s.equals("Toothiya")) {
-            imageView.setImageResource(R.drawable.invite);
-        } else if (s.equals("Weideryu")) {
-            imageView.setImageResource(R.drawable.invite);
+        if(convertView == null){
+            view = inflater.inflate(R.layout.list_participant, parent, false);
+            holder = new ViewHolder();
+            holder.label = (TextView) view.findViewById(R.id.label);
+            holder.logo = (ImageView) view.findViewById(R.id.logo);
+            holder.tvStatus = (TextView)view.findViewById(R.id.tvStatus);
+            view.setTag(holder);
         } else {
-            imageView.setImageResource(R.drawable.invite);
+            view = convertView;
+            holder = (ViewHolder)view.getTag();
         }
 
-        return rowView;
+        EventParticipant participant = values.get(position);
+        holder.label.setText(participant.getName());
+        holder.tvStatus.setText("");
+
+        // Change icon based on name
+        String s = participant.getName();
+
+        System.out.println("events "+ s);
+        holder.logo.setImageResource(R.drawable.invite);
+
+        return view;
     }
 }

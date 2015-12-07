@@ -1,284 +1,313 @@
-//<<<<<<< HEAD
 package cmpe277.project.skibuddy.server;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import bolts.Continuation;
+import bolts.Task;
 import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.common.EventParticipant;
-import cmpe277.project.skibuddy.common.Location;
-import cmpe277.project.skibuddy.common.LocationListener;
-//import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.EventRelation;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.ParticipationStatus;
 import cmpe277.project.skibuddy.common.Run;
-import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
+import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
 import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.parseobjects.ParseEvent;
+import cmpe277.project.skibuddy.server.parseobjects.ParseEventParticipant;
+import cmpe277.project.skibuddy.server.parseobjects.ParseEventRelation;
+import cmpe277.project.skibuddy.server.parseobjects.ParseParticipation;
+import cmpe277.project.skibuddy.server.parseobjects.ParseRun;
+import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 
 /**
- * Created by eh on 11/28/2015.
+ * Created by eh on 11/29/2015.
  */
 public class ParseServer implements Server {
+    final Context context;
+    private ParseUser user;
+
     public ParseServer(Context context){
-        Parse.enableLocalDatastore(context);
+        this.context = context;
 
-        Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
+        ParseObject.registerSubclass(ParseEvent.class);
+        ParseObject.registerSubclass(ParseUser.class);
+        ParseObject.registerSubclass(ParseParticipation.class);
+        ParseObject.registerSubclass(ParseRun.class);
+
+        Parse.initialize(context, "REO5YRRyjUfaHVNB4dplAfCRxTr8rJndVTxIOP0Q", "0yAKP0rwx6Ske9TUA4gmRXrmCUjXyUcmtFYv9ENq");
+    }
+
+    private void invokeCallback(ServerCallback callback){
+        Handler mainHandler = new Handler(context.getMainLooper());
+        mainHandler.post(callback);
     }
 
     @Override
-    public User authenticateUser(String authentication_token) {
-        return null;
+    public void authenticateUser(String authentication_token, final ServerCallback<User> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(ParseUser.AUTHTOKEN_FIELD, authentication_token);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() > 0) {
+                        callback.postResult(objects.get(0));
+                        user = objects.get(0);
+                    }
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public User getUser(UUID userID) {
-        return null;
+    public User getAuthenticatedUser() throws NotAuthenticatedException {
+        if (user == null)
+            throw new NotAuthenticatedException();
+
+        return user;
     }
 
     @Override
-    public List<Run> getRuns(UUID eventID)  {
-        return null;
+    public void getUser(UUID userID, final ServerCallback<User> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(ParseUser.ID_FIELD, userID.toString());
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(objects.get(0));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public List<Run> getUserRuns(UUID userID) {
-        return null;
+    public void getUsersByName(String nameStartsWith, final ServerCallback<List<User>> callback) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereContains(ParseUser.NAME_FIELD, nameStartsWith);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(new LinkedList<User>(objects));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public void authenticateUser(String authentication_token, ServerCallback<User> callback) {
+    public void storeUser(String authentication_token, User user) {
+        ParseUser parseUser = (ParseUser)user;
+        parseUser.setAuthToken(authentication_token);
+        this.user = parseUser;
+        parseUser.saveInBackground();
+    }
 
+    private void runQuery(ParseQuery<ParseRun> query, final ServerCallback<List<Run>> callback){
+        query.findInBackground(new FindCallback<ParseRun>() {
+            @Override
+            public void done(List<ParseRun> objects, ParseException e) {
+                List<Run> runs = new LinkedList<Run>();
+                for(ParseRun run : objects) {
+                    try {
+                        runs.add(run.get());
+                    } catch (IOException io){
+                        Log.w(ParseServer.class.getName(), "Couldn't decode run: " + io.getMessage());
+                    }
+                }
+                callback.postResult(runs);
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public void getUser(UUID userID, ServerCallback<User> callback) {
-
-    }
-
-    @Override
-    public void storeUser(User user) {
-
-    }
-
-    @Override
-    public void getRuns(UUID eventID, ServerCallback<List<Run>> callback) {
-
+    public void getRuns(UUID eventID, final ServerCallback<List<Run>> callback) {
+        ParseQuery<ParseRun> query = ParseQuery.getQuery(ParseRun.class);
+        query.whereEqualTo(ParseRun.EVENTID_FIELD, eventID.toString());
+        runQuery(query, callback);
     }
 
     @Override
     public void getUserRuns(UUID userID, ServerCallback<List<Run>> callback) {
-
+        ParseQuery<ParseRun> query = ParseQuery.getQuery(ParseRun.class);
+        query.whereEqualTo(ParseRun.USERID_FIELD, userID.toString());
+        runQuery(query, callback);
     }
 
     @Override
     public void storeRun(Run run) {
+        ParseRun newRun = new ParseRun();
+        newRun.store(run);
+        newRun.saveInBackground();
 
+        // After adding the run, we should update the user's stats
+        user.incrementTotalDistance(run.getDistance());
+        user.incrementTotalTime(run.getTotalTime());
+        if(run.getTopSpeed() > user.getTopSpeed())
+            user.setTopSpeed(run.getTopSpeed());
+
+        user.saveInBackground();
     }
 
     @Override
-    public void getEvents(ServerCallback<List<Event>> callback) {
-
+    public void getEvent(UUID eventID, final ServerCallback<Event> callback) {
+        ParseQuery<ParseEvent> query = ParseQuery.getQuery(ParseEvent.class);
+        query.whereEqualTo(ParseEvent.EVENTID_FIELD, eventID.toString());
+        query.findInBackground(new FindCallback<ParseEvent>() {
+            @Override
+            public void done(List<ParseEvent> objects, ParseException e) {
+                if(e == null){
+                    if (objects.size() > 0)
+                        callback.postResult(objects.get(0));
+                } else {
+                    Log.w("ParseServer", e.getMessage());
+                }
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public void getEventParticipants(UUID eventID, ServerCallback<List<EventParticipant>> callback) {
-
-    }
-
-    /*@Override
-    public void getEventParticipants(UUID eventID, ServerCallback<List<User>> callback) {
-
-    }
-*/
-    @Override
-    public void storeEvent(Event event, ServerCallback<UUID> callback) {
-
-    }
-
-    @Override
-    public List<Event> getEvents()  {
-        return null;
-    }
-
-    @Override
-    public List<User> getEventParticipants(UUID eventID)  {
-        return null;
-    }
-
-    @Override
-    public UUID storeEvent(Event event)  {
-        if(event.getEventID() == null)
-            event.setEventID(UUID.randomUUID());
-
-        ParseObject parseEvent = new ParseObject("Event");
-        try {
-            parseEvent.put("eventName", new Mapper().getMapper().writeValueAsString(event));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+    public void getEvents(final ServerCallback<List<EventRelation>> callback) {
+        // No exception is defined on this function, so we can only ignore a call if
+        // no user is logged in.
+        if (user == null) {
+            Log.w(ParseServer.class.getName(), "User not logged in, exception should be thrown here really...");
+            return;
         }
-        parseEvent.saveInBackground();
-        return event.getEventID();
+
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.include(ParseParticipation.EVENT_FIELD);
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                List<EventRelation> result = new ArrayList<>(objects.size());
+                for (ParseParticipation participation : objects)
+                    result.add(new ParseEventRelation(participation));
+                callback.postResult(result);
+                invokeCallback(callback);
+            }
+        });
     }
 
     @Override
-    public void inviteUser(User userID, Event event)  {
+    public void getEventParticipants(UUID eventID, final ServerCallback<List<EventParticipant>> callback) {
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, eventID.toString());
+        query.include(ParseParticipation.USER_FIELD);
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                List<EventParticipant> result = new ArrayList<>(objects.size());
+                for (ParseParticipation participation : objects)
+                    result.add(new ParseEventParticipant(participation));
+                callback.postResult(result);
+                invokeCallback(callback);
+            }
+        });
+    }
 
+    @Override
+    public void storeEvent(Event event, final ServerCallback<UUID> callback) {
+        final ParseEvent parseEvent = (ParseEvent)event;
+        parseEvent.saveInBackground().continueWith(new Continuation<Void, Void>() {
+            @Override
+            public Void then(Task<Void> task) throws Exception {
+                ParseParticipation hostRelationship = new ParseParticipation();
+                hostRelationship.setUser(user);
+                hostRelationship.setEvent(parseEvent);
+                hostRelationship.setParticipationStatus(ParticipationStatus.HOST);
+                hostRelationship.saveInBackground();
+                callback.postResult(parseEvent.getEventID());
+                invokeCallback(callback);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public void inviteUser(User user, Event event) {
+        ParseParticipation participation = new ParseParticipation();
+        participation.setUser((ParseUser)user);
+        participation.setEvent((ParseEvent) event);
+        participation.setParticipationStatus(ParticipationStatus.INVITEE);
+        participation.saveInBackground();
     }
 
     @Override
     public void acceptInvitation(Event event) {
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, event.getEventID().toString());
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                if(e == null && objects.size() == 1){
+                    ParseParticipation invitationToAccept = objects.get(0);
+                    invitationToAccept.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                    invitationToAccept.saveInBackground();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void rejectInvitation(Event event) {
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, event.getEventID().toString());
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                if(e == null && objects.size() == 1){
+                    ParseParticipation invitationToAccept = objects.get(0);
+                    invitationToAccept.setParticipationStatus(ParticipationStatus.PARTICIPANT);
+                    invitationToAccept.deleteInBackground();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void updateLocation(SkiBuddyLocation location) {
 
     }
 
     @Override
-    public void rejectInvitation(Event event)  {
+    public void registerLocationListener(SkiBuddyLocationListener listener, UUID eventID) {
 
     }
 
     @Override
-    public void updateLocation(Location location)  {
-
-    }
-
-    @Override
-    public void registerLocationListener(LocationListener listener, UUID eventID)  {
-
-    }
-
-    @Override
-    public void unregisterLocationListener(LocationListener listener) {
+    public void unregisterLocationListener(SkiBuddyLocationListener listener) {
 
     }
 }
-//=======
-//package cmpe277.project.skibuddy.server;
-//
-//import android.content.Context;
-//import android.os.Handler;
-//
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.parse.Parse;
-//import com.parse.ParseObject;
-//
-//import java.util.List;
-//import java.util.UUID;
-//
-//import cmpe277.project.skibuddy.common.Event;
-//import cmpe277.project.skibuddy.common.Location;
-//import cmpe277.project.skibuddy.common.LocationListener;
-//import cmpe277.project.skibuddy.common.NotAuthenticatedException;
-//import cmpe277.project.skibuddy.common.Run;
-//import cmpe277.project.skibuddy.common.User;
-//
-///**
-// * Created by eh on 11/28/2015.
-// */
-//public class ParseServer implements Server {
-//    private final Context context;
-//
-//    public ParseServer(Context context){
-//        this.context = context;
-////        Parse.enableLocalDatastore(context);
-////
-//        Parse.initialize(context, "QY0YiXoRaSmEDYBprKbQSgUMAPX2EgYaNF4spnLt", "c0CDe7W7J4aMeWJUpeuxMCP6vBalpS6oEnyOmWmC");
-//    }
-//
-//    @Override
-//    public void authenticateUser(String authentication_token, final ServerCallback<User> callback) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Handler mainHandler = new Handler(context.getMainLooper());
-//                User result = new User();
-//                result.setName("John Doe");
-//                callback.postResult(result);
-//                mainHandler.post(callback);
-//            }
-//        }).start();
-//    }
-//
-//    @Override
-//    public User getUser(UUID userID) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<Run> getRuns(UUID eventID) throws NotAuthenticatedException {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<Run> getUserRuns(UUID userID) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void storeRun(Run run) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public List<Event> getEvents() throws NotAuthenticatedException {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<User> getEventParticipants(UUID eventID) throws NotAuthenticatedException {
-//        return null;
-//    }
-//
-//    @Override
-//    public UUID storeEvent(Event event) throws NotAuthenticatedException {
-//        if(event.getEventID() == null)
-//            event.setEventID(UUID.randomUUID());
-//
-//        ParseObject parseEvent = new ParseObject("Event");
-//        try {
-//            parseEvent.put("event", new Mapper().getMapper().writeValueAsString(event));
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//        parseEvent.saveInBackground();
-//        return event.getEventID();
-//    }
-//
-//    @Override
-//    public void inviteUser(User userID, Event event) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public void acceptInvitation(Event event) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public void rejectInvitation(Event event) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public void updateLocation(Location location) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public void registerLocationListener(LocationListener listener, UUID eventID) throws NotAuthenticatedException {
-//
-//    }
-//
-//    @Override
-//    public void unregisterLocationListener(LocationListener listener) {
-//
-//    }
-//}
-//>>>>>>> f0a29f3fb4d94aafcdd313c68165917f98a1407b

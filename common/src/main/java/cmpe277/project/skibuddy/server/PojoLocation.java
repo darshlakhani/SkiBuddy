@@ -1,11 +1,11 @@
 package cmpe277.project.skibuddy.server;
 
-import cmpe277.project.skibuddy.common.Location;
+import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 
 /**
  * Created by eh on 11/28/2015.
  */
-class PojoLocation implements Location {
+public class PojoLocation implements SkiBuddyLocation {
     private double latitude;
     private double longitude;
     private double elevation;

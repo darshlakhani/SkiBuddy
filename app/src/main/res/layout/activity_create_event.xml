@@ -16,11 +16,12 @@
         android:layout_height="wrap_content"
         android:text="Event Name"/> -->
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/etEventName"
+        android:id="@+id/tEventName"
         android:layout_width="match_parent"
         android:textColorHint="#003380"
         android:layout_height="wrap_content">
     <EditText
+        android:id="@+id/etEventName"
         android:textColor="#003d99"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
@@ -37,12 +38,13 @@
         android:layout_below="@+id/etEventName"
         android:text="Event Description"/> -->
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/etEventDescription"
+        android:id="@+id/tEventDescription"
         android:layout_width="match_parent"
-        android:layout_below="@+id/etEventName"
+        android:layout_below="@+id/tEventName"
         android:textColorHint="#003380"
         android:layout_height="wrap_content">
     <EditText
+        android:id="@+id/etEventDescription"
         android:textColor="#003d99"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,13 +53,13 @@
         />
  </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/etEventDate"
+        android:id="@+id/tEventDate"
         android:layout_width="match_parent"
-        android:layout_below="@+id/etEventDescription"
+        android:layout_below="@+id/tEventDescription"
         android:textColorHint="#003380"
         android:layout_height="wrap_content">
     <EditText
-
+        android:id="@+id/etEventDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#003d99"
@@ -67,14 +69,14 @@
 </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/etEventStartTime"
+        android:id="@+id/tEventStartTime"
         android:layout_width="match_parent"
-        android:layout_below="@+id/etEventDate"
+        android:layout_below="@+id/tEventDate"
         android:textColorHint="#003380"
         android:layout_height="wrap_content">
 
     <EditText
-
+        android:id="@+id/etEventStartTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvEventStartTime"
@@ -86,14 +88,14 @@
 </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/etEventEndTime"
+        android:id="@+id/tEventEndTime"
         android:layout_width="match_parent"
-        android:layout_below="@+id/etEventStartTime"
+        android:layout_below="@+id/tEventStartTime"
         android:textColorHint="#003380"
         android:layout_height="wrap_content">
 
     <EditText
-
+        android:id="@+id/etEventEndTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
        android:hint="@string/end_time"
@@ -105,7 +107,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etEventEndTime"
+        android:layout_below="@+id/tEventEndTime"
         android:id="@+id/btCreateEventButton"
         android:text="Save"
         android:layout_marginTop="40dp"
