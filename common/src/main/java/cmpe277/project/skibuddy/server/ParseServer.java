@@ -106,7 +106,7 @@ public class ParseServer implements Server {
     @Override
     public void getUsersByName(String nameStartsWith, final ServerCallback<List<User>> callback) {
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        query.whereContains(ParseUser.NAME_FIELD, nameStartsWith);
+        query.whereContains(ParseUser.NAME_LOWERCASE_FIELD, nameStartsWith.toLowerCase());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
