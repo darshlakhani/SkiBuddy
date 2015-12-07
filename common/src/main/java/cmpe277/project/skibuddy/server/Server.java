@@ -58,6 +58,11 @@ public interface Server {
 	void storeRun(Run run);
 
 	/**
+	 * Gets a single run
+	 */
+	void getRun(UUID runId, ServerCallback<Run> callback);
+
+	/**
 	 * Fetches the specified event. Returns null if the event couldn't be found.
 	 */
 	void getEvent(UUID eventID, ServerCallback<Event> callback);
