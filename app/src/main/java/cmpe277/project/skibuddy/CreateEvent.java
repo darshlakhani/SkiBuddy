@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -14,11 +15,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+//import cmpe277.project.skibuddy.server.PojoEvent;
+import cmpe277.project.skibuddy.common.Event;
 import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class CreateEvent extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "cmpe277.project.skibuddy";
+
+    EditText etEventName,etEventDesc, etDate, etStartTime, etEndtime;
+    Event e;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +45,11 @@ public class CreateEvent extends AppCompatActivity {
 
         final Context self = this;
         final Server ss = new ServerSingleton().getServerInstance(self);
+        e = ServerSingleton.createEvent();
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 /*ss.authenticateUser("abc", new ServerCallback<User>() {
                     @Override
@@ -43,30 +61,38 @@ public class CreateEvent extends AppCompatActivity {
                         } else {
                             text = String.format("got user %s", result.getName());
                         }*/
-                EditText etEventName = (EditText) findViewById(R.id.etEventName);
-                final String eventName = etEventName.getText().toString();
+                etEventName = (EditText) findViewById(R.id.etEventName);
+                // final String eventName = etEventName.getText().toString();
 
-                EditText etEventDesc = (EditText) findViewById(R.id.etEventDescription);
-                String eventDescription = etEventDesc.getText().toString();
+                etEventDesc = (EditText) findViewById(R.id.etEventDescription);
+                //String eventDescription = etEventDesc.getText().toString();
 
 
-                EditText etDate = (EditText) findViewById(R.id.etEventDate);
-                String eventDate = etDate.getText().toString();
+                etDate = (EditText) findViewById(R.id.etEventDate);
+                etStartTime = (EditText) findViewById(R.id.etEventStartTime);
+                etEndtime = (EditText) findViewById(R.id.etEventEndTime);
+                if(!checkEditText())
+                {
+                    Toast.makeText(getApplicationContext(),"Enter All Values", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.i("Create Event", "@@@@ in else");
+                    String eventDate = etDate.getText().toString();
 
-                EditText etStartTime = (EditText) findViewById(R.id.etEventStartTime);
-                String startTime = etStartTime.getText().toString();
+
+                    String startTime = etStartTime.getText().toString();
                     startTime = eventDate + " " + startTime;
 
-                EditText etEndtime = (EditText) findViewById(R.id.etEventEndTime);
-                String endTime = etEndtime.getText().toString();
-                endTime = eventDate + " " + endTime;
-/*
+
+                    String endTime = etEndtime.getText().toString();
+                    endTime = eventDate + " " + endTime;
+
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm");
-                DateTime sTime = formatter.parseDateTime(startTime);
+//                DateTime sTime = formatter.parseDateTime(startTime);
+//
+//                DateTime eTime = formatter.parseDateTime(endTime);
 
-                DateTime eTime = formatter.parseDateTime(endTime);
-
-                PojoEvent event = new PojoEvent();
+                /*PojoEvent event = new PojoEvent();
                     event.setName(eventName);
                     event.setDescription(eventDescription);
                     event.setStart(sTime);
@@ -81,16 +107,33 @@ public class CreateEvent extends AppCompatActivity {
                         }
                     });*/
 
-                    String tdsp = endTime +","+ startTime +","+eventDate;
-                Log.i("tag1", endTime);
-                Log.i("tag2", startTime);
-                Log.i("tag3", eventDate);
-                Toast t = Toast.makeText(self, startTime, Toast.LENGTH_LONG);
-                        t.show();
+                   /* String tdsp = endTime + "," + startTime + "," + eventDate;
+                    Log.i("tag1", endTime);
+                    Log.i("tag2", startTime);
+                    Log.i("tag3", eventDate);
+                   */ //Toast t = Toast.makeText(self, eventName, Toast.LENGTH_LONG);
+                    //t.show();
 
-                Intent intent = new Intent(getApplicationContext(), InviteUser.class);
-                startActivity(intent);
+                    e.setName(etEventName.getText().toString());
+                    e.setDescription(etEventDesc.getText().toString());
+                    e.setStart(DateTime.now());
+                    e.setEnd(DateTime.now().plusHours(4));
+                    ss.storeEvent(e, new ServerCallback<UUID>() {
+                        @Override
+                        public void handleResult(UUID result) {
+                            Log.i("Create Event", "@@@@ stored event");
 
+                        }
+                    });
+
+                    Intent intent = new Intent(getApplicationContext(), InviteUser.class);
+                    Bundle b = new Bundle();
+
+                    b.putString(BundleKeys.EVENTID_KEY, e.getEventID().toString());
+                    intent.putExtras(b);
+
+                    startActivity(intent);
+                }
 
             }
 
@@ -100,6 +143,30 @@ public class CreateEvent extends AppCompatActivity {
 
 
 
+    }
+
+    private boolean checkEditText() {
+
+//        if(etDate.getText().toString().trim().length()==0) {
+//            return false;
+//        }
+//        if(etEndtime.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
+//        if(etEventDesc.getText().toString().trim().length()==0)
+//        {
+//            return  false;
+//        }
+//        if(etEventName.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
+//        if(etStartTime.getText().toString().trim().length()==0)
+//        {
+//            return false;
+//        }
+        return true;
     }
 
     @Override
