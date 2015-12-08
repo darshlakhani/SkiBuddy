@@ -137,7 +137,7 @@ public class SignInActivity extends AppCompatActivity implements
 
 
                 userProfileIntent.putExtra("UserProfileActivity", arrStr);
-            SignInActivity.this.startActivity(userProfileIntent);
+//              SignInActivity.this.startActivity(userProfileIntent);
 
                 //TODO: end of to be deprecated
 
@@ -159,7 +159,7 @@ public class SignInActivity extends AppCompatActivity implements
                         }
                         // Launch new activity
                         Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
-                        //startActivity(i);
+                        startActivity(i);
                     }
                 });
             }//if
