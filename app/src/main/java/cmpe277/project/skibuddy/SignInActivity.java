@@ -70,10 +70,22 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
+        updateUI(false);
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (!opr.isDone()) {
-            Log.d(TAG, "Did not have cached sign-in");
+        if (opr.isDone()) {
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            try {
+                handleSignInResult(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NoUserIdException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
             showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
@@ -83,9 +95,9 @@ public class SignInActivity extends AppCompatActivity implements
                         handleSignInResult(googleSignInResult);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     } catch (NoUserIdException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -138,7 +150,7 @@ public class SignInActivity extends AppCompatActivity implements
 
                 userProfileIntent.putExtra("UserProfileActivity", arrStr);
 //              SignInActivity.this.startActivity(userProfileIntent);
-
+                updateUI(true);
                 //TODO: end of to be deprecated
 
                 //instead of user profile, load dashboard after sign in
@@ -164,7 +176,7 @@ public class SignInActivity extends AppCompatActivity implements
                 });
             }//if
 
-            updateUI(true);
+            //updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
