@@ -24,6 +24,11 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.*;
 
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
+
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -42,7 +47,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         mStatusTextView = (TextView) findViewById(R.id.status);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
+//        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -121,16 +126,43 @@ public class SignInActivity extends AppCompatActivity implements
 
             if (mGoogleApiClient.hasConnectedApi(Plus.API)) {
                 Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                String name = currentPerson.getDisplayName();
-                String taglineStr = currentPerson.getTagline();
-                String uriStr = currentPerson.getImage().getUrl();
+                final String name = currentPerson.getDisplayName();
+                final String taglineStr = currentPerson.getTagline();
+                final String uriStr = currentPerson.getImage().getUrl();
+
+                //TODO: to be deprecated
                 arrStr.add(name);       //index 0
                 arrStr.add(taglineStr); //index 1
                 arrStr.add(uriStr);     //index 2
-            }
 
-            userProfileIntent.putExtra("UserProfileActivity", arrStr);
+
+                userProfileIntent.putExtra("UserProfileActivity", arrStr);
             SignInActivity.this.startActivity(userProfileIntent);
+
+                //TODO: end of to be deprecated
+
+                //instead of user profile, load dashboard after sign in
+                final Server s = new ServerSingleton().getServerInstance(this);
+                final String UID = "qwes";
+                s.authenticateUser(UID, new ServerCallback<User>() {
+                    @Override
+                    public void handleResult(User result) {
+                        if (result == null) {
+                            User user = ServerSingleton.createUser();
+                            //user.setName("Ernst Haagsman");
+                            user.setName(name);
+                            user.setTagline(taglineStr);
+                            user.setProfilePictureURL(uriStr);
+                            //user.setTagline("");
+
+                            s.storeUser(UID, user);
+                        }
+                        // Launch new activity
+                        Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
+                        //startActivity(i);
+                    }
+                });
+            }//if
 
             updateUI(true);
         } else {
