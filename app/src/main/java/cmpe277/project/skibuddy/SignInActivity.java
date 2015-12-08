@@ -249,9 +249,9 @@ public class SignInActivity extends AppCompatActivity implements
             case R.id.sign_in_button:
                 signIn();
                 break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
+       //     case R.id.sign_out_button:
+        //        signOut();
+        //        break;
         }
     }
 
