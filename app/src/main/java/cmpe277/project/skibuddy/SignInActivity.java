@@ -84,6 +84,8 @@ public class SignInActivity extends AppCompatActivity implements
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } else {
             showProgressDialog();
@@ -98,6 +100,8 @@ public class SignInActivity extends AppCompatActivity implements
                     } catch (NoUserIdException e) {
                         e.printStackTrace();
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -120,6 +124,8 @@ public class SignInActivity extends AppCompatActivity implements
                 e.printStackTrace();
             } catch (NoUserIdException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -130,57 +136,74 @@ public class SignInActivity extends AppCompatActivity implements
     private static class NoUserIdException extends Exception {
     }
 
-    private void handleSignInResult(GoogleSignInResult result) throws IOException, JSONException, NoUserIdException {
+    private void handleSignInResult(GoogleSignInResult result) throws IOException, JSONException, NoUserIdException, InterruptedException {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+
         if (result.isSuccess()) {
-            Intent userProfileIntent = new Intent(SignInActivity.this, UserProfileActivity.class);
-            ArrayList<String> arrStr = new ArrayList<String>();
+            final Server s = new ServerSingleton().getServerInstance(this);
+ //           Intent userProfileIntent = new Intent(SignInActivity.this, UserProfileActivity.class);
+  //          ArrayList<String> arrStr = new ArrayList<String>();
 
             if (mGoogleApiClient.hasConnectedApi(Plus.API)) {
-                Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                final String name = currentPerson.getDisplayName();
-                final String taglineStr = currentPerson.getTagline();
-                final String uriStr = currentPerson.getImage().getUrl();
+                final Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+                if (currentPerson != null) {
+                    final String name = currentPerson.getDisplayName();
+                    final String taglineStr = currentPerson.getTagline();
+                    //final String uriStr = currentPerson.getImage().getUrl();
+                    final String id = currentPerson.getId();
 
-                //TODO: to be deprecated
-                arrStr.add(name);       //index 0
-                arrStr.add(taglineStr); //index 1
-                arrStr.add(uriStr);     //index 2
+                    s.authenticateUser("G+" + id, new ServerCallback<User>() {
+                        @Override
+                        public void handleResult(User result) {
+                            if (result == null) {
+                                User user = ServerSingleton.createUser();
+                                user.setName(name);
+                                user.setTagline(taglineStr);
+                                //user.setProfilePictureURL(uriStr);
 
-
-                userProfileIntent.putExtra("UserProfileActivity", arrStr);
-//              SignInActivity.this.startActivity(userProfileIntent);
-                updateUI(true);
-                //TODO: end of to be deprecated
-
-                //instead of user profile, load dashboard after sign in
-                final Server s = new ServerSingleton().getServerInstance(this);
-                final String UID = "qwes";
-                s.authenticateUser(UID, new ServerCallback<User>() {
-                    @Override
-                    public void handleResult(User result) {
-                        if (result == null) {
-                            User user = ServerSingleton.createUser();
-                            //user.setName("Ernst Haagsman");
-                            user.setName(name);
-                            user.setTagline(taglineStr);
-                            user.setProfilePictureURL(uriStr);
-                            //user.setTagline("");
-
-                            s.storeUser(UID, user);
+                                //s.storeUser(UID, user);
+                                s.storeUser("G+" + id, user);
+                            }
+                            // Launch new activity
+                            //Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
+                            Intent i = new Intent(SignInActivity.this, UserProfileActivity.class);
+                            startActivity(i);
                         }
-                        // Launch new activity
-                        Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
-                        startActivity(i);
-                    }
-                });
-            }//if
+                    });
 
-            //updateUI(true);
-        } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
+                } else {
+                    final String UID = "qwes";
+                    //final String UID = userIdGenerator(currentPerson.getDisplayName()); //UUID generator
+                    s.authenticateUser(UID, new ServerCallback<User>() {
+                        @Override
+                        public void handleResult(User result) {
+                            if (result == null) {
+                                User user = ServerSingleton.createUser();
+                                user.setName(currentPerson.getDisplayName());
+                                user.setName("Ernst Haagsman");
+
+                                user.setTagline("");
+
+                                s.storeUser(UID, user);
+                            }
+
+                            // Launch new activity
+                            //Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
+                            Intent i = new Intent(SignInActivity.this, UserProfileActivity.class);
+                            startActivity(i);
+                        }
+                    });
+
+                }//if
+
+            }
         }
+    }
+    public static String userIdGenerator(String appended) throws InterruptedException {
+        //generate a unique 14-char number
+        String name = System.currentTimeMillis() + "";
+
+        return appended + name.substring(7, 13);
     }
 
     private void signIn() {
