@@ -1,15 +1,17 @@
 package cmpe277.project.skibuddy;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class UserProfileActivity extends Activity {
     TextView name;
@@ -17,21 +19,42 @@ public class UserProfileActivity extends Activity {
     ImageView imageView;
 
     ArrayList<String> arrStr = new ArrayList<String>();
+    User user = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
 
-        arrStr = getIntent().getStringArrayListExtra("UserProfileActivity");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            final Server s = new ServerSingleton().getServerInstance(this);
+            String userUUID = bundle.getString(BundleKeys.UUID_KEY);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        name = (TextView) findViewById(R.id.name);
-        tagline = (TextView) findViewById(R.id.tagline);
+            s.getUser(UUID.fromString(userUUID), new ServerCallback<User>() {
+                @Override
+                public void handleResult(User result) {
+                    if (result == null) {
+                        try {
+                            user = s.getAuthenticatedUser();
+                            arrStr.add(user.getName());                 //index 0
+                            arrStr.add(user.getTagline());              //index 1
+                            arrStr.add(user.getProfilePictureURL());    //index 2
+                        } catch (NotAuthenticatedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
 
-        if (arrStr != null && arrStr.size() != 0) {
-            setUserProfile();
-        }
+            imageView = (ImageView) findViewById(R.id.imageView);
+            name = (TextView) findViewById(R.id.name);
+            tagline = (TextView) findViewById(R.id.tagline);
+
+            if (arrStr != null && arrStr.size() != 0) {
+                setUserProfile();
+            }
+        }//if
     }
 
     public void setUserProfile () {
@@ -48,44 +71,9 @@ public class UserProfileActivity extends Activity {
             tagline.setText(getString(R.string.tagline_na));
         }
 
-        //Profile picture
-        final int PROFILE_PIC_SIZE = 500;
-        String uriStr = arrStr.get(2);
-        if (uriStr != null || uriStr != "") {
-            String shorter_url =
-                    uriStr.substring(0,
-                            uriStr.length() - 2)
-                            + PROFILE_PIC_SIZE;
-            new LoadProfileImage(imageView).execute(shorter_url);
-        }
-        else imageView.setImageBitmap(null);
-    }
+        //Load Profile picture
+        LoadProfilePicture loadProfilePicture = new LoadProfilePicture(imageView);
+        loadProfilePicture.loadPicture(user);
 
-    /**
-     * Background Async task to load user profile picture from url
-     */
-    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadProfileImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 }
