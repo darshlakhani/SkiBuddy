@@ -32,6 +32,7 @@ import cmpe277.project.skibuddy.common.GeoBounds;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
+import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
@@ -45,17 +46,23 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     private Run currentRun;
     private UUID eventId;
     private UUID runId;
-    private final Server s;
+    private final Server s = new ServerSingleton().getServerInstance(this);
 
     private boolean moveCameraOnInitialGpsLock = true;
     private final int DEFAULT_ZOOM_LEVEL = 12;
 
-    public RunActivity(){
-        s = new ServerSingleton().getServerInstance(this);
+    private SkiBuddyLocationListener eventUserLocationListener;
+
+    private class EventUserLocationListener extends SkiBuddyLocationListener {
+        @Override
+        public void getLocationUpdate(UUID user, String initials, SkiBuddyLocation location) {
+
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.eventUserLocationListener = new EventUserLocationListener();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
 
@@ -100,8 +107,11 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
 
             }
             String eventUUID = bundle.getString(BundleKeys.EVENTID_KEY);
-            if (eventUUID != null)
+            if (eventUUID != null) {
+                Log.d(RunActivity.class.getName(), "Starting run activity for event " + eventUUID);
                 eventId = UUID.fromString(eventUUID);
+                s.registerLocationListener(eventUserLocationListener);
+            }
         }
 
         // Handle button clicks
@@ -143,6 +153,12 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        s.unregisterLocationListener(eventUserLocationListener);
     }
 
     private void storeRun(Run run){
@@ -217,21 +233,29 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
+        // Move camera to our position if this is the first position we got
         if(moveCameraOnInitialGpsLock){
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM_LEVEL));
             moveCameraOnInitialGpsLock = false;
         }
 
+        SkiBuddyLocation newLocation = ServerSingleton.createLocation();
+        newLocation.setElevation(location.getAltitude());
+        newLocation.setLatitude(location.getLatitude());
+        newLocation.setLongitude(location.getLongitude());
+
+        // Extend the run, if applicable
         if (currentRun != null) {
-            SkiBuddyLocation newLocation = ServerSingleton.createLocation();
-            newLocation.setElevation(location.getAltitude());
-            newLocation.setLatitude(location.getLatitude());
-            newLocation.setLongitude(location.getLongitude());
             currentRun.extendTrack(newLocation);
 
             drawRun(currentRun);
             updateStatus(currentRun);
+        }
+
+        // Share the user's location, if applicable
+        if (eventId != null){
+            s.updateLocation(newLocation, eventId);
         }
     }
 

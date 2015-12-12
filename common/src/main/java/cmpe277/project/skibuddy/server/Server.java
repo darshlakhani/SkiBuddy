@@ -12,18 +12,12 @@ import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.User;
 
-public interface Server {
+public interface Server extends AuthenticatedUserProvider, LiveServer {
 
 	/**
 	 * Returns the user object of the user that is logging in (if successful). If unsuccessful returns null.
 	 */
 	void authenticateUser(String authentication_token, ServerCallback<User> callback);
-
-	/**
-	 * Returns the currently logged in user.
-	 * @throws cmpe277.project.skibuddy.common.NotAuthenticatedException If no user currently logged in
-	 */
-	User getAuthenticatedUser() throws NotAuthenticatedException;
 
 	/**
 	 * Returns the requested user. If unsuccessful returns null.
@@ -100,19 +94,4 @@ public interface Server {
 	 * Rejects the invitation for the specified event.
 	 */
 	void rejectInvitation(Event event);
-
-	/**
-	 * Sends a location update for the current user. Should be used while skiing in an event.
-	 */
-	void updateLocation(SkiBuddyLocation location);
-
-	/**
-	 * Registers a location listener for the specified event, the location listener will receive updates for all users in that event.
-	 */
-	void registerLocationListener(SkiBuddyLocationListener listener, UUID eventID);
-
-	/**
-	 * Unregisters the specified location listener
-	 */
-	void unregisterLocationListener(SkiBuddyLocationListener listener);
 }

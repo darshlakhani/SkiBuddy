@@ -40,9 +40,11 @@ import cmpe277.project.skibuddy.server.parseobjects.ParseUser;
 public class ParseServer implements Server {
     final Context context;
     private ParseUser user;
+    private UpdateClient updateClient;
 
     public ParseServer(Context context){
         this.context = context;
+        this.updateClient = new UpdateClient(context, this);
 
         ParseObject.registerSubclass(ParseEvent.class);
         ParseObject.registerSubclass(ParseUser.class);
@@ -92,7 +94,7 @@ public class ParseServer implements Server {
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                if(e == null){
+                if (e == null) {
                     if (objects.size() > 0)
                         callback.postResult(objects.get(0));
                 } else {
@@ -134,10 +136,10 @@ public class ParseServer implements Server {
             @Override
             public void done(List<ParseRun> objects, ParseException e) {
                 List<Run> runs = new LinkedList<Run>();
-                for(ParseRun run : objects) {
+                for (ParseRun run : objects) {
                     try {
                         runs.add(run.get());
-                    } catch (IOException io){
+                    } catch (IOException io) {
                         Log.w(ParseServer.class.getName(), "Couldn't decode run: " + io.getMessage());
                     }
                 }
@@ -322,17 +324,17 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void updateLocation(SkiBuddyLocation location) {
-
+    public void updateLocation(SkiBuddyLocation location, UUID eventID) {
+        updateClient.updateLocation(location, eventID);
     }
 
     @Override
-    public void registerLocationListener(SkiBuddyLocationListener listener, UUID eventID) {
-
+    public void registerLocationListener(SkiBuddyLocationListener listener) {
+        updateClient.registerLocationListener(listener);
     }
 
     @Override
     public void unregisterLocationListener(SkiBuddyLocationListener listener) {
-
+        updateClient.unregisterLocationListener(listener);
     }
 }
