@@ -16,6 +16,7 @@ import cmpe277.project.skibuddy.common.User;
 @ParseClassName("SkiBuddyUser")
 public class ParseUser extends ParseObject implements User {
     public static final String NAME_FIELD = "NAME";
+    public static final String NAME_LOWERCASE_FIELD = "NAME_TOLOWER";
     public static final String TAGLINE_FIELD = "TAGLINE";
     public static final String PROFILEPIC_FIELD = "PROFILE_PIC";
     public static final String ID_FIELD = "USERID";
@@ -32,6 +33,7 @@ public class ParseUser extends ParseObject implements User {
     @Override
     public void setName(String name) {
         put(NAME_FIELD, name);
+        put(NAME_LOWERCASE_FIELD, name.toLowerCase());
     }
 
     @Override
