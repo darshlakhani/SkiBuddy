@@ -145,9 +145,20 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                     // Return button label to 'REC'
                     toggleRecordButton.setText("REC");
 
+                    // If run has no points, no need to store it
+                    if(runToStore.getTrack().size() < 1) {
+                        Toast t = Toast.makeText(context,
+                                "No Locations Recorded",
+                                Toast.LENGTH_LONG);
+                        t.show();
+                        return;
+                    }
+
                     // Show user quick stats of run
                     centerRun(runToStore);
-                    Toast t = Toast.makeText(context, String.format("Run distance: %.2f m", runToStore.getDistance()), Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(context,
+                            String.format("Run distance: %.2f m", runToStore.getDistance()),
+                            Toast.LENGTH_LONG);
                     t.show();
 
                     // Store run
