@@ -76,6 +76,6 @@ public class LiveClient extends WebSocketClient {
 
     @Override
     public void onError(Exception ex) {
-
+        websocketStatusListener.onConnectionClosed(-1, ex.getMessage(), false);
     }
 }
