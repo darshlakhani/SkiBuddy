@@ -1,9 +1,13 @@
 package cmpe277.project.skibuddy;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -18,54 +22,66 @@ public class UserProfileActivity extends Activity {
     TextView tagline;
     ImageView imageView;
 
-    ArrayList<String> arrStr = new ArrayList<String>();
-    User user = null;
+    private final Server s = new ServerSingleton().getServerInstance(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
 
+        imageView = (ImageView) findViewById(R.id.imageView);
+        name = (TextView) findViewById(R.id.name);
+        tagline = (TextView) findViewById(R.id.tagline);
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            final Server s = new ServerSingleton().getServerInstance(this);
             String userUUID = bundle.getString(BundleKeys.UUID_KEY);
+
+            if (userUUID == null) {
+                Log.e(UserProfileActivity.class.getName(),
+                        "UserProfileActivity launched with null User UUID");
+                Toast t = Toast.makeText(getBaseContext(), "An error occurred", Toast.LENGTH_LONG);
+                t.show();
+                return;
+            }
 
             s.getUser(UUID.fromString(userUUID), new ServerCallback<User>() {
                 @Override
                 public void handleResult(User result) {
                     if (result == null) {
-                        try {
-                            user = s.getAuthenticatedUser();
-                            arrStr.add(user.getName());                 //index 0
-                            arrStr.add(user.getTagline());              //index 1
-                            arrStr.add(user.getProfilePictureURL());    //index 2
-                        } catch (NotAuthenticatedException e) {
-                            e.printStackTrace();
-                        }
+                        Toast t = Toast.makeText(getBaseContext(), "Couldn't find user", Toast.LENGTH_LONG);
+                        t.show();
+                    } else {
+                        setUserProfile(result);
                     }
                 }
             });
 
-            imageView = (ImageView) findViewById(R.id.imageView);
-            name = (TextView) findViewById(R.id.name);
-            tagline = (TextView) findViewById(R.id.tagline);
-
-            if (arrStr != null && arrStr.size() != 0) {
-                setUserProfile();
+        } else {
+            try {
+                User user = s.getAuthenticatedUser();
+                setUserProfile(user);
+            } catch (NotAuthenticatedException e) {
+                // User not authenticated, return to sign in screen
+                Intent i = new Intent(UserProfileActivity.this, SignInActivity.class);
+                startActivity(i);
             }
-        }//if
+        }
+
     }
 
-    public void setUserProfile () {
+    public void setUserProfile (User user) {
+        if(user == null) {
+            // This should never happen
+            return;
+        }
+
         imageView.setImageBitmap(null);
-        //User name
-        name.setText(getString(R.string.signed_in_fmt, arrStr.get(0)));
 
         //Tagline
-        String taglineStr = arrStr.get(1);
+        String taglineStr = user.getTagline();
 
-        if (taglineStr != null) {
+        if (taglineStr != null && !taglineStr.isEmpty()) {
             tagline.setText(getString(R.string.tagline, taglineStr));
         } else {
             tagline.setText(getString(R.string.tagline_na));
