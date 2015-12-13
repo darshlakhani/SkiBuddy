@@ -74,6 +74,7 @@ public class ParticipantAdapter extends BaseAdapter {
         // Change icon based on name
         String s = participant.getName();
 
+
         System.out.println("events "+ s);
         holder.logo.setImageResource(R.drawable.invite);
 
