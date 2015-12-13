@@ -110,18 +110,8 @@ public class InviteUser extends ListActivity {
                 Log.i("Invite User", q);
                 Log.i("Invite User", "@@@@ handle result");
 
-               /* while(it.hasNext())
-                {
-                    String u = it.next().getName();
-                    Log.i("Invite User", "@@@@"+u);
-                }
-                Log.i("Invite User", "@@@@ before update");
-*/
-                /*UserListAdapter custom = new UserListAdapter(self, R.layout.user_list, result);
-                user.setAdapter(custom);*/
 
-//                User resUsers[] = new User[result.size()];
-//                result.toArray(resUsers);
+
 
                 ArrayAdapter<User> adapter = new UserListAdapter(getApplicationContext(),R.layout.user_list,result, eventID);
 
@@ -134,26 +124,6 @@ public class InviteUser extends ListActivity {
 
 
 
-    private void updateUsers(List<User> result) {
-
-        Log.i("Invite User", "@@@@ Inside updateUser");
-        /*ArrayAdapter<UserListAdapter> adapter = new ArrayAdapter<UserListAdapter>(getApplicationContext(), R.layout.user_list, invUsers) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                Log.i("Invite User", "@@@@ Inside getView");
-                if (convertView == null) {
-                    Log.i("Invite User", "@@@@ No view");
-                    convertView = getLayoutInflater().inflate(R.layout.user_list, parent, false);
-                }
-
-                Log.i("Invite User", "@@@@ view");
-                TextView name = (TextView) convertView.findViewById(R.id.tvUserName);
-                name.setText("Raj");
-                return convertView;
-            }
-        };*/
-    }
 
 }
 
