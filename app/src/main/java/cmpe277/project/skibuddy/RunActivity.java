@@ -46,6 +46,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     private Run currentRun;
     private UUID eventId;
     private UUID runId;
+    private RunUserMarkerManager markerManager = null;
     private final Server s = new ServerSingleton().getServerInstance(this);
 
     private boolean moveCameraOnInitialGpsLock = true;
@@ -56,7 +57,8 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     private class EventUserLocationListener extends SkiBuddyLocationListener {
         @Override
         public void getLocationUpdate(UUID user, String initials, SkiBuddyLocation location) {
-
+            if(markerManager != null)
+                markerManager.updateLocation(user,initials,location);
         }
     }
 
@@ -229,6 +231,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        markerManager = new RunUserMarkerManager(mMap);
     }
 
     @Override

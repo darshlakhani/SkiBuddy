@@ -2,7 +2,6 @@ package cmpe277.project.skibuddy.server;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.net.URI;
@@ -19,7 +18,7 @@ import cmpe277.project.skibuddy.common.User;
 /**
  * Created by eh on 12/11/2015.
  */
-public class UpdateClient extends SkiBuddyLocationListener implements LiveServer, ConnectionClosedListener {
+public class UpdateClient extends SkiBuddyLocationListener implements LiveServer, WebsocketStatusListener {
     private List<SkiBuddyLocationListener> listeners = new LinkedList<>();
     private LiveClient liveClient;
     private AuthenticatedUserProvider authenticatedUserProvider;
@@ -27,6 +26,8 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
     private URI serverURI;
     private boolean shouldConnect = false;
     private Context context;
+    private UUID eventID = null;
+    private SkiBuddyLocation lastLocation = null;
 
     public UpdateClient(Context context, AuthenticatedUserProvider authenticatedUserProvider){
         this.authenticatedUserProvider = authenticatedUserProvider;
@@ -60,6 +61,9 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
 
     @Override
     public void updateLocation(SkiBuddyLocation location, UUID eventID) {
+        lastLocation = location;
+        eventID = eventID;
+
         // Send update if we're connected, discard it if we aren't
         try {
             User authenticatedUser = authenticatedUserProvider.getAuthenticatedUser();
@@ -97,6 +101,9 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
      */
     @Override
     public void getLocationUpdate(UUID user, String initials, SkiBuddyLocation location) {
+        Log.d(UpdateClient.class.getName(),
+                "Received a new location for user with initials " + initials);
+
         if(listeners.size() > 0){
             for (SkiBuddyLocationListener listener : listeners){
                 if(listener != null) {
@@ -106,6 +113,15 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
                 }
             }
         }
+    }
+
+    @Override
+    public void onConnectionOpened() {
+        Log.i(UpdateClient.class.getName(), "Connected to websocket server");
+
+        // If we had a previous update to send, resend that
+        if(eventID != null && lastLocation != null)
+            updateLocation(lastLocation, eventID);
     }
 
     @Override
@@ -123,9 +139,10 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
     private Runnable connect = new Runnable() {
         @Override
         public void run() {
-            Log.d(UpdateClient.class.getName(), "Reconnecting...");
-            if(shouldConnect && liveClient == null)
+            if(shouldConnect && liveClient == null) {
+                Log.d(UpdateClient.class.getName(), "Connecting...");
                 liveClient = new LiveClient(serverURI, self, self);
+            }
         }
     };
 }

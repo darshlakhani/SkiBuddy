@@ -11,7 +11,6 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
@@ -22,20 +21,20 @@ import cmpe277.project.skibuddy.common.SkiBuddyLocationListener;
  */
 public class LiveClient extends WebSocketClient {
     private SkiBuddyLocationListener locationListener;
-    private ConnectionClosedListener connectionClosedListener;
+    private WebsocketStatusListener websocketStatusListener;
 
     public LiveClient(URI serverURI,
                       SkiBuddyLocationListener locationListener,
-                      ConnectionClosedListener connectionClosedListener){
+                      WebsocketStatusListener websocketStatusListener){
         super(serverURI);
         this.locationListener = locationListener;
-        this.connectionClosedListener = connectionClosedListener;
+        this.websocketStatusListener = websocketStatusListener;
         connect();
     }
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        Log.i(LiveClient.class.getName(), "Connected to websocket server");
+        websocketStatusListener.onConnectionOpened();
     }
 
     @Override
@@ -63,7 +62,7 @@ public class LiveClient extends WebSocketClient {
         ObjectMapper mapper = new Mapper().getMapper();
         try {
             String json = mapper.writeValueAsString(update);
-            Log.d(LiveClient.class.getName(), "Sent " + json);
+            Log.d(LiveClient.class.getName(), "Sent position update to websocket server");
             send(json);
         } catch (JsonProcessingException | WebsocketNotConnectedException e) {
             e.printStackTrace();
@@ -72,7 +71,7 @@ public class LiveClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        connectionClosedListener.onConnectionClosed(code, reason, remote);
+        websocketStatusListener.onConnectionClosed(code, reason, remote);
     }
 
     @Override
