@@ -24,6 +24,7 @@ public class ParticipantAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private final List<EventParticipant> values;
 
+
     public ParticipantAdapter(Context context, List<EventParticipant> values) {
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -74,9 +75,12 @@ public class ParticipantAdapter extends BaseAdapter {
         // Change icon based on name
         String s = participant.getName();
 
+        LoadProfilePicture profilePicture  = new LoadProfilePicture(holder.logo);
+        profilePicture.loadPicture(participant);
 
-        System.out.println("events "+ s);
-        holder.logo.setImageResource(R.drawable.invite);
+        System.out.println("events " + s);
+        //holder.logo.setImageResource(R.drawable.invite);
+
 
         return view;
     }

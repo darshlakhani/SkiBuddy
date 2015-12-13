@@ -2,11 +2,13 @@ package cmpe277.project.skibuddy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.util.Set;
 
 import cmpe277.project.skibuddy.common.User;
 
@@ -23,14 +25,36 @@ public class LoadProfilePicture {
     public void loadPicture (User user) {
         final int PROFILE_PIC_SIZE = 500;
         String uriStr = user.getProfilePictureURL();
-        if (uriStr != null || uriStr != "") {
-            String shorter_url =
-                    uriStr.substring(0,
-                            uriStr.length() - 2)
-                            + PROFILE_PIC_SIZE;
-            new LoadProfileImage(imageView).execute(shorter_url);
+        if (uriStr != null && !uriStr.isEmpty()) {
+            String uriWithSize = UriWithSize(uriStr, imageView.getWidth());
+            if(!uriWithSize.isEmpty())
+                new LoadProfileImage(imageView).execute(uriWithSize);
         }
         else imageView.setImageBitmap(null);
+    }
+
+    private static String UriWithSize(String URI, int size){
+        Uri uri = Uri.parse(URI);
+        final String SIZE_QUERY_PARAM = "sz";
+        final Set<String> params = uri.getQueryParameterNames();
+        final Uri.Builder newUri = uri.buildUpon().clearQuery();
+
+        if(params.contains(SIZE_QUERY_PARAM)) {
+            for (String param : params) {
+                String value;
+                if (param.equals(SIZE_QUERY_PARAM)) {
+                    value = String.valueOf(size);
+                } else {
+                    value = uri.getQueryParameter(param);
+                }
+
+                newUri.appendQueryParameter(param, value);
+            }
+        } else {
+            newUri.appendQueryParameter(SIZE_QUERY_PARAM, String.valueOf(size));
+        }
+
+        return newUri.toString();
     }
 
     /**
