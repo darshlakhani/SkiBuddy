@@ -47,7 +47,6 @@ public class SignInActivity extends AppCompatActivity implements
 
         mStatusTextView = (TextView) findViewById(R.id.status);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-//        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -78,13 +77,7 @@ public class SignInActivity extends AppCompatActivity implements
             GoogleSignInResult result = opr.get();
             try {
                 handleSignInResult(result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NoUserIdException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
                 e.printStackTrace();
             }
         } else {
@@ -95,13 +88,7 @@ public class SignInActivity extends AppCompatActivity implements
                     hideProgressDialog();
                     try {
                         handleSignInResult(googleSignInResult);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (NoUserIdException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
+                    } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -118,13 +105,7 @@ public class SignInActivity extends AppCompatActivity implements
 
             try {
                 handleSignInResult(result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (NoUserIdException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -137,19 +118,18 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
     private void handleSignInResult(GoogleSignInResult result) throws IOException, JSONException, NoUserIdException, InterruptedException {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-
         if (result.isSuccess()) {
+            Log.d(TAG, "Google Sign in successful");
             final Server s = new ServerSingleton().getServerInstance(this);
- //           Intent userProfileIntent = new Intent(SignInActivity.this, UserProfileActivity.class);
-  //          ArrayList<String> arrStr = new ArrayList<String>();
 
             if (mGoogleApiClient.hasConnectedApi(Plus.API)) {
                 final Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+
                 if (currentPerson != null) {
                     final String name = currentPerson.getDisplayName();
-                    final String taglineStr = currentPerson.getTagline();
-                    //final String uriStr = currentPerson.getImage().getUrl();
+                    String googleTagline = currentPerson.getTagline();
+                    final String taglineStr = googleTagline != null ? googleTagline : "";
+                    final String uriStr = currentPerson.getImage().getUrl();
                     final String id = currentPerson.getId();
 
                     s.authenticateUser("G+" + id, new ServerCallback<User>() {
@@ -159,51 +139,21 @@ public class SignInActivity extends AppCompatActivity implements
                                 User user = ServerSingleton.createUser();
                                 user.setName(name);
                                 user.setTagline(taglineStr);
-                                //user.setProfilePictureURL(uriStr);
+                                user.setProfilePictureURL(uriStr);
 
-                                //s.storeUser(UID, user);
                                 s.storeUser("G+" + id, user);
                             }
                             // Launch new activity
-                            //Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
-                            Intent i = new Intent(SignInActivity.this, UserProfileActivity.class);
+                            Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
                             startActivity(i);
                         }
                     });
-
-                } else {
-                    final String UID = "qwes";
-                    //final String UID = userIdGenerator(currentPerson.getDisplayName()); //UUID generator
-                    s.authenticateUser(UID, new ServerCallback<User>() {
-                        @Override
-                        public void handleResult(User result) {
-                            if (result == null) {
-                                User user = ServerSingleton.createUser();
-                                user.setName(currentPerson.getDisplayName());
-                                user.setName("Ernst Haagsman");
-
-                                user.setTagline("");
-
-                                s.storeUser(UID, user);
-                            }
-
-                            // Launch new activity
-                            //Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
-                            Intent i = new Intent(SignInActivity.this, UserProfileActivity.class);
-                            startActivity(i);
-                        }
-                    });
-
-                }//if
+                }
 
             }
+        } else {
+            Log.d(TAG, "Google Sign in failed");
         }
-    }
-    public static String userIdGenerator(String appended) throws InterruptedException {
-        //generate a unique 14-char number
-        String name = System.currentTimeMillis() + "";
-
-        return appended + name.substring(7, 13);
     }
 
     private void signIn() {
@@ -272,9 +222,6 @@ public class SignInActivity extends AppCompatActivity implements
             case R.id.sign_in_button:
                 signIn();
                 break;
-       //     case R.id.sign_out_button:
-        //        signOut();
-        //        break;
         }
     }
 
