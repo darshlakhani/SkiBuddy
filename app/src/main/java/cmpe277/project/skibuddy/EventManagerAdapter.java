@@ -24,15 +24,16 @@ public class EventManagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
+        Bundle fragmentBundle = new Bundle();
+        fragmentBundle.putString(BundleKeys.EVENTID_KEY, eventID);
         switch (position) {
             case 0:
                 ParticipantFragment tab1 = new ParticipantFragment();
-                Bundle fragmentBundle = new Bundle();
-                fragmentBundle.putString(BundleKeys.EVENTID_KEY, eventID);
                 tab1.setArguments(fragmentBundle);
                 return tab1;
             case 1:
                 RunFragment tab2 = new RunFragment();
+                tab2.setArguments(fragmentBundle);
                 return tab2;
 
             default:

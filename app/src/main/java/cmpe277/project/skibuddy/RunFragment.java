@@ -26,6 +26,8 @@ import cmpe277.project.skibuddy.server.ServerSingleton;
 public class RunFragment extends ListFragment {
 
 
+    private UUID eventID;
+
     public RunFragment() {
         // Required empty public constructor
     }
@@ -35,7 +37,7 @@ public class RunFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+//        this.eventID = UUID.fromString(getArguments().getString(BundleKeys.EVENTID_KEY));
         return inflater.inflate(R.layout.fragment_run, container, false);
     }
 

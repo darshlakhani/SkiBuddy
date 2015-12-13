@@ -2,6 +2,7 @@ package cmpe277.project.skibuddy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -22,7 +23,7 @@ public class EventManagement extends AppCompatActivity {
     String eventID;
 
     TextView tvEventName,tvDesc,tvStartDate,tvEndDate;
-    ImageButton invite;
+    ImageButton invite,recordRun;
 
 
     @Override
@@ -40,6 +41,7 @@ public class EventManagement extends AppCompatActivity {
         tvStartDate = (TextView)findViewById(R.id.tvStartDate);
         tvEndDate = (TextView)findViewById(R.id.tvEndDate);
         invite = (ImageButton) findViewById(R.id.imageButton1);
+        recordRun = (ImageButton) findViewById(R.id.recordRun);
 
         tvEventName.setText(mpResult.get("name"));
         setTitle(mpResult.get("name"));
@@ -49,6 +51,10 @@ public class EventManagement extends AppCompatActivity {
 
         if(mpResult.get("status")!=null &&mpResult.get("status").equals("host") && mpResult.get("event").equals("current")) {
             invite.setVisibility(View.VISIBLE);
+        }
+
+        if (mpResult.get("event").equals("current")) {
+            recordRun.setVisibility(View.VISIBLE);
         }
 
         eventID = mpResult.get("id");
@@ -99,6 +105,19 @@ public class EventManagement extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 Intent intent = new Intent(context, InviteUser.class);
+                intent.putExtra(BundleKeys.EVENTID_KEY, eventID);
+                startActivity(intent);
+
+            }
+
+        });
+
+        recordRun.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Intent intent = new Intent(context, RunActivity.class);
                 intent.putExtra(BundleKeys.EVENTID_KEY, eventID);
                 startActivity(intent);
 
