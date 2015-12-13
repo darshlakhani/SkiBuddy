@@ -40,9 +40,6 @@
         <activity
             android:name=".RunActivity"
             android:label="@string/title_activity_run" >
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".EventManagement" />
         <activity android:name=".CreateEvent" />

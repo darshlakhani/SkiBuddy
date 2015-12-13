@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -26,11 +28,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import cmpe277.project.skibuddy.common.GeoBounds;
 import cmpe277.project.skibuddy.common.NotAuthenticatedException;
 import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.common.SkiBuddyLocation;
 import cmpe277.project.skibuddy.common.User;
 import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
 public class RunActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
@@ -40,11 +44,23 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     private TextView runStatus;
     private Run currentRun;
     private UUID eventId;
+    private UUID runId;
+    private final Server s;
+
+    private boolean moveCameraOnInitialGpsLock = true;
+    private final int DEFAULT_ZOOM_LEVEL = 12;
+
+    public RunActivity(){
+        s = new ServerSingleton().getServerInstance(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+
+        toggleRecordButton = (Button)findViewById(R.id.toggle_record_button);
+        runStatus = (TextView)findViewById(R.id.record_run_status);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -63,6 +79,26 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
         // Handle incoming bundle
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            String runUUID = bundle.getString(BundleKeys.RUNID_KEY);
+            if (runUUID != null) {
+                runId = UUID.fromString(runUUID);
+
+                // If we have a run to display, we should also hide the 'record button', and
+                // draw the run.
+                moveCameraOnInitialGpsLock = false;
+
+                toggleRecordButton.setVisibility(View.INVISIBLE);
+                s.getRun(runId, new ServerCallback<Run>() {
+                    @Override
+                    public void handleResult(Run result) {
+                        currentRun = result;
+                        drawRun(result);
+                        updateStatus(result);
+                        centerRun(result);
+                    }
+                });
+
+            }
             String eventUUID = bundle.getString(BundleKeys.EVENTID_KEY);
             if (eventUUID != null)
                 eventId = UUID.fromString(eventUUID);
@@ -71,8 +107,6 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
         // Handle button clicks
         final Context context = this;
 
-        toggleRecordButton = (Button)findViewById(R.id.toggle_record_button);
-        runStatus = (TextView)findViewById(R.id.record_run_status);
         toggleRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +134,7 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
                     toggleRecordButton.setText("REC");
 
                     // Show user quick stats of run
+                    centerRun(runToStore);
                     Toast t = Toast.makeText(context, String.format("Run distance: %.2f m", runToStore.getDistance()), Toast.LENGTH_LONG);
                     t.show();
 
@@ -111,7 +146,6 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     private void storeRun(Run run){
-        Server s = new ServerSingleton().getServerInstance(this);
         try {
             User currentUser = s.getAuthenticatedUser();
 
@@ -125,6 +159,18 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
             t.show();
 
             //TODO: send user to login activity
+        }
+    }
+
+    private void centerRun(Run run){
+        try {
+            GeoBounds bounds = new GeoBounds(run.getTrack());
+            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(bounds.getSouth(), bounds.getWest()),
+                                                         new LatLng(bounds.getNorth(), bounds.getEast()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 150));
+
+        } catch (IllegalArgumentException e){
+            Log.w(RunActivity.class.getName(), "Couldn't center run: " + e.getMessage());
         }
     }
 
@@ -171,6 +217,12 @@ public class RunActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
+        if(moveCameraOnInitialGpsLock){
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM_LEVEL));
+            moveCameraOnInitialGpsLock = false;
+        }
+
         if (currentRun != null) {
             SkiBuddyLocation newLocation = ServerSingleton.createLocation();
             newLocation.setElevation(location.getAltitude());

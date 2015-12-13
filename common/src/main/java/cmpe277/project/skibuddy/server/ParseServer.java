@@ -177,6 +177,31 @@ public class ParseServer implements Server {
     }
 
     @Override
+    public void getRun(final UUID runId, final ServerCallback<Run> callback) {
+        ParseQuery<ParseRun> query = ParseQuery.getQuery(ParseRun.class);
+        query.whereEqualTo(ParseRun.RUNID_FIELD, runId.toString());
+        query.findInBackground(new FindCallback<ParseRun>() {
+            @Override
+            public void done(List<ParseRun> objects, ParseException e) {
+                if (e == null){
+                    if(objects.size() > 0)
+                        try {
+                            callback.postResult(objects.get(0).get());
+                        } catch (IOException e1) {
+                            Log.w(ParseServer.class.getName(), "Couldn't decode run");
+                        }
+                    else
+                    {
+                        Log.w(ParseServer.class.getName(), "Couldn't find run for ID " + runId.toString());
+                    }
+                } else {
+                    Log.w(ParseServer.class.getName(), "Parse exception: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
     public void getEvent(UUID eventID, final ServerCallback<Event> callback) {
         ParseQuery<ParseEvent> query = ParseQuery.getQuery(ParseEvent.class);
         query.whereEqualTo(ParseEvent.EVENTID_FIELD, eventID.toString());
