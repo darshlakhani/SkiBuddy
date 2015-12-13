@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -122,37 +124,50 @@ public class SignInActivity extends AppCompatActivity implements
             Log.d(TAG, "Google Sign in successful");
             final Server s = new ServerSingleton().getServerInstance(this);
 
-            if (mGoogleApiClient.hasConnectedApi(Plus.API)) {
-                final Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+            final String id = result.getSignInAccount().getId();
+            final String name = result.getSignInAccount().getDisplayName();
 
-                if (currentPerson != null) {
-                    final String name = currentPerson.getDisplayName();
-                    String googleTagline = currentPerson.getTagline();
-                    final String taglineStr = googleTagline != null ? googleTagline : "";
-                    final String uriStr = currentPerson.getImage().getUrl();
-                    final String id = currentPerson.getId();
+            s.authenticateUser("G+" + id, new ServerCallback<User>() {
+                @Override
+                public void handleResult(User result) {
+                    if (result == null) {
 
-                    s.authenticateUser("G+" + id, new ServerCallback<User>() {
-                        @Override
-                        public void handleResult(User result) {
-                            if (result == null) {
-                                User user = ServerSingleton.createUser();
-                                user.setName(name);
-                                user.setTagline(taglineStr);
-                                user.setProfilePictureURL(uriStr);
+                        // We don't know this user yet, so we should create an account
+                        // If the user has a Google+ account, fetch tagline and profile pic
+                        // By default leave them blank though
+                        String taglineStr = "";
+                        String profilePictureUrl = "";
+                        if (mGoogleApiClient.hasConnectedApi(Plus.API)) {
+                            final Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
 
-                                s.storeUser("G+" + id, user);
+                            if (currentPerson != null) {
+                                String googleTagline = currentPerson.getTagline();
+                                taglineStr = googleTagline != null ? googleTagline : "";
+                                profilePictureUrl = currentPerson.getImage().getUrl();
+
                             }
-                            // Launch new activity
-                            Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
-                            startActivity(i);
-                        }
-                    });
-                }
 
-            }
+                        }
+
+                        User user = ServerSingleton.createUser();
+                        user.setName(name);
+                        user.setTagline(taglineStr);
+                        user.setProfilePictureURL(profilePictureUrl);
+
+                        s.storeUser("G+" + id, user);
+                    }
+                    // Launch new activity
+                    Intent i = new Intent(SignInActivity.this, DashboardActivity.class);
+                    startActivity(i);
+                }
+            });
         } else {
             Log.d(TAG, "Google Sign in failed");
+
+            Toast t = Toast.makeText(this,
+                    "Authentication with Google failed, please try again later",
+                    Toast.LENGTH_LONG);
+            t.show();
         }
     }
 
