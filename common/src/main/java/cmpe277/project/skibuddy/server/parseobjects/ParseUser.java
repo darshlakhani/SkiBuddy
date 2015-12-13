@@ -13,7 +13,7 @@ import cmpe277.project.skibuddy.common.User;
 /**
  * Created by eh on 12/1/2015.
  */
-@ParseClassName("User")
+@ParseClassName("SkiBuddyUser")
 public class ParseUser extends ParseObject implements User {
     public static final String NAME_FIELD = "NAME";
     public static final String TAGLINE_FIELD = "TAGLINE";
