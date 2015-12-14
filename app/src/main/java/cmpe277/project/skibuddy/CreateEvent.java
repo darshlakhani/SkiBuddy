@@ -157,7 +157,7 @@ public class CreateEvent extends Activity {
                     });
 
                     UUID eid = e.getEventID();
-                    Intent intent = new Intent(getApplicationContext(), InviteUser.class);
+                    Intent intent = new Intent(getApplicationContext(), EventManagement.class);
 
                     Bundle b = new Bundle();
 
