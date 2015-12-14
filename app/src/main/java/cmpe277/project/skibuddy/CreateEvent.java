@@ -46,6 +46,8 @@ public class CreateEvent extends AppCompatActivity {
     static final int TIME_DIALOG_ID1 = 1;
     static final int DATA_DIALOG_ID = 2;
 
+    private DateTime startTime;
+    private DateTime endTime;
 
     Event e;
     Button bDate, bEndTime, bStartTime;
@@ -108,13 +110,10 @@ public class CreateEvent extends AppCompatActivity {
 
                 dateView = (TextView) findViewById(R.id.tvDateView);
 
-                //bDate = (Button) findViewById(R.id.bDate);
-
-
                 if (!checkEditText()) {
                     Toast.makeText(getApplicationContext(), "Enter All Values", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.i("Create Event", "@@@@ in else");
+
                     String eventDate = dateView.getText().toString();
 
 
@@ -122,17 +121,20 @@ public class CreateEvent extends AppCompatActivity {
                     startTime = eventDate + " " + startTime;
 
                     String endTime = endTimeText.getText().toString();
-                    endTime = eventDate + " " + endTime;
+                    endTime = eventDate+" "+endTime;
 
 
                     DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm");
+                    DateTime sTime = formatter.parseDateTime(startTime);
+
+                    DateTime eTime = formatter.parseDateTime(endTime);
 
                     try {
                         e.setHostId(ss.getAuthenticatedUser().getId());
                         e.setName(etEventName.getText().toString());
                         e.setDescription(etEventDesc.getText().toString());
-                        e.setStart(DateTime.now());
-                        e.setEnd(DateTime.now().plusHours(4));
+                        e.setStart(sTime);
+                        e.setEnd(eTime);
                         ss.storeEvent(e, new ServerCallback<UUID>() {
                             @Override
                             public void handleResult(UUID result) {
@@ -168,8 +170,6 @@ public class CreateEvent extends AppCompatActivity {
 
     public void setDate(View view) {
         showDialog(999);
-        Toast.makeText(getApplicationContext(), "date", Toast.LENGTH_SHORT)
-                .show();
     }
 
     @Override
@@ -198,7 +198,6 @@ public class CreateEvent extends AppCompatActivity {
 
             minute = selectedMinute;
 
-
             // set current time into textview
 
             endTimeText.setText(new StringBuilder().append(padding_str(hour)).append(":").append(padding_str(minute)));
@@ -214,7 +213,6 @@ public class CreateEvent extends AppCompatActivity {
             hour = selectedHour;
 
             minute = selectedMinute;
-
 
             // set current time into textview
 
