@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,7 @@ public class CurrentEventFragment extends ListFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         erList.clear();
-        return inflater.inflate(R.layout.fragment_current_event, container, false);
+        return inflater.inflate(R.layout.fragment_events, container, false);
     }
 
     final private String DATETIME_FORMAT = "MMM d, YY H:mm a";
@@ -98,9 +97,6 @@ public class CurrentEventFragment extends ListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                        .show();
-                String eventName = CURRENT_EVENT_LIST[position];
                 final EventRelation erObj = erList.get(position);
                 final HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());

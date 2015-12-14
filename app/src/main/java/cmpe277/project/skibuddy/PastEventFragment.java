@@ -49,7 +49,7 @@ public class PastEventFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         erList.clear();
-        return inflater.inflate(R.layout.fragment_past_event, container, false);
+        return inflater.inflate(R.layout.fragment_events, container, false);
     }
 
     final private String DATETIME_FORMAT = "MMM d, YY H:mm a";
@@ -106,9 +106,6 @@ public class PastEventFragment extends ListFragment {
         getListView().setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                        .show();
-                String eventName = PAST_EVENT_LIST[position];
                 final EventRelation erObj = erList.get(position);
 
                 final HashMap<String, String> mp = new HashMap();

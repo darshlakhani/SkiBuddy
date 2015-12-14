@@ -4,20 +4,18 @@ package cmpe277.project.skibuddy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cmpe277.project.skibuddy.common.Run;
+import android.widget.AdapterView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import android.support.v4.app.ListFragment;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
-import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.Run;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
