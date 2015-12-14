@@ -30,7 +30,7 @@ public class RunFragment extends ListFragment {
 
 
     private UUID eventID;
-    static List<Run> runList = new ArrayList();
+    private List<Run> runList = new ArrayList();
 
     public RunFragment() {
         // Required empty public constructor

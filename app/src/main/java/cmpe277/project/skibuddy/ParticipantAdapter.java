@@ -79,9 +79,7 @@ public class ParticipantAdapter extends BaseAdapter {
         profilePicture.loadPicture(participant);
 
         System.out.println("events " + s);
-        //holder.logo.setImageResource(R.drawable.invite);
-
-
+        
         return view;
     }
 }
