@@ -39,7 +39,7 @@ import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
 
-public class CreateEvent extends Activity {
+public class CreateEvent extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "cmpe277.project.skibuddy";
 
     EditText etEventName,etEventDesc, etStartTime;
@@ -323,7 +323,7 @@ public class CreateEvent extends Activity {
 
         // this.menu = menu;
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      /*  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
             SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
@@ -357,7 +357,7 @@ public class CreateEvent extends Activity {
 
             });
 
-        }
+        }*/
 
         return true;
     }
