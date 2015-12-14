@@ -185,15 +185,14 @@ public class ParseServer implements Server {
         query.findInBackground(new FindCallback<ParseRun>() {
             @Override
             public void done(List<ParseRun> objects, ParseException e) {
-                if (e == null){
-                    if(objects.size() > 0)
+                if (e == null) {
+                    if (objects.size() > 0)
                         try {
                             callback.postResult(objects.get(0).get());
                         } catch (IOException e1) {
                             Log.w(ParseServer.class.getName(), "Couldn't decode run");
                         }
-                    else
-                    {
+                    else {
                         Log.w(ParseServer.class.getName(), "Couldn't find run for ID " + runId.toString());
                     }
                 } else {
@@ -281,12 +280,22 @@ public class ParseServer implements Server {
     }
 
     @Override
-    public void inviteUser(User user, Event event) {
-        ParseParticipation participation = new ParseParticipation();
-        participation.setUser((ParseUser)user);
-        participation.setEvent((ParseEvent) event);
-        participation.setParticipationStatus(ParticipationStatus.INVITEE);
-        participation.saveInBackground();
+    public void inviteUser(final User user, final Event event) {
+        ParseQuery<ParseParticipation> query = ParseQuery.getQuery(ParseParticipation.class);
+        query.whereEqualTo(ParseParticipation.EVENTID_FIELD, event.getEventID().toString());
+        query.whereEqualTo(ParseParticipation.USERID_FIELD, user.getId().toString());
+        query.findInBackground(new FindCallback<ParseParticipation>() {
+            @Override
+            public void done(List<ParseParticipation> objects, ParseException e) {
+                if(objects.size() == 0){
+                    ParseParticipation participation = new ParseParticipation();
+                    participation.setUser((ParseUser)user);
+                    participation.setEvent((ParseEvent)event);
+                    participation.setParticipationStatus(ParticipationStatus.INVITEE);
+                    participation.saveInBackground();
+                }
+            }
+        });
     }
 
     @Override
