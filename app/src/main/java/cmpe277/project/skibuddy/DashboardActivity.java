@@ -9,10 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageButton;
-import android.view.View.OnClickListener;
 import android.view.View;
-import android.widget.Toast;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -22,7 +21,7 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        setTitle("Dashboard");
+        setTitle("My Events");
 
         //Code for Image Button
         addListenerOnButton();

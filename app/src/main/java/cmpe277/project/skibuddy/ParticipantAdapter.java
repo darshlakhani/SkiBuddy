@@ -70,7 +70,14 @@ public class ParticipantAdapter extends BaseAdapter {
 
         EventParticipant participant = values.get(position);
         holder.label.setText(participant.getName());
-        holder.tvStatus.setText(participant.getParticipationStatus().toString());
+
+        // Handle participation status
+        String participationStatus = participant.getParticipationStatus().toString();
+
+        // It's an enum in all-caps, so we have to make the rest lowercase
+        String correctedStatus = participationStatus.substring(0,1) +
+                participationStatus.substring(1).toLowerCase();
+        holder.tvStatus.setText(correctedStatus);
 
         // Change icon based on name
         String s = participant.getName();

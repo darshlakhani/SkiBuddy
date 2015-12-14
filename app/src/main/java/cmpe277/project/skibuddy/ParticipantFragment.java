@@ -75,8 +75,6 @@ public class ParticipantFragment extends ListFragment {
                 b.putString(BundleKeys.UUID_KEY, userID.toString());
                 i.putExtras(b);
                 startActivity(i);
-                Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                        .show();
             }
         });
 
