@@ -23,11 +23,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                CurrentEventFragment tab1 = new CurrentEventFragment();
-                return tab1;
+                EventFragment currentEventsFragment = new EventFragment();
+                currentEventsFragment.setIsPastEventFragment(false);
+                return currentEventsFragment;
             case 1:
-                PastEventFragment tab2 = new PastEventFragment();
-                return tab2;
+                EventFragment pastEventsFragment = new EventFragment();
+                pastEventsFragment.setIsPastEventFragment(true);
+                return pastEventsFragment;
             
             default:
                 return null;

@@ -8,22 +8,37 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.HashMap;
+import java.util.UUID;
+
+import cmpe277.project.skibuddy.common.Event;
+import cmpe277.project.skibuddy.common.NotAuthenticatedException;
+import cmpe277.project.skibuddy.common.User;
+import cmpe277.project.skibuddy.server.Server;
+import cmpe277.project.skibuddy.server.ServerCallback;
+import cmpe277.project.skibuddy.server.ServerSingleton;
 
 /**
  * Created by rnagpal on 11/30/15.
  */
 public class EventManagement extends AppCompatActivity {
 
-    String eventID;
+    UUID eventID;
+    final Server s = new ServerSingleton().getServerInstance(this);
 
     TextView tvDesc,tvStartDate,tvEndDate;
     ImageButton invite,recordRun;
+
+    final private String DATETIME_FORMAT = "MMM d, YY h:mm a";
 
 
     @Override
@@ -31,10 +46,8 @@ public class EventManagement extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_event_management);
-        Intent intent = getIntent();
-        HashMap<String,String> mpResult = (HashMap<String,String>)intent.getSerializableExtra("eventMap");
-
-
+        Bundle b = getIntent().getExtras();
+        eventID = UUID.fromString(b.getString(BundleKeys.EVENTID_KEY));
 
         tvDesc = (TextView)findViewById(R.id.tvEventDesc);
         tvStartDate = (TextView)findViewById(R.id.tvStartDate);
@@ -42,20 +55,32 @@ public class EventManagement extends AppCompatActivity {
         invite = (ImageButton) findViewById(R.id.imageButton1);
         recordRun = (ImageButton) findViewById(R.id.recordRun);
 
-        setTitle(mpResult.get("name"));
-        tvDesc.setText(mpResult.get("desc"));
-        tvStartDate.setText(mpResult.get("startDate"));
-        tvEndDate.setText(mpResult.get("endDate"));
+        s.getEvent(eventID, new ServerCallback<Event>() {
+            @Override
+            public void handleResult(Event result) {
 
-        if(mpResult.get("status")!=null &&mpResult.get("status").equals("host") && mpResult.get("event").equals("current")) {
-            invite.setVisibility(View.VISIBLE);
-        }
+                setTitle(result.getName());
+                tvDesc.setText(result.getDescription());
+                tvStartDate.setText(result.getStart()
+                        .toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
+                tvEndDate.setText(result.getEnd()
+                        .toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
 
-        if (mpResult.get("event").equals("current")) {
-            recordRun.setVisibility(View.VISIBLE);
-        }
+                // If the user hosts the event, they should be able to invite others
+                try {
+                    User currentUser = s.getAuthenticatedUser();
+                    if(result.getHostId() == currentUser.getId())
+                        invite.setVisibility(View.VISIBLE);
+                } catch (NotAuthenticatedException e) {
+                    Log.w(EventManagement.class.getName(), "User not logged in!");
+                }
 
-        eventID = mpResult.get("id");
+                // If the event is happening now, we want to be able to record runs in it
+                DateTime now = DateTime.now();
+                if(result.getStart().isBefore(now) && result.getEnd().isAfter(now))
+                    recordRun.setVisibility(View.VISIBLE);
+            }
+        });
 
         //Code for Tab Implementation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,7 +93,7 @@ public class EventManagement extends AppCompatActivity {
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final EventManagerAdapter adapter = new EventManagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount(), eventID);
+                (getSupportFragmentManager(), tabLayout.getTabCount(), eventID.toString());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
