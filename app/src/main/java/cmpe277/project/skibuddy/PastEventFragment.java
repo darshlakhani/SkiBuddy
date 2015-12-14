@@ -52,7 +52,7 @@ public class PastEventFragment extends ListFragment {
         return inflater.inflate(R.layout.fragment_events, container, false);
     }
 
-    final private String DATETIME_FORMAT = "MMM d, YY H:mm a";
+    final private String DATETIME_FORMAT = "MMM d, YY h:mm a";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
