@@ -69,6 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
                 Intent i = new Intent(DashboardActivity.this, RunActivity.class);
                 startActivity(i);
 
+
             }
 
         });
@@ -86,6 +87,8 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 
 
