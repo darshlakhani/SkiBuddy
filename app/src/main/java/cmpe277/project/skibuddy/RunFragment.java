@@ -31,6 +31,8 @@ public class RunFragment extends ListFragment {
 
     private UUID eventID;
     private List<Run> runList = new ArrayList();
+    final Server s = new ServerSingleton().getServerInstance(getActivity());
+
 
     public RunFragment() {
         // Required empty public constructor
@@ -48,22 +50,9 @@ public class RunFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-        final Server s = new ServerSingleton().getServerInstance(getActivity());
 
         // Get bundle, read either eventID or userID, depending on which one is populated,
         // get the user's runs or the event's runs.
-        Bundle bundle = getArguments();
-        if(bundle.getString(BundleKeys.EVENTID_KEY) != null){
-            // get event runs
-            UUID eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
-            s.getRuns(eventID, new RunServerCallback());
-
-        } else if (bundle.getString(BundleKeys.UUID_KEY) != null) {
-            UUID userId = UUID.fromString(bundle.getString(BundleKeys.UUID_KEY));
-            s.getUserRuns(userId, new RunServerCallback());
-        } else {
-            Log.w(RunFragment.class.getName(), "RunFragment needs either an eventID or a userID");
-        }
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,7 +66,21 @@ public class RunFragment extends ListFragment {
             }
         });
 
+    }
 
+    private void loadRuns() {
+        Bundle bundle = getArguments();
+        if(bundle.getString(BundleKeys.EVENTID_KEY) != null){
+            // get event runs
+            UUID eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
+            s.getRuns(eventID, new RunServerCallback());
+
+        } else if (bundle.getString(BundleKeys.UUID_KEY) != null) {
+            UUID userId = UUID.fromString(bundle.getString(BundleKeys.UUID_KEY));
+            s.getUserRuns(userId, new RunServerCallback());
+        } else {
+            Log.w(RunFragment.class.getName(), "RunFragment needs either an eventID or a userID");
+        }
     }
 
     class RunServerCallback extends ServerCallback<List<Run>>{
@@ -94,5 +97,9 @@ public class RunFragment extends ListFragment {
         }
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadRuns();
+    }
 }

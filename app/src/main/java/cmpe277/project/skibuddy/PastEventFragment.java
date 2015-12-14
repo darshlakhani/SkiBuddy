@@ -37,6 +37,7 @@ public class PastEventFragment extends ListFragment {
     static final String[] PAST_EVENT_LIST = new String[100];
     static final EventRelation[] PAST_EVENT_LIST_FINAL = new EventRelation[100];
     static final ArrayList<EventRelation> erList = new ArrayList<>();
+    final Server s = new ServerSingleton().getServerInstance(getActivity());
 
 
 
@@ -58,50 +59,6 @@ public class PastEventFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-
-        final Server s = new ServerSingleton().getServerInstance(getActivity());
-
-        s.getEvents(new ServerCallback<List<EventRelation>>() {
-
-            @Override
-            public void handleResult(List<EventRelation> result) {
-
-                if (result == null){
-                    // we didn't get a result, something went wrong, or whatever
-                    return;
-                }
-                Log.d("Result Size: ",String.valueOf(result.size()));
-                //Get Current Date Time
-                DateTime currentValue = new DateTime();
-
-                int index = 0;
-
-                for (int i = 0; i < result.size(); i++) {
-
-                    //Get DateTime from Event Object
-                    DateTime dateValue = result.get(i).getEnd();
-
-                    //Get Participation Status
-                    Object participationStatus = result.get(i).getParticipationStatus();
-
-                    //Compare datetime from event with current datetime value
-                    int difference = DateTimeComparator.getInstance().compare(currentValue, dateValue);
-                    Log.d("Difference Value",String.valueOf(difference));
-
-                    //If Current date is greater, event should be in past and should be added to list
-                    if(difference == 1 && participationStatus!=ParticipationStatus.INVITEE) {
-                        PAST_EVENT_LIST_FINAL[index] = result.get(i);
-                        PAST_EVENT_LIST[index] = result.get(i).getName();
-                        if( !erList.contains(result.get(i))) {
-                            erList.add(result.get(i));
-                            index++;
-                        }
-                    }
-                }
-                setListAdapter(new EventListAdapter(getActivity(),erList));
-
-            }
-        });
 
         getListView().setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -176,6 +133,57 @@ public class PastEventFragment extends ListFragment {
         });
     }
 
+    private void loadEvents() {
+        erList.clear();
+        s.getEvents(new ServerCallback<List<EventRelation>>() {
+
+            @Override
+            public void handleResult(List<EventRelation> result) {
+
+                if (result == null){
+                    // we didn't get a result, something went wrong, or whatever
+                    return;
+                }
+                Log.d("Result Size: ", String.valueOf(result.size()));
+                //Get Current Date Time
+                DateTime currentValue = new DateTime();
+
+                int index = 0;
+
+                for (int i = 0; i < result.size(); i++) {
+
+                    //Get DateTime from Event Object
+                    DateTime dateValue = result.get(i).getEnd();
+
+                    //Get Participation Status
+                    Object participationStatus = result.get(i).getParticipationStatus();
+
+                    //Compare datetime from event with current datetime value
+                    int difference = DateTimeComparator.getInstance().compare(currentValue, dateValue);
+                    Log.d("Difference Value",String.valueOf(difference));
+
+                    //If Current date is greater, event should be in past and should be added to list
+                    if(difference == 1 && participationStatus!= ParticipationStatus.INVITEE) {
+                        PAST_EVENT_LIST_FINAL[index] = result.get(i);
+                        PAST_EVENT_LIST[index] = result.get(i).getName();
+                        if( !erList.contains(result.get(i))) {
+                            erList.add(result.get(i));
+                            index++;
+                        }
+                    }
+                }
+                setListAdapter(new EventListAdapter(getActivity(),erList));
+
+            }
+        });
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadEvents();
+    }
 }
 
 
