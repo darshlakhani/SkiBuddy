@@ -189,6 +189,7 @@ public class ParseServer implements Server {
                     if(objects.size() > 0)
                         try {
                             callback.postResult(objects.get(0).get());
+                            invokeCallback(callback);
                         } catch (IOException e1) {
                             Log.w(ParseServer.class.getName(), "Couldn't decode run");
                         }

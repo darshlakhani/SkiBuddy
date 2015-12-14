@@ -30,7 +30,7 @@ public class LoadProfilePicture {
             if(!uriWithSize.isEmpty())
                 new LoadProfileImage(imageView).execute(uriWithSize);
         }
-        else imageView.setImageBitmap(null);
+        else imageView.setImageResource(R.drawable.profilepic);
     }
 
     private static String UriWithSize(String URI, int size){

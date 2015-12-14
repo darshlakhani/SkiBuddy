@@ -92,7 +92,7 @@ public class UpdateClient extends SkiBuddyLocationListener implements LiveServer
 
         if(listeners.size() == 0){
             shouldConnect = false;
-            liveClient.close();
+            if(liveClient != null) liveClient.close();
         }
     }
 
