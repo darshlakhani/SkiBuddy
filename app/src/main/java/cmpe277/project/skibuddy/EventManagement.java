@@ -120,7 +120,8 @@ public class EventManagement extends AppCompatActivity {
 
         final Context context = this;
 
-
+        final Bundle b = new Bundle();
+        b.putString(BundleKeys.EVENTID_KEY, eventID.toString());
 
         invite.setOnClickListener(new OnClickListener() {
 
@@ -128,7 +129,7 @@ public class EventManagement extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 Intent intent = new Intent(context, InviteUser.class);
-                intent.putExtra(BundleKeys.EVENTID_KEY, eventID);
+                intent.putExtras(b);
                 startActivity(intent);
 
             }
@@ -141,7 +142,7 @@ public class EventManagement extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 Intent intent = new Intent(context, RunActivity.class);
-                intent.putExtra(BundleKeys.EVENTID_KEY, eventID);
+                intent.putExtras(b);
                 startActivity(intent);
 
             }
