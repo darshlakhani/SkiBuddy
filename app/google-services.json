@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_id": "skibuddy-da1a3",
-    "project_number": "991984700133",
+    "project_id": "modular-source-114821",
+    "project_number": "352114567488",
     "name": "SkiBuddy"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:991984700133:android:60832fe44273d279",
+        "mobilesdk_app_id": "1:352114567488:android:60832fe44273d279",
         "client_id": "android:cmpe277.project.skibuddy",
         "client_type": 1,
         "android_client_info": {
@@ -16,11 +16,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "991984700133-8nl5am5tqmbrnbhi833ee1dl5prvjggn.apps.googleusercontent.com",
+          "client_id": "352114567488-0nteg7jjomb5g06pusvdi07ob6qnekoq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "cmpe277.project.skibuddy",
-            "certificate_hash": "87083295D3001099528EB7F079C2FB46A9268607"
+            "certificate_hash": "67A7615F8FF04AF925B456A01BACC91BAD9C837B"
           }
         }
       ],
