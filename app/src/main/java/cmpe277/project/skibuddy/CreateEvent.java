@@ -64,6 +64,7 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        setTitle("Create Event");
 
         Button createEventButton = (Button) findViewById(R.id.btCreateEventButton);
         bEndTime = (Button) findViewById(R.id.bEventEndTime);
@@ -146,8 +147,8 @@ public class CreateEvent extends AppCompatActivity {
 
                     e.setName(etEventName.getText().toString());
                     e.setDescription(etEventDesc.getText().toString());
-                    e.setStart(DateTime.now());
-                    e.setEnd(DateTime.now().plusHours(4));
+                    e.setStart(sTime);
+                    e.setEnd(eTime);
                     ss.storeEvent(e, new ServerCallback<UUID>() {
                         @Override
                         public void handleResult(UUID result) {
@@ -319,7 +320,7 @@ public class CreateEvent extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
 
         // this.menu = menu;
 
