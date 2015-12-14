@@ -140,17 +140,17 @@ public class CreateEvent extends AppCompatActivity {
                             public void handleResult(UUID result) {
                                 Log.i("Create Event", "@@@@ stored event");
 
+                                Intent intent = new Intent(getApplicationContext(), EventManagement.class);
+
+                                Bundle b = new Bundle();
+
+                                b.putString(BundleKeys.EVENTID_KEY, e.getEventID().toString());
+                                intent.putExtras(b);
+
+                                startActivity(intent);
                             }
                         });
 
-                        Intent intent = new Intent(getApplicationContext(), EventManagement.class);
-
-                        Bundle b = new Bundle();
-
-                        b.putString(BundleKeys.EVENTID_KEY, e.getEventID().toString());
-                        intent.putExtras(b);
-
-                        startActivity(intent);
                     } catch (NotAuthenticatedException e) {
                         Log.w(CreateEvent.class.getName(),
                                 "User not authenticated");

@@ -69,7 +69,7 @@ public class EventManagement extends AppCompatActivity {
                 // If the user hosts the event, they should be able to invite others
                 try {
                     User currentUser = s.getAuthenticatedUser();
-                    if(result.getHostId() == currentUser.getId())
+                    if(result.getHostId().equals(currentUser.getId()))
                         invite.setVisibility(View.VISIBLE);
                 } catch (NotAuthenticatedException e) {
                     Log.w(EventManagement.class.getName(), "User not logged in!");
