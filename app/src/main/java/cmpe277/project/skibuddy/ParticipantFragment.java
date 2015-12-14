@@ -1,6 +1,7 @@
 package cmpe277.project.skibuddy;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cmpe277.project.skibuddy.common.EventParticipant;
+import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
@@ -24,6 +26,7 @@ import java.util.*;
 public class ParticipantFragment extends ListFragment {
 
     private UUID eventID;
+    private List<EventParticipant> participantList = new ArrayList();
 
     public ParticipantFragment() {
         // Required empty public constructor
@@ -56,6 +59,7 @@ public class ParticipantFragment extends ListFragment {
                 }
 
                 setListAdapter(new ParticipantAdapter(getActivity(), result));
+                participantList = result;
             }
         });
 
@@ -64,6 +68,13 @@ public class ParticipantFragment extends ListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                EventParticipant participant = participantList.get(position);
+                UUID userID = participant.getId();
+                Bundle b = new Bundle();
+                b.putString(BundleKeys.UUID_KEY, userID.toString());
+                i.putExtras(b);
+                startActivity(i);
                 Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                         .show();
             }

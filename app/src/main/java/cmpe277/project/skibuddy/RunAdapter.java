@@ -36,6 +36,7 @@ public class RunAdapter extends BaseAdapter{
     }
 
     private class ViewHolder {
+        public Run run;
         public TextView label, tvStatus;
         public ImageView logo;
     }
@@ -73,9 +74,11 @@ public class RunAdapter extends BaseAdapter{
         }
 
         Run run = values.get(position);
+        holder.run = run;
 
         // TODO: get objects from the user objects
-        holder.tvStatus.setText(String.valueOf(run.getDistance()));
+
+        holder.tvStatus.setText(String.format("%,.0f m", run.getDistance()));
         s.getUser(run.getUserId(), new ServerCallback<User>() {
             @Override
             public void handleResult(User result) {
@@ -83,11 +86,7 @@ public class RunAdapter extends BaseAdapter{
             }
         });
 
-        // Change icon based on name
-        //String s = run.getUser().getName();
-
-        //System.out.println("events "+ s);
-        holder.logo.setImageResource(R.drawable.invite);
+        holder.logo.setImageResource(R.drawable.map);
 
         return view;
     }

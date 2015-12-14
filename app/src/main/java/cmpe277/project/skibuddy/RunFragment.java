@@ -1,6 +1,7 @@
 package cmpe277.project.skibuddy;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cmpe277.project.skibuddy.common.Run;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import android.support.v4.app.ListFragment;
@@ -26,6 +29,9 @@ import cmpe277.project.skibuddy.server.ServerSingleton;
 public class RunFragment extends ListFragment {
 
 
+    private UUID eventID;
+    private List<Run> runList = new ArrayList();
+
     public RunFragment() {
         // Required empty public constructor
     }
@@ -35,7 +41,6 @@ public class RunFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_run, container, false);
     }
 
@@ -63,8 +68,12 @@ public class RunFragment extends ListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                        .show();
+               UUID runID = runList.get(position).getRunId();
+                Intent i = new Intent(getActivity(),RunActivity.class);
+                Bundle b = new Bundle();
+                b.putString(BundleKeys.RUNID_KEY, runID.toString());
+                i.putExtras(b);
+                startActivity(i);
             }
         });
 
@@ -81,6 +90,7 @@ public class RunFragment extends ListFragment {
             }
 
             setListAdapter(new RunAdapter(getActivity(), result));
+            runList = result;
         }
     }
 
