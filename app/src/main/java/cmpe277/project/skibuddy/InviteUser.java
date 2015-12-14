@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -58,12 +59,12 @@ public class InviteUser extends ListActivity {
         Intent i = getIntent();
 
         Bundle bundle = i.getExtras();
-        eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
-
+        //eventID = UUID.fromString(bundle.getString(BundleKeys.EVENTID_KEY));
+        self = getApplicationContext();
         ss = new ServerSingleton().getServerInstance(self);
 
         Log.i("Invite User", "@@@@ action");
-        self = getApplicationContext();
+
         //invUsers = new UserListAdapter(self,R.layout.user_list,);
         search = (EditText) findViewById(R.id.etSearch);
         //user = (ListView) findViewById(R.android.list);
@@ -103,23 +104,40 @@ public class InviteUser extends ListActivity {
 
     private void searchUser(final String q) {
         Log.i("Invite User", "@@@@ searchUser");
+        if(q.equals(" ") || q.equals("") || q.equals(null))
+        {
+            String noUser[] = new String[1];
+            noUser[0] = "Type in text field to search user";
 
-        ss.getUsersByName(q, new ServerCallback<List<User>>() {
-            @Override
-            public void handleResult(List<User> result) {
-                Log.i("Invite User", q);
-                Log.i("Invite User", "@@@@ handle result");
+            ArrayAdapter<String> nadapter = new NoUserAdapter(getApplicationContext(), R.layout.user_list, noUser);
+
+            setListAdapter(nadapter);
+        }
+        else {
+            ss.getUsersByName(q, new ServerCallback<List<User>>() {
+                @Override
+                public void handleResult(List<User> result) {
+                    Log.i("Invite User", q);
+                    Log.i("Invite User", "@@@@ handle result");
 
 
+                    if (result == null) {
+                        String noUser[] = new String[1];
+                        noUser[0] = "No User Found";
 
+                        ArrayAdapter<String> nadapter = new NoUserAdapter(getApplicationContext(), R.layout.user_list, noUser);
 
-                ArrayAdapter<User> adapter = new UserListAdapter(getApplicationContext(),R.layout.user_list,result, eventID);
+                        setListAdapter(nadapter);
+                    /*return;*/
+                    } else {
+                        ArrayAdapter<User> adapter = new UserListAdapter(getApplicationContext(), R.layout.user_list, result, eventID);
 
-                setListAdapter(adapter);
+                        setListAdapter(adapter);
+                    }
 
-
-            }
-        });
+                }
+            });
+        }
     }
 
 
