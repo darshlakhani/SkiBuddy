@@ -86,22 +86,24 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
         android:layout_below="@id/tab_layout"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pager">
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primary_dark_material_light">
 
         <ImageButton
             android:id="@+id/recordRun"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="15dp"
             android:src="@drawable/record"
+            android:layout_centerVertical="true"
             android:visibility="invisible" />
 
 
@@ -109,11 +111,11 @@
             android:id="@+id/imageButton1"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="15dp"
             android:layout_marginRight="15dp"
-            android:src="@drawable/invite"
+            android:src="@drawable/add"
+            android:scaleType="fitCenter"
             android:visibility="invisible" />
 
     </RelativeLayout>

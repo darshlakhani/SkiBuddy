@@ -67,7 +67,9 @@ public class UserListAdapter extends ArrayAdapter<User> {
         ib.setTag(show);
 
         textView.setText(show.getName());
-        imageView.setImageResource(R.drawable.invite);
+        LoadProfilePicture picture = new LoadProfilePicture(imageView);
+        picture.loadPicture(show);
+        //imageView.setImageResource(R.drawable.invite);
         final Server s = new ServerSingleton().getServerInstance(getContext());
 
         ib.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +86,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
                         @Override
                         public void handleResult(Event result) {
                             s.inviteUser(toInvite, result);
-                            Toast t = Toast.makeText(getContext(), "Invited user", Toast.LENGTH_LONG);
-                            t.show();
+
                         }
                     });
                 }
