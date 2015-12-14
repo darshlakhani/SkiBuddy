@@ -13,10 +13,13 @@ import android.text.TextWatcher;
 import android.text.method.TextKeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -98,6 +101,17 @@ public class InviteUser extends ListActivity {
                 searchUser(s.toString());
             }
         });
+
+        Button doneButton = (Button)findViewById(R.id.bDone);
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), EventManagement.class);
+                    startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -140,7 +154,11 @@ public class InviteUser extends ListActivity {
         }
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
 
 }

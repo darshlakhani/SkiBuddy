@@ -31,17 +31,14 @@ public class UserListAdapter extends ArrayAdapter<User> {
     //private final String[] values;
     List<User> users;
     String[ ] names;
-    boolean ch = false;
     UUID eventID;
 
     public UserListAdapter(Context context,int resource,  List<User> result, UUID eventID) {
-        super(context, resource, result);
+        super(context, resource,result);
         this.context = context;
         this.users =  result;
         this.eventID = eventID;
     }
-
-
 
 
 
@@ -66,40 +63,35 @@ public class UserListAdapter extends ArrayAdapter<User> {
         TextView textView = (TextView) rowView.findViewById(R.id.tvUserName);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.ivProfile);
         Button ib = (Button) rowView.findViewById(R.id.ibTick);
+        User show = users.get(position);
+        ib.setTag(show);
 
-            User show = users.get(position);
-            ib.setTag(show);
-
-            textView.setText(show.getName());
-
-            LoadProfilePicture profilePicture = new LoadProfilePicture(imageView);
-            profilePicture.loadPicture(show);
-
+        textView.setText(show.getName());
+        LoadProfilePicture picture = new LoadProfilePicture(imageView);
+        picture.loadPicture(show);
         //imageView.setImageResource(R.drawable.invite);
-            final Server s = new ServerSingleton().getServerInstance(getContext());
+        final Server s = new ServerSingleton().getServerInstance(getContext());
 
-            ib.setOnClickListener(new View.OnClickListener() {
+        ib.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    if (!v.isSelected()) {
-                        ((Button) v).setEnabled(false);
-                        ((Button) v).setText("Invited");
-                        v.setSelected(true);
+            @Override
+            public void onClick(View v) {
+                if (!v.isSelected()) {
+                    ((Button) v).setEnabled(false);
+                    ((Button) v).setText("Invited");
+                    v.setSelected(true);
 
-                        final User toInvite = (User) v.getTag();
-                        s.getEvent(eventID, new ServerCallback<Event>() {
-                            @Override
-                            public void handleResult(Event result) {
-                                s.inviteUser(toInvite, result);
-                                Toast t = Toast.makeText(getContext(), "Invited user", Toast.LENGTH_LONG);
-                                t.show();
-                            }
-                        });
-                    }
+                    final User toInvite = (User)v.getTag();
+                    s.getEvent(eventID, new ServerCallback<Event>() {
+                        @Override
+                        public void handleResult(Event result) {
+                            s.inviteUser(toInvite, result);
+
+                        }
+                    });
                 }
-            });
-
+            }
+        });
         return rowView;
     }
 }
