@@ -22,7 +22,7 @@ public class EventManagement extends AppCompatActivity {
 
     String eventID;
 
-    TextView tvEventName,tvDesc,tvStartDate,tvEndDate;
+    TextView tvDesc,tvStartDate,tvEndDate;
     ImageButton invite,recordRun;
 
 
@@ -36,14 +36,12 @@ public class EventManagement extends AppCompatActivity {
 
 
 
-        tvEventName = (TextView)findViewById(R.id.tvEventName);
         tvDesc = (TextView)findViewById(R.id.tvEventDesc);
         tvStartDate = (TextView)findViewById(R.id.tvStartDate);
         tvEndDate = (TextView)findViewById(R.id.tvEndDate);
         invite = (ImageButton) findViewById(R.id.imageButton1);
         recordRun = (ImageButton) findViewById(R.id.recordRun);
 
-        tvEventName.setText(mpResult.get("name"));
         setTitle(mpResult.get("name"));
         tvDesc.setText(mpResult.get("desc"));
         tvStartDate.setText(mpResult.get("startDate"));
