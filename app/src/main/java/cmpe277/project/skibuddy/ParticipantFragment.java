@@ -26,7 +26,7 @@ import java.util.*;
 public class ParticipantFragment extends ListFragment {
 
     private UUID eventID;
-    static List<EventParticipant> participantList = new ArrayList();
+    private List<EventParticipant> participantList = new ArrayList();
 
     public ParticipantFragment() {
         // Required empty public constructor
