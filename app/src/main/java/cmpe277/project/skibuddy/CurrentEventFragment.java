@@ -45,6 +45,7 @@ public class CurrentEventFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        erList.clear();
         return inflater.inflate(R.layout.fragment_current_event, container, false);
     }
 
@@ -83,8 +84,10 @@ public class CurrentEventFragment extends ListFragment {
                     if(difference == -1 || difference == 0) {
                         CURRENT_EVENT_LIST_FINAL[index] = result.get(i);
                         CURRENT_EVENT_LIST[index] = result.get(i).getName();
-                        erList.add(result.get(i));
-                        index++;
+                        if( ! erList.contains(result.get(i))) {
+                            erList.add(result.get(i));
+                            index++;
+                        }
                     }
                 }
                 setListAdapter(new EventListAdapter(getActivity(), erList));
@@ -101,27 +104,25 @@ public class CurrentEventFragment extends ListFragment {
                 final EventRelation erObj = erList.get(position);
                 final HashMap<String, String> mp = new HashMap();
                 mp.put("name", erObj.getName());
-                mp.put("id",erObj.getEventID().toString());
+                mp.put("id", erObj.getEventID().toString());
                 mp.put("desc", erObj.getDescription());
                 //Store start date
                 mp.put("startDate", erObj.getStart().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
 
                 //Store end date
                 mp.put("endDate", erObj.getEnd().toString(DateTimeFormat.forPattern(DATETIME_FORMAT)));
-                mp.put("event","current");
+                mp.put("event", "current");
                 Log.d("end date", erObj.getEnd().toString());
 
                 Object status = erObj.getParticipationStatus();
                 String pStatus = new String();
 
-                if(status == ParticipationStatus.HOST)
-                {
+                if (status == ParticipationStatus.HOST) {
                     pStatus = "host";
-                    mp.put("status",pStatus);
+                    mp.put("status", pStatus);
                 }
 
-                if(status == ParticipationStatus.INVITEE)
-                {
+                if (status == ParticipationStatus.INVITEE) {
                     pStatus = "invite";
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             getActivity());
@@ -131,15 +132,17 @@ public class CurrentEventFragment extends ListFragment {
                     alertDialogBuilder
                             .setMessage("Do you want to accept the invitation?")
                             .setCancelable(false)
-                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,int id) {
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
                                     // if this button is clicked, close
                                     // current activity
-                                    Log.d("Reply","Accept Invite");
+                                    Log.d("Reply", "Accept Invite");
                                     Intent i = new Intent(getActivity(), EventManagement.class);
                                     i.putExtra("eventMap", mp);
-                                    startActivity(i);
                                     s.acceptInvitation(erObj);
+                                    getActivity().finish();
+                                    startActivity(i);
+
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -154,9 +157,8 @@ public class CurrentEventFragment extends ListFragment {
 
                     // show it
                     alertDialog.show();
-                    mp.put("status",pStatus);
-                }
-                else {
+                    mp.put("status", pStatus);
+                } else {
 
                     Intent i = new Intent(getActivity(), EventManagement.class);
                     i.putExtra("eventMap", mp);

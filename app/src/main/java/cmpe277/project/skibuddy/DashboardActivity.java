@@ -94,6 +94,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 startRunActivity();
 
+
             }
 
         });
@@ -128,6 +129,8 @@ public class DashboardActivity extends AppCompatActivity {
         i.putExtras(b);
         startActivity(i);
     }
+
+
 
 
 }
