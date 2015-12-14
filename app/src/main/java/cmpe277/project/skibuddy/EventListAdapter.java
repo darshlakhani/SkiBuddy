@@ -30,7 +30,7 @@ public class EventListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        public TextView label, tvStatus,tvEventType;
+        public TextView label, tvStatus;
         public ImageView logo1;
     }
 
@@ -60,7 +60,6 @@ public class EventListAdapter extends BaseAdapter {
             holder.label = (TextView) view.findViewById(R.id.label);
             holder.logo1 = (ImageView) view.findViewById(R.id.logo1);
             holder.tvStatus = (TextView)view.findViewById(R.id.tvStatus);
-            holder.tvEventType = (TextView)view.findViewById(R.id.tvEventtype);
             view.setTag(holder);
         } else {
             view = convertView;
@@ -70,7 +69,7 @@ public class EventListAdapter extends BaseAdapter {
         EventRelation event = values.get(position);
 
         Object status = event.getParticipationStatus();
-        String pStatus = new String();
+        String pStatus = "";
 
         if(status == ParticipationStatus.HOST)
         {
@@ -88,14 +87,11 @@ public class EventListAdapter extends BaseAdapter {
         }
 
         holder.label.setText(event.getName());
-        //TODO: this used to be the host's name
-        holder.tvStatus.setText("");
-        holder.tvEventType.setText(pStatus);
+        holder.tvStatus.setText(pStatus);
 
         // Change icon based on name
         String s = event.getName();
 
-        System.out.println("events "+ s);
         holder.logo1.setImageResource(R.drawable.event);
 
         return view;
