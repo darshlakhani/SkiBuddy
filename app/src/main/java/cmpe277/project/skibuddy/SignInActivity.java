@@ -38,6 +38,8 @@ public class SignInActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    private boolean signingOut = false;
+
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
@@ -62,6 +64,19 @@ public class SignInActivity extends AppCompatActivity implements
                 .addApi(Plus.API)
                 .build();
 
+        mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle bundle) {
+                if(signingOut)
+                    signOut();
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+            }
+        });
+
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setScopes(gso.getScopeArray());
@@ -72,28 +87,36 @@ public class SignInActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            try {
-                handleSignInResult(result);
-            } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-            }
+        Bundle b = getIntent().getExtras();
+        if (b != null && b.getString(BundleKeys.SIGNOUT) != null){
+            signingOut = true;
+            connectAndSignOut();
         } else {
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    try {
-                        handleSignInResult(googleSignInResult);
-                    } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            // If we're not signing out, try to sign in with a cached account
+
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+            if (opr.isDone()) {
+                Log.d(TAG, "Got cached sign-in");
+                GoogleSignInResult result = opr.get();
+                try {
+                    handleSignInResult(result);
+                } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
+            } else {
+                showProgressDialog();
+                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                    @Override
+                    public void onResult(GoogleSignInResult googleSignInResult) {
+                        hideProgressDialog();
+                        try {
+                            handleSignInResult(googleSignInResult);
+                        } catch (IOException | NoUserIdException | JSONException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -175,12 +198,24 @@ public class SignInActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void connectAndSignOut(){
+        if(mGoogleApiClient.isConnected()) {
+            signOut();
+        } else {
+            mGoogleApiClient.connect();
+        }
+    }
+
 
     private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
+                        Toast t = Toast.makeText(getBaseContext(),
+                                "Signed out",
+                                Toast.LENGTH_SHORT);
+                        t.show();
                     }
                 });
     }
