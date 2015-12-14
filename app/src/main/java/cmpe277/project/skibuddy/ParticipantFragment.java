@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import cmpe277.project.skibuddy.common.EventParticipant;
-import cmpe277.project.skibuddy.common.EventRelation;
 import cmpe277.project.skibuddy.server.Server;
 import cmpe277.project.skibuddy.server.ServerCallback;
 import cmpe277.project.skibuddy.server.ServerSingleton;
@@ -26,7 +25,8 @@ import java.util.*;
 public class ParticipantFragment extends ListFragment {
 
     private UUID eventID;
-    private List<EventParticipant> participantList = new ArrayList();
+    private List<EventParticipant> participantList = new ArrayList<>();
+    final Server s = new ServerSingleton().getServerInstance(getActivity());
 
     public ParticipantFragment() {
         // Required empty public constructor
@@ -47,24 +47,6 @@ public class ParticipantFragment extends ListFragment {
 
         super.onActivityCreated(savedInstanceState);
 
-        final Server s = new ServerSingleton().getServerInstance(getActivity());
-        s.getEventParticipants(eventID, new ServerCallback<List<EventParticipant>>() {
-
-            @Override
-            public void handleResult(List<EventParticipant> result) {
-
-                if(result == null || result.size() < 1)
-                {
-                    return;
-                }
-
-                setListAdapter(new ParticipantAdapter(getActivity(), result));
-                participantList = result;
-            }
-        });
-
-
-
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -81,5 +63,25 @@ public class ParticipantFragment extends ListFragment {
 
     }
 
+    private void loadParticipants() {
+        s.getEventParticipants(eventID, new ServerCallback<List<EventParticipant>>() {
 
+            @Override
+            public void handleResult(List<EventParticipant> result) {
+
+                if (result == null || result.size() < 1) {
+                    return;
+                }
+
+                setListAdapter(new ParticipantAdapter(getActivity(), result));
+                participantList = result;
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadParticipants();
+    }
 }
